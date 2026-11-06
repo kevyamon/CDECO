@@ -1,0 +1,361 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CDECO Design System - Chambre de Diplomatie Économique du Congo */
+
+@layer base {
+  :root {
+    /* Primary - Deep Blue (#1E3A8A style) */
+    --primary: 217 71% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Background & Foreground */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Secondary - Light Blue/Gray */
+    --secondary: 214 32% 96%;
+    --secondary-foreground: 222 47% 20%;
+
+    /* Muted */
+    --muted: 214 32% 96%;
+    --muted-foreground: 215 20% 40%;
+
+    /* Accent - Gold/Orange CDECO (matching brand logo) */
+    --accent: 38 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border & Input */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 47% 20%;
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Custom CDECO Colors */
+    --cdeco-blue: 217 71% 33%;
+    --cdeco-blue-light: 217 91% 60%;
+    --cdeco-gold: 38 80% 55%;
+    --cdeco-gold-light: 40 85% 60%;
+    --cdeco-green: 142 71% 45%;
+    --cdeco-red: 0 84% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 71% 33%) 0%, hsl(217 71% 25%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(38 80% 55%) 0%, hsl(40 85% 60%) 100%);
+    --gradient-hero: linear-gradient(to right, hsl(217 71% 20% / 0.95) 0%, hsl(217 71% 25% / 0.85) 50%, hsl(217 71% 30% / 0.7) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(222 47% 11% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(222 47% 11% / 0.1), 0 2px 4px -2px hsl(222 47% 11% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(222 47% 11% / 0.1), 0 4px 6px -4px hsl(222 47% 11% / 0.1);
+    --shadow-glow: 0 0 40px hsl(38 80% 55% / 0.3);
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 15%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 38 80% 55%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 25%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 222 47% 25%;
+    --sidebar-ring: 38 80% 55%;
+  }
+
+  .dark {
+    /* Primary */
+    --primary: 38 80% 55%;
+    --primary-foreground: 222 47% 11%;
+
+    /* Background & Foreground */
+    --background: 222 47% 8%;
+    --foreground: 0 0% 98%;
+
+    /* Card */
+    --card: 222 47% 11%;
+    --card-foreground: 0 0% 98%;
+
+    /* Popover */
+    --popover: 222 47% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Secondary */
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted */
+    --muted: 222 47% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent */
+    --accent: 38 80% 55%;
+    --accent-foreground: 222 47% 11%;
+
+    /* Destructive */
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border & Input */
+    --border: 222 47% 20%;
+    --input: 222 47% 20%;
+    --ring: 38 80% 55%;
+
+    /* Sidebar Dark */
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 38 80% 55%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 12%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 222 47% 15%;
+    --sidebar-ring: 38 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* Améliorer le rendu du texte */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+
+  /* Optimiser les images par défaut */
+  img {
+    content-visibility: auto;
+  }
+
+  /* Focus visible pour l'accessibilité */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}
+
+@layer components {
+  .container-cdeco {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 shadow-lg hover:shadow-glow;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .glass-effect {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+}
+
+@layer utilities {
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Smooth entrance animations */
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.5s ease-out forwards;
+  }
+
+  /* Animation delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  /* Card interaction */
+  .card-interactive {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-interactive:hover {
+    @apply -translate-y-1 shadow-lg border-primary/30;
+  }
+
+  /* Icon hover pulse */
+  .icon-hover-pulse {
+    @apply transition-transform duration-200;
+  }
+  .icon-hover-pulse:hover {
+    @apply scale-110;
+  }
+}
+
+/* Keyframes */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimiser les performances de défilement */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* GPU acceleration pour les animations fréquentes */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Optimisation du rendu des images */
+.contain-paint {
+  contain: paint;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/50;
+}
+
+/* Confetti Animation */
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(400px) rotate(720deg) scale(0.5);
+  }
+}

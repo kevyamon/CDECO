@@ -1,0 +1,55 @@
+# CDECO - Chambre de Diplomatie Économique du Congo
+# https://cdeco.org
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Social media bots
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# Allow all other bots
+User-agent: *
+Allow: /
+
+# Disallow admin and auth pages
+Disallow: /admin
+Disallow: /auth
+Disallow: /auth-membre
+Disallow: /espace-membre
+
+# Sitemap location
+Sitemap: https://cdeco.org/sitemap.xml
+
+# Host preference
+Host: https://cdeco.org
