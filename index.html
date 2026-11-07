@@ -57,17 +57,105 @@
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
     </noscript>
     
-    <!-- Critical CSS inline for faster FCP -->
+    <!-- Critical CSS inline for faster FCP & Instant Branded Preloader -->
     <style>
       *,::before,::after{box-sizing:border-box}
-      body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+      body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;background-color:#0b192c}
       #root{min-height:100vh}
-      .min-h-screen{min-height:100vh}
-      .flex{display:flex}
-      .items-center{align-items:center}
-      .justify-center{justify-content:center}
-      .animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}
-      @keyframes pulse{50%{opacity:.5}}
+      
+      /* CDECO Initial Brand Preloader (Zero White Screen) */
+      .cdeco-preloader{
+        position:fixed;
+        inset:0;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        background:radial-gradient(circle at center, #132b49 0%, #0b192c 100%);
+        color:#ffffff;
+        z-index:99999;
+        font-family:Inter,system-ui,-apple-system,sans-serif;
+        text-align:center;
+        padding:20px;
+      }
+      .cdeco-preloader-emblem{
+        position:relative;
+        width:96px;
+        height:96px;
+        margin-bottom:20px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .cdeco-preloader-glow{
+        position:absolute;
+        inset:-12px;
+        border-radius:50%;
+        background:radial-gradient(circle, rgba(212,175,55,0.35) 0%, rgba(212,175,55,0) 70%);
+        animation:cdecoPulse 2s ease-in-out infinite;
+      }
+      .cdeco-preloader-logo{
+        width:88px;
+        height:88px;
+        object-fit:contain;
+        position:relative;
+        z-index:1;
+        filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      }
+      .cdeco-preloader-title{
+        font-size:26px;
+        font-weight:800;
+        letter-spacing:1.5px;
+        margin:0 0 6px 0;
+        color:#ffffff;
+        font-family:Poppins,Inter,sans-serif;
+      }
+      .cdeco-preloader-subtitle{
+        font-size:13px;
+        font-weight:500;
+        color:#94a3b8;
+        letter-spacing:0.5px;
+        max-width:340px;
+        margin:0 0 24px 0;
+        line-height:1.4;
+      }
+      .cdeco-preloader-track{
+        width:160px;
+        height:3px;
+        background:rgba(255,255,255,0.12);
+        border-radius:99px;
+        overflow:hidden;
+        position:relative;
+      }
+      .cdeco-preloader-bar{
+        position:absolute;
+        top:0;
+        left:-50%;
+        width:50%;
+        height:100%;
+        background:linear-gradient(90deg, transparent, #d4af37, #fef08a, #d4af37, transparent);
+        border-radius:99px;
+        animation:cdecoSlide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .cdeco-preloader-motto{
+        margin-top:16px;
+        font-size:11px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:2px;
+        color:#d4af37;
+        opacity:0.9;
+      }
+
+      @keyframes cdecoSlide{
+        0%{left:-50%;width:30%}
+        50%{width:60%}
+        100%{left:100%;width:30%}
+      }
+      @keyframes cdecoPulse{
+        0%,100%{transform:scale(0.95);opacity:0.4}
+        50%{transform:scale(1.2);opacity:0.9}
+      }
     </style>
 
     <!-- Favicon -->
@@ -110,7 +198,20 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="cdeco-preloader" id="cdeco-splash">
+        <div class="cdeco-preloader-emblem">
+          <div class="cdeco-preloader-glow"></div>
+          <img src="/logo-cdeco.png" alt="CDECO" class="cdeco-preloader-logo" width="88" height="88" />
+        </div>
+        <div class="cdeco-preloader-title">CDECO</div>
+        <div class="cdeco-preloader-subtitle">Chambre de Diplomatie Économique du Congo</div>
+        <div class="cdeco-preloader-track">
+          <div class="cdeco-preloader-bar"></div>
+        </div>
+        <div class="cdeco-preloader-motto">Agir localement • Rayonner globalement</div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
