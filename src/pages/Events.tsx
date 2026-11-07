@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import SectionHeader from "@/components/ui/section-header";
@@ -9,6 +10,7 @@ import PhotoGallery, { GalleryImage } from "@/components/PhotoGallery";
 import UpcomingEventsList from "@/components/events/UpcomingEventsList";
 import { fadeInUp, staggerContainer, staggerItem } from "@/animations/variants";
 import { useTranslation } from "react-i18next";
+import { mediaService } from "@/api/mediaService";
 
 // Importations des photos de la galerie
 import eventsForum from "@/assets/gallery/events-forum.jpg";
@@ -60,6 +62,26 @@ const pastEvents = [
 const Events = () => {
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
+  const [dynamicGallery, setDynamicGallery] = useState<GalleryImage[]>([]);
+
+  useEffect(() => {
+    mediaService
+      .getMediaList("gallery")
+      .then((items) => {
+        if (items && items.length > 0) {
+          const formatted: GalleryImage[] = items.map((item) => ({
+            src: item.url,
+            alt: item.altText || item.title || "Photo Événement CDECO",
+            title: item.title || "Conférence & Événement",
+            category: "Conférence",
+          }));
+          setDynamicGallery(formatted);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const allGalleryImages = [...dynamicGallery, ...galleryImages];
 
   return (
     <Layout>
@@ -135,7 +157,7 @@ const Events = () => {
             </p>
           </motion.div>
 
-          <PhotoGallery images={galleryImages} columns={3} />
+          <PhotoGallery images={allGalleryImages} columns={3} />
         </div>
       </section>
 

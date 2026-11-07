@@ -186,3 +186,49 @@ export const KEY_SLOTS: MediaSlot[] = [
   },
 ];
 
+export interface DestinationCategory {
+  value: "gallery" | "partner" | "leadership" | "kampus" | "resources" | "general";
+  label: string;
+  pageTarget: string;
+  hint: string;
+}
+
+export const DESTINATION_CATEGORIES: DestinationCategory[] = [
+  {
+    value: "gallery",
+    label: "Événements & Conférences (Galerie Photos)",
+    pageTarget: "Page /evenements",
+    hint: "La photo s'affichera immédiatement dans la galerie des moments forts de la page Événements.",
+  },
+  {
+    value: "partner",
+    label: "Partenaires & Institutions (Logos Officiels)",
+    pageTarget: "Page d'Accueil /",
+    hint: "Le logo sera automatiquement intégré au bandeau de défilement des partenaires officiels.",
+  },
+  {
+    value: "leadership",
+    label: "Gouvernance & Présidence (Audiences & Bureau)",
+    pageTarget: "Pages /cdeco/message-president et /cdeco/bureau",
+    hint: "Photos officielles des audiences de la présidence et portraits des membres du bureau.",
+  },
+  {
+    value: "kampus",
+    label: "KAMPUS CDECO (Sessions & Ateliers)",
+    pageTarget: "Page /kampus-cdeco",
+    hint: "Photos des ateliers pratiques, formations de cadres et promotions d'étudiants KAMPUS.",
+  },
+  {
+    value: "resources",
+    label: "Ressources & Publications (Couvertures de Guides)",
+    pageTarget: "Page /ressources",
+    hint: "Visuels de couverture pour les rapports économiques, guides sectoriels et documents.",
+  },
+  {
+    value: "general",
+    label: "Presse & Archives Officielles (Usage Général)",
+    pageTarget: "Documentation générale",
+    hint: "Banque d'images institutionnelles pour les communiqués et la communication globale.",
+  },
+];
+

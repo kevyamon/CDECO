@@ -42,10 +42,10 @@ export const KeySectionsMediaManager: FC = () => {
 
       toast({
         title: "Média remplacé avec succès !",
-        description: `La ressource pour "${slot.title}" a été synchronisée sur Cloudinary.`,
+        description: `La ressource pour "${slot.title}" a été mise à jour en haute définition.`,
       });
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Échec du téléversement vers Cloudinary.";
+      const msg = error.response?.data?.message || "Échec du téléversement du média.";
       toast({
         title: "Erreur de téléversement",
         description: msg,
@@ -164,7 +164,7 @@ export const KeySectionsMediaManager: FC = () => {
                   {isUploading ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-primary/80 z-20 text-white p-3 text-center">
                       <RefreshCw className="h-6 w-6 animate-spin text-accent mb-2" />
-                      <span className="text-xs font-medium">Traitement Cloudinary en cours...</span>
+                      <span className="text-xs font-medium">Mise à jour du média en cours...</span>
                     </div>
                   ) : null}
 

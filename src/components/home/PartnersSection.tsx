@@ -12,8 +12,9 @@
  * { id: 1, name: "Nom Partenaire", logo: monLogo }
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { mediaService } from "@/api/mediaService";
 
 // =============================================================================
 // CONFIGURATION DES PARTENAIRES
@@ -57,6 +58,23 @@ const PlaceholderLogo = ({ name }: { name: string }) => {
 const PartnersSection = () => {
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [dynamicPartners, setDynamicPartners] = useState<{ id: string | number; name: string; logo: string | null }[]>([]);
+
+  useEffect(() => {
+    mediaService
+      .getMediaList("partner")
+      .then((items) => {
+        if (items && items.length > 0) {
+          const list = items.map((item, idx) => ({
+            id: `dyn-${item._id || item.key || idx}`,
+            name: item.title || "Partenaire Officiel",
+            logo: item.url,
+          }));
+          setDynamicPartners(list);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Animation de défilement automatique
   useEffect(() => {
@@ -98,7 +116,8 @@ const PartnersSection = () => {
   }, []);
 
   // Double les partenaires pour un défilement infini
-  const displayPartners = [...PARTNERS, ...PARTNERS];
+  const allPartners = dynamicPartners.length > 0 ? [...dynamicPartners, ...PARTNERS] : PARTNERS;
+  const displayPartners = [...allPartners, ...allPartners];
 
   return (
     <section className="py-12 md:py-16 bg-background border-y border-border/50">

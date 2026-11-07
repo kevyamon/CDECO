@@ -5,7 +5,7 @@ export interface SiteMediaItem {
   id?: string;
   key: string;
   title: string;
-  category: "hero" | "leadership" | "gallery" | "partner" | "video" | "section" | "general";
+  category: "hero" | "leadership" | "gallery" | "partner" | "video" | "section" | "general" | "events" | "kampus" | "resources";
   url: string;
   publicId: string;
   altText: string;
