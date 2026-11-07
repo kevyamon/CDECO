@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
-import { Calendar, PlusCircle, Edit2, Trash2, RefreshCw, Check, Sparkles, MapPin, X } from "lucide-react";
+import { Calendar, PlusCircle, Edit2, Trash2, RefreshCw, Check, MapPin, X } from "lucide-react";
 import { DEFAULT_UPCOMING_EVENTS, DEFAULT_HIGHLIGHT_EVENTS, DEFAULT_PAST_EVENTS } from "@/components/events/defaultEventsData";
 import { AdminCardGridSkeleton } from "./AdminSkeletonLoader";
 
@@ -215,7 +215,6 @@ export const EventsManagerTab: FC = () => {
               className="text-xs h-8"
               onClick={() => { setActiveCategory("highlight"); resetForm(); }}
             >
-              <Sparkles className="w-3.5 h-3.5 mr-1 text-accent" />
               Moments Forts & Sommets ({events.filter(e => e.category === "highlight").length})
             </Button>
             <Button

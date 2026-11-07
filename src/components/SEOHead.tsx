@@ -19,7 +19,7 @@ const SEOHead = ({
   description = "La Chambre de Diplomatie Économique du Congo (CDECO) promeut les échanges économiques et diplomatiques, soutient les PME/PMI et renforce le climat des affaires au Congo.",
   keywords = "CDECO, Congo, diplomatie économique, chambre de commerce, PME, PMI, investissement, Brazzaville",
   canonicalUrl,
-  ogImage = "/og-image.jpg",
+  ogImage = "/logo-cdeco.png",
   ogType = "website",
   noIndex = false,
   publishedTime,
@@ -39,7 +39,8 @@ const SEOHead = ({
     "name": "Chambre de Diplomatie Économique du Congo",
     "alternateName": "CDECO",
     "url": baseUrl,
-    "logo": `${baseUrl}/logo.png`,
+    "logo": `${baseUrl}/logo-cdeco.png`,
+    "image": `${baseUrl}/logo-cdeco.png`,
     "description": description,
     "foundingDate": "2024",
     "address": {
@@ -143,6 +144,9 @@ const SEOHead = ({
       {noIndex && <meta name="robots" content="noindex, nofollow" />}
       {!noIndex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
       {canonicalUrl && <link rel="canonical" href={fullUrl} />}
+      <link rel="alternate" hrefLang="fr" href={fullUrl} />
+      <link rel="alternate" hrefLang="en" href={fullUrl} />
+      <link rel="alternate" hrefLang="x-default" href={fullUrl} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
