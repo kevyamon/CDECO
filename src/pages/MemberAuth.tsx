@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { z } from "zod";
-import { Eye, EyeOff, Lock, Mail, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ArrowLeft, RefreshCw } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/api/authService";
@@ -11,13 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
-const authSchema = z.object({
-  email: z.string().min(3, "Veuillez renseigner un identifiant ou un email valide").toLowerCase().trim(),
-  password: z.string().min(1, "Le mot de passe est requis"),
-});
+const createAuthSchema = (isEn: boolean) =>
+  z.object({
+    email: z
+      .string()
+      .min(3, isEn ? "Please provide a valid username or email" : "Veuillez renseigner un identifiant ou un email valide")
+      .toLowerCase()
+      .trim(),
+    password: z.string().min(1, isEn ? "Password is required" : "Le mot de passe est requis"),
+  });
 
 const MemberAuth = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === "en";
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isAdmin, loading } = useAuth();
@@ -35,7 +44,6 @@ const MemberAuth = () => {
   const [mode, setMode] = useState<"login" | "signup">(initialMode);
   const wakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Réveil silencieux anticipé de l'instance cloud Render dès l'accès à la page
   useEffect(() => {
     apiClient.get("/health").catch(() => {});
   }, []);
@@ -53,10 +61,11 @@ const MemberAuth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const authSchema = createAuthSchema(isEn);
     const validation = authSchema.safeParse({ email, password });
     if (!validation.success) {
       toast({
-        title: "Validation",
+        title: isEn ? "Validation Error" : "Validation",
         description: validation.error.errors[0].message,
         variant: "destructive",
       });
@@ -66,7 +75,6 @@ const MemberAuth = () => {
     setIsLoading(true);
     setIsServerWaking(false);
 
-    // Déclenche un indicateur prévenant après 3.5s si Render est en phase de boot
     wakingTimerRef.current = setTimeout(() => {
       setIsServerWaking(true);
     }, 3500);
@@ -77,14 +85,14 @@ const MemberAuth = () => {
 
       if (response.user.role === "admin") {
         toast({
-          title: "Accès Administrateur",
-          description: "Bienvenue dans le tableau de bord de gestion CDECO.",
+          title: isEn ? "Admin Portal Access" : "Accès Administrateur",
+          description: isEn ? "Welcome to CDECO management dashboard." : "Bienvenue dans le tableau de bord de gestion CDECO.",
         });
         navigate("/admin");
       } else {
         toast({
-          title: "Connexion réussie",
-          description: "Bienvenue dans votre espace membre.",
+          title: isEn ? "Login Successful" : "Connexion réussie",
+          description: isEn ? "Welcome to your member portal." : "Bienvenue dans votre espace membre.",
         });
         navigate("/espace-membre");
       }
@@ -94,26 +102,28 @@ const MemberAuth = () => {
 
       if (!error.response) {
         toast({
-          title: "Serveur en cours de démarrage",
-          description: "Le serveur sécurisé est en cours de réveil sur Render (cloud). Veuillez patienter 15 à 25 secondes puis réessayer.",
+          title: isEn ? "Server starting up" : "Serveur en cours de démarrage",
+          description: isEn
+            ? "The secure backend cloud server is waking up on Render. Please hold on 15 to 25 seconds then try again."
+            : "Le serveur sécurisé est en cours de réveil sur Render (cloud). Veuillez patienter 15 à 25 secondes puis réessayer.",
           variant: "destructive",
         });
       } else if (error.response.status === 429) {
         toast({
-          title: "Sécurité / Limite de débit",
-          description: error.response.data?.message || "Trop de tentatives consécutives. Veuillez patienter avant de réessayer.",
+          title: isEn ? "Rate Limit Exceeded" : "Sécurité / Limite de débit",
+          description: error.response.data?.message || (isEn ? "Too many attempts. Please pause a moment before retrying." : "Trop de tentatives consécutives. Veuillez patienter avant de réessayer."),
           variant: "destructive",
         });
       } else if (error.response.status === 401 || error.response.status === 400) {
         toast({
-          title: "Erreur d'authentification",
-          description: error.response.data?.message || "Identifiant ou mot de passe incorrect.",
+          title: isEn ? "Authentication Error" : "Erreur d'authentification",
+          description: error.response.data?.message || (isEn ? "Invalid credentials." : "Identifiant ou mot de passe incorrect."),
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Erreur de connexion",
-          description: error.response.data?.message || "Une erreur est survenue lors de la communication avec le serveur.",
+          title: isEn ? "Connection Error" : "Erreur de connexion",
+          description: error.response.data?.message || (isEn ? "Failed to communicate with the server." : "Une erreur est survenue lors de la communication avec le serveur."),
           variant: "destructive",
         });
       }
@@ -126,10 +136,11 @@ const MemberAuth = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const authSchema = createAuthSchema(isEn);
     const validation = authSchema.safeParse({ email, password });
     if (!validation.success) {
       toast({
-        title: "Validation",
+        title: isEn ? "Validation Error" : "Validation",
         description: validation.error.errors[0].message,
         variant: "destructive",
       });
@@ -138,8 +149,8 @@ const MemberAuth = () => {
 
     if (password !== confirmPassword) {
       toast({
-        title: "Mots de passe non identiques",
-        description: "Veuillez saisir deux mots de passe identiques.",
+        title: isEn ? "Passwords do not match" : "Mots de passe non identiques",
+        description: isEn ? "Please make sure both passwords match exactly." : "Veuillez saisir deux mots de passe identiques.",
         variant: "destructive",
       });
       return;
@@ -148,17 +159,16 @@ const MemberAuth = () => {
     setIsLoading(true);
 
     try {
-      // Inscription membre via endpoint d'authentification
       await authService.login(email, password);
       toast({
-        title: "Compte configuré",
-        description: "Votre compte membre est opérationnel.",
+        title: isEn ? "Account Configured" : "Compte configuré",
+        description: isEn ? "Your member credentials are ready." : "Votre compte membre est opérationnel.",
       });
       navigate("/espace-membre");
-    } catch (error: any) {
+    } catch {
       toast({
-        title: "Information",
-        description: "Votre compte sera validé dès l'approbation de votre adhésion par le secrétariat.",
+        title: isEn ? "Information" : "Information",
+        description: isEn ? "Your account will be activated once your membership application is approved." : "Votre compte sera validé dès l'approbation de votre adhésion par le secrétariat.",
       });
       navigate("/adhesion");
     } finally {
@@ -171,7 +181,7 @@ const MemberAuth = () => {
       <div className="w-full max-w-md mb-4">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="h-4 w-4" />
-          Retour au site CDECO
+          {isEn ? "Return to CDECO Home" : "Retour au site CDECO"}
         </Link>
       </div>
       <Card className="w-full max-w-md shadow-md border-border">
@@ -180,24 +190,26 @@ const MemberAuth = () => {
             <img src={logoCdeco} alt="Logo CDECO" className="h-full w-full object-contain rounded-xl" />
           </div>
           <CardTitle className="text-2xl font-heading">
-            {mode === "signup" ? "Créer un compte membre" : "Connexion CDECO"}
+            {mode === "signup"
+              ? (isEn ? "Create Member Account" : "Créer un compte membre")
+              : (isEn ? "CDECO Portal Sign In" : "Connexion CDECO")}
           </CardTitle>
           <CardDescription>
             {mode === "signup"
-              ? "Créez votre compte pour suivre le statut de votre demande d'adhésion"
-              : "Renseignez vos identifiants pour accéder à votre espace"}
+              ? (isEn ? "Create your login to monitor your membership status" : "Créez votre compte pour suivre le statut de votre demande d'adhésion")
+              : (isEn ? "Enter your credentials to access your member space" : "Renseignez vos identifiants pour accéder à votre espace")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={mode === "signup" ? handleSignup : handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="member-email">Identifiant ou Adresse Email</Label>
+              <Label htmlFor="member-email">{isEn ? "Username or Email Address" : "Identifiant ou Adresse Email"}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="member-email"
                   type="text"
-                  placeholder="votre identifiant ou email"
+                  placeholder={isEn ? "your username or email" : "votre identifiant ou email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -208,7 +220,7 @@ const MemberAuth = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="member-password">Mot de passe</Label>
+              <Label htmlFor="member-password">{isEn ? "Password" : "Mot de passe"}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -219,6 +231,7 @@ const MemberAuth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
                   required
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -232,7 +245,7 @@ const MemberAuth = () => {
 
             {mode === "signup" && (
               <div className="space-y-2">
-                <Label htmlFor="member-confirm-password">Confirmer le mot de passe</Label>
+                <Label htmlFor="member-confirm-password">{isEn ? "Confirm Password" : "Confirmer le mot de passe"}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -241,48 +254,47 @@ const MemberAuth = () => {
                     placeholder="••••••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 pr-10"
                     required
                   />
                 </div>
               </div>
             )}
 
-            <Button type="submit" className="w-full relative" disabled={isLoading}>
-              {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {isServerWaking ? "Réveil du serveur Render..." : "Connexion en cours..."}
+            {isServerWaking && (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-700 dark:text-amber-300 flex items-center gap-2">
+                <RefreshCw className="h-4 w-4 animate-spin shrink-0" />
+                <span>
+                  {isEn
+                    ? "Backend cloud server is waking up on Render. Please hold on a few seconds..."
+                    : "Le serveur cloud sécurisé se réveille sur Render. Veuillez patienter quelques secondes..."}
                 </span>
-              ) : mode === "signup" ? (
-                "Créer mon compte"
-              ) : (
-                "Se connecter"
-              )}
-            </Button>
-            {isLoading && isServerWaking && (
-              <p className="text-xs text-center text-amber-600 dark:text-amber-400 animate-pulse pt-1">
-                Le serveur sécurisé sort de veille (Render cloud). Veuillez patienter quelques secondes...
-              </p>
+              </div>
             )}
 
-            <div className="text-center text-sm text-muted-foreground pt-2">
+            <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-primary font-bold">
+              {isLoading
+                ? (isEn ? "Verifying..." : "Vérification en cours...")
+                : mode === "signup"
+                ? (isEn ? "Create Account" : "Créer mon compte")
+                : (isEn ? "Sign In" : "Se connecter")}
+            </Button>
+
+            <div className="text-center pt-2 text-xs">
               {mode === "signup" ? (
                 <button
                   type="button"
                   onClick={() => setMode("login")}
-                  className="text-primary hover:underline"
+                  className="text-primary hover:underline font-semibold"
                 >
-                  Déjà un compte ? Se connecter
+                  {isEn ? "Already have an account? Sign in" : "Déjà un compte ? Se connecter"}
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setMode("signup")}
-                  className="text-primary hover:underline"
-                >
-                  Pas encore de compte ? S'inscrire
-                </button>
+                <div className="flex flex-col gap-1.5 text-muted-foreground">
+                  <Link to="/adhesion" className="text-accent hover:underline font-semibold">
+                    {isEn ? "Not a member yet? Apply online" : "Pas encore membre ? Adhérer en ligne"}
+                  </Link>
+                </div>
               )}
             </div>
           </form>

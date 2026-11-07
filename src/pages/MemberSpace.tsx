@@ -20,11 +20,14 @@ import {
   Calendar,
   FileText,
   ArrowLeft,
-  LogIn,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
+import { useTranslation } from "react-i18next";
 
 const MemberSpace = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === "en";
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isAdmin, loading, signOut } = useAuth();
@@ -43,15 +46,15 @@ const MemberSpace = () => {
       setMembershipRequest(found || null);
     } catch {
       toast({
-        title: "Erreur",
-        description: "Impossible de récupérer les informations d'adhésion.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Unable to load membership details." : "Impossible de récupérer les informations d'adhésion.",
         variant: "destructive",
       });
       setMembershipRequest(null);
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, [isEn, toast]);
 
   useEffect(() => {
     if (loading) return;
@@ -73,188 +76,184 @@ const MemberSpace = () => {
     switch (status) {
       case "approved":
         return {
-          label: "Approuvée",
+          label: isEn ? "Approved" : "Approuvée",
           icon: CheckCircle,
           className: "bg-emerald-100 text-emerald-700 border-emerald-200",
-          description: "Félicitations ! Votre demande d'adhésion a été approuvée.",
+          description: isEn
+            ? "Congratulations! Your membership request has been officially approved."
+            : "Félicitations ! Votre demande d'adhésion a été approuvée.",
           color: "text-emerald-600",
         };
       case "rejected":
         return {
-          label: "Refusée",
+          label: isEn ? "Declined" : "Refusée",
           icon: XCircle,
           className: "bg-red-100 text-red-700 border-red-200",
-          description: "Votre demande n'a pas été retenue. Contactez-nous pour plus d'informations.",
+          description: isEn
+            ? "Your application was not accepted. Please reach out to us for more information."
+            : "Votre demande n'a pas été retenue. Contactez-nous pour plus d'informations.",
           color: "text-red-600",
         };
       default:
         return {
-          label: "En attente",
+          label: isEn ? "Under Review" : "En attente",
           icon: Clock,
           className: "bg-amber-100 text-amber-700 border-amber-200",
-          description: "Votre demande est en cours d'examen par notre équipe.",
+          description: isEn
+            ? "Your application is currently being evaluated by our admissions board."
+            : "Votre demande est en cours d'examen par notre équipe.",
           color: "text-amber-600",
         };
     }
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "Récemment";
-    return new Date(dateString).toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
-  if (loading) {
-    return (
-      <Layout>
-        <div className="min-h-screen flex items-center justify-center pt-20">
-          <RefreshCw className="h-10 w-10 animate-spin text-primary" />
-        </div>
-      </Layout>
-    );
-  }
+  const statusConfig = getStatusConfig(membershipRequest?.status || "pending");
+  const StatusIcon = statusConfig.icon;
 
   return (
     <Layout>
-      <div className="min-h-screen bg-muted/20 pt-24 pb-12">
-        <div className="container mx-auto px-4 max-w-4xl space-y-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="min-h-screen bg-muted/20 py-24 sm:py-32">
+        <div className="container-cdeco px-4 sm:px-6 max-w-4xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
             <div>
-              <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-2">
-                <ArrowLeft className="h-4 w-4" />
-                Retour au site
+              <Link to="/" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary mb-2 transition-colors">
+                <ArrowLeft className="w-3.5 h-3.5" />
+                {isEn ? "Back to Homepage" : "Retour à l'accueil"}
               </Link>
-              <h1 className="text-3xl font-heading font-bold">Espace Membre</h1>
-              <p className="text-muted-foreground">Suivi de votre statut d'adhérent CDECO</p>
+              <h1 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+                {isEn ? "Member Portal" : "Espace Membre"}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {isEn ? "Welcome," : "Bienvenue,"} <span className="font-semibold text-foreground">{user?.email}</span>
+              </p>
             </div>
-            {user && (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground">{user.email}</span>
-                <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-2 text-destructive">
-                  <LogOut className="h-4 w-4" />
-                  Déconnexion
-                </Button>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => user?.email && fetchMembershipByEmail(user.email)}
+                disabled={isLoading}
+                className="gap-1.5 text-xs"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+                {isEn ? "Refresh" : "Actualiser"}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5 text-xs text-muted-foreground">
+                <LogOut className="w-3.5 h-3.5" />
+                {isEn ? "Sign Out" : "Déconnexion"}
+              </Button>
+            </div>
           </div>
 
-          {!user && (
-            <Card className="max-w-xl mx-auto shadow-sm">
-              <CardHeader className="text-center">
-                <LogIn className="h-10 w-10 text-primary mx-auto mb-2" />
-                <CardTitle>Connexion requise</CardTitle>
-                <CardDescription>
-                  Connectez-vous avec l'adresse email utilisée lors de votre inscription pour accéder à votre espace.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Link to="/auth-membre" className="block">
-                  <Button className="w-full">Se connecter</Button>
-                </Link>
-                <Link to="/adhesion" className="block text-center text-sm text-primary hover:underline">
-                  Pas encore inscrit ? Remplir le formulaire d'adhésion
-                </Link>
-              </CardContent>
-            </Card>
-          )}
-
-          {isLoading && (
-            <div className="flex justify-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          )}
-
-          {!isLoading && hasSearched && !membershipRequest && user && (
-            <Card className="text-center p-8">
-              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-              <CardTitle className="text-xl mb-2">Aucune demande trouvée</CardTitle>
-              <CardDescription className="mb-6">
-                Aucune adhésion n'est associée à l'adresse <strong>{user.email}</strong>.
-              </CardDescription>
-              <Link to="/adhesion">
-                <Button>Faire une demande d'adhésion</Button>
-              </Link>
-            </Card>
-          )}
-
-          {!isLoading && membershipRequest && (
-            <div className="space-y-6">
-              {(() => {
-                const statusConfig = getStatusConfig(membershipRequest.status);
-                const StatusIcon = statusConfig.icon;
-                return (
-                  <Card className="shadow-sm overflow-hidden">
-                    <CardHeader className="pb-4">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
-                            <StatusIcon className={`h-6 w-6 ${statusConfig.color}`} />
-                          </div>
-                          <div>
-                            <CardTitle className="text-xl">Statut de votre demande</CardTitle>
-                            <CardDescription>{statusConfig.description}</CardDescription>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className={`text-sm px-3 py-1 ${statusConfig.className}`}>
-                          {statusConfig.label}
-                        </Badge>
+          {/* Statut Card */}
+          <Card className="border-border shadow-sm">
+            <CardHeader className="bg-muted/20 border-b pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base sm:text-lg">
+                    {isEn ? "Membership Application Status" : "Statut de votre demande d'adhésion"}
+                  </CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    {statusConfig.description}
+                  </CardDescription>
+                </div>
+                <Badge variant="outline" className={`gap-1.5 px-3 py-1 text-xs font-semibold ${statusConfig.className}`}>
+                  <StatusIcon className="w-3.5 h-3.5" />
+                  {statusConfig.label}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              {membershipRequest ? (
+                <div className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <User className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">{isEn ? "Full Name" : "Nom & Prénom"}</p>
+                        <p className="font-semibold text-sm">
+                          {membershipRequest.firstName} {membershipRequest.lastName}
+                        </p>
                       </div>
-                    </CardHeader>
-                    <CardContent className="text-sm text-muted-foreground flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>Transmise le {formatDate(membershipRequest.createdAt || membershipRequest.created_at)}</span>
-                    </CardContent>
-                  </Card>
-                );
-              })()}
+                    </div>
 
-              <Card className="shadow-sm">
-                <CardHeader className="border-b bg-muted/20">
-                  <CardTitle className="text-lg">Récapitulatif de votre profil</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 grid sm:grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg">
-                    <User className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Nom et prénom</p>
-                      <p className="font-medium">{membershipRequest.firstName || membershipRequest.first_name} {membershipRequest.lastName || membershipRequest.last_name}</p>
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <Building className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">{isEn ? "Category" : "Catégorie"}</p>
+                        <p className="font-semibold text-sm">
+                          {membershipRequest.memberType || (isEn ? "General Member" : "Membre Adhérent")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <Mail className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Email</p>
+                        <p className="font-semibold text-sm">{membershipRequest.email}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <Phone className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">{isEn ? "Phone" : "Téléphone"}</p>
+                        <p className="font-semibold text-sm">{membershipRequest.phone || "-"}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <MapPin className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">{isEn ? "Address / Headquarters" : "Adresse / Siège"}</p>
+                        <p className="font-semibold text-sm">{membershipRequest.address || "-"}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/40">
+                      <Calendar className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">{isEn ? "Application Date" : "Date de soumission"}</p>
+                        <p className="font-semibold text-sm">
+                          {new Date(membershipRequest.createdAt).toLocaleDateString(isEn ? "en-US" : "fr-FR")}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg">
-                    <Mail className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Email</p>
-                      <p className="font-medium">{membershipRequest.email}</p>
+
+                  {membershipRequest.motivation && (
+                    <div className="p-4 rounded-xl bg-muted/40 space-y-1">
+                      <p className="text-xs text-muted-foreground flex items-center gap-1.5 font-medium">
+                        <FileText className="w-3.5 h-3.5 text-accent" />
+                        {isEn ? "Expressed Motivation" : "Motivation exprimée"}
+                      </p>
+                      <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed italic">
+                        "{membershipRequest.motivation}"
+                      </p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg">
-                    <Phone className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Téléphone</p>
-                      <p className="font-medium">{membershipRequest.phone}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg">
-                    <Building className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Organisation</p>
-                      <p className="font-medium">{membershipRequest.organization || "Non spécifié"}</p>
-                    </div>
-                  </div>
-                  <div className="sm:col-span-2 flex items-center gap-3 p-3 bg-muted/40 rounded-lg">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Adresse</p>
-                      <p className="font-medium">{membershipRequest.address || "Non spécifiée"}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                  )}
+                </div>
+              ) : hasSearched ? (
+                <div className="text-center py-8 space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    {isEn
+                      ? "No active membership application was found for this email address."
+                      : "Aucun dossier d'adhésion en cours n'a été trouvé avec cette adresse email."}
+                  </p>
+                  <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-primary font-bold">
+                    <Link to="/adhesion">
+                      {isEn ? "Submit Membership Application" : "Déposer une demande d'adhésion"}
+                    </Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="py-8 text-center text-xs text-muted-foreground">
+                  {isEn ? "Loading dossier..." : "Chargement du dossier..."}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Layout>

@@ -17,7 +17,8 @@ import team1 from "@/assets/gallery/team-1.jpg";
 gsap.registerPlugin(ScrollTrigger);
 const defaultCarouselImages = [event1, event2, event3, event4, event5, team1];
 const HeroSection = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === "en";
   const { getMedia } = useSiteMedia();
   const customHero = getMedia("hero_banner", "");
   const carouselImages = useMemo(() => {
@@ -103,7 +104,7 @@ const HeroSection = () => {
                 <div className="h-px w-8 sm:w-12 bg-white/40" />
                 <span className="flex items-center gap-2 text-xs sm:text-sm font-medium uppercase tracking-[0.15em] text-white/90">
                   <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  République du Congo • {t("hero.badge")}
+                  {isEn ? "Republic of Congo" : "République du Congo"} • {t("hero.badge")}
                 </span>
                 <div className="h-px w-8 sm:w-12 bg-white/40" />
               </div>

@@ -20,31 +20,31 @@ import {
   Step3Motivation,
   Step4Recap,
 } from "@/components/adhesion/AdhesionWizardSteps";
-import { fadeInUp, fadeInDown, staggerContainer, staggerItem, scaleIn } from "@/animations/variants";
+import { useTranslation } from "react-i18next";
 
-const personalInfoSchema = z.object({
-  lastName: z.string().trim().min(2, "Le nom doit contenir au moins 2 caractères"),
-  firstName: z.string().trim().min(2, "Le prénom doit contenir au moins 2 caractères"),
-  age: z.string().refine((val) => {
-    const num = parseInt(val);
-    return !isNaN(num) && num >= 18 && num <= 120;
-  }, "L'âge doit être compris entre 18 et 120 ans"),
-  nationality: z.string().trim().min(2, "La nationalité est requise"),
-  phone: z.string().trim().min(8, "Numéro de téléphone invalide"),
-  email: z.string().trim().email("Adresse email invalide"),
-});
-
-const professionalInfoSchema = z.object({
-  memberType: z.string().min(1, "Veuillez sélectionner un type de membre"),
-  organization: z.string().trim().min(2, "L'organisation est requise"),
-  profession: z.string().trim().min(2, "La profession ou fonction est requise"),
-  address: z.string().trim().min(5, "L'adresse complète est requise"),
-});
-
-const motivationSchema = z.object({
-  motivation: z.string().trim().min(50, "Votre motivation doit contenir au moins 50 caractères"),
-  acceptStatutes: z.literal(true, {
-    errorMap: () => ({ message: "Vous devez accepter les statuts de la CDECO" }),
+const createValidationSchemas = (isEn: boolean) => ({
+  personal: z.object({
+    lastName: z.string().trim().min(2, isEn ? "Last name must contain at least 2 characters" : "Le nom doit contenir au moins 2 caractères"),
+    firstName: z.string().trim().min(2, isEn ? "First name must contain at least 2 characters" : "Le prénom doit contenir au moins 2 caractères"),
+    age: z.string().refine((val) => {
+      const num = parseInt(val);
+      return !isNaN(num) && num >= 18 && num <= 120;
+    }, isEn ? "Age must be between 18 and 120 years" : "L'âge doit être compris entre 18 et 120 ans"),
+    nationality: z.string().trim().min(2, isEn ? "Nationality is required" : "La nationalité est requise"),
+    phone: z.string().trim().min(8, isEn ? "Invalid phone number" : "Numéro de téléphone invalide"),
+    email: z.string().trim().email(isEn ? "Invalid email address" : "Adresse email invalide"),
+  }),
+  professional: z.object({
+    memberType: z.string().min(1, isEn ? "Please select a membership category" : "Veuillez sélectionner un type de membre"),
+    organization: z.string().trim().min(2, isEn ? "Organization or company name is required" : "L'organisation est requise"),
+    profession: z.string().trim().min(2, isEn ? "Profession or role is required" : "La profession ou fonction est requise"),
+    address: z.string().trim().min(5, isEn ? "Full address is required" : "L'adresse complète est requise"),
+  }),
+  motivation: z.object({
+    motivation: z.string().trim().min(50, isEn ? "Motivation statement must contain at least 50 characters" : "Votre motivation doit contenir au moins 50 caractères"),
+    acceptStatutes: z.literal(true, {
+      errorMap: () => ({ message: isEn ? "You must accept CDECO's statutes and bylaws" : "Vous devez accepter les statuts de la CDECO" }),
+    }),
   }),
 });
 
@@ -63,13 +63,6 @@ const initialFormData: AdhesionFormData = {
   acceptStatutes: false,
 };
 
-const steps = [
-  { id: 1, title: "Personnel", icon: User },
-  { id: 2, title: "Professionnel", icon: Briefcase },
-  { id: 3, title: "Motivation", icon: FileText },
-  { id: 4, title: "Validation", icon: CheckCircle },
-];
-
 const formStepVariants = {
   hidden: { opacity: 0, x: 20 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
@@ -77,6 +70,9 @@ const formStepVariants = {
 };
 
 const Adhesion = () => {
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === "en";
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<AdhesionFormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -93,6 +89,13 @@ const Adhesion = () => {
   const prefersReducedMotion = useReducedMotion();
   const formRef = useRef<HTMLDivElement>(null);
 
+  const steps = [
+    { id: 1, title: isEn ? "Personal" : "Personnel", icon: User },
+    { id: 2, title: isEn ? "Professional" : "Professionnel", icon: Briefcase },
+    { id: 3, title: isEn ? "Motivation" : "Motivation", icon: FileText },
+    { id: 4, title: isEn ? "Review" : "Validation", icon: CheckCircle },
+  ];
+
   const getVariants = (variant: any) => (prefersReducedMotion ? {} : variant);
 
   const updateFormData = (field: keyof AdhesionFormData, value: string | boolean) => {
@@ -103,10 +106,11 @@ const Adhesion = () => {
   };
 
   const validateStep = (step: number): boolean => {
+    const schemas = createValidationSchemas(isEn);
     try {
-      if (step === 1) personalInfoSchema.parse(formData);
-      else if (step === 2) professionalInfoSchema.parse(formData);
-      else if (step === 3) motivationSchema.parse(formData);
+      if (step === 1) schemas.personal.parse(formData);
+      else if (step === 2) schemas.professional.parse(formData);
+      else if (step === 3) schemas.motivation.parse(formData);
       setErrors({});
       return true;
     } catch (error) {
@@ -141,8 +145,10 @@ const Adhesion = () => {
   const handleSubmit = async () => {
     if (!checkRateLimit()) {
       toast({
-        title: "Trop de tentatives",
-        description: `Veuillez attendre ${getBlockTimeRemaining()} secondes avant de réessayer.`,
+        title: isEn ? "Too many attempts" : "Trop de tentatives",
+        description: isEn
+          ? `Please wait ${getBlockTimeRemaining()} seconds before trying again.`
+          : `Veuillez attendre ${getBlockTimeRemaining()} secondes avant de réessayer.`,
         variant: "destructive",
       });
       return;
@@ -168,13 +174,15 @@ const Adhesion = () => {
 
       setIsSubmitted(true);
       toast({
-        title: "Demande enregistrée !",
-        description: "Votre adhésion a été transmise à notre secrétariat général.",
+        title: isEn ? "Application Submitted!" : "Demande enregistrée !",
+        description: isEn
+          ? "Your membership dossier has been submitted to the secretariat."
+          : "Votre adhésion a été transmise à notre secrétariat général.",
       });
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Une erreur est survenue lors de l'enregistrement.";
+      const msg = error.response?.data?.message || (isEn ? "An error occurred while submitting." : "Une erreur est survenue lors de l'enregistrement.");
       toast({
-        title: "Échec de transmission",
+        title: isEn ? "Submission failed" : "Échec de transmission",
         description: msg,
         variant: "destructive",
       });
@@ -186,15 +194,28 @@ const Adhesion = () => {
   if (isSubmitted) {
     return (
       <Layout>
-        <SEOHead title="Demande Envoyée - CDECO" canonicalUrl="/adhesion" />
+        <SEOHead
+          title={isEn ? "Application Received - CDECO" : "Demande Envoyée - CDECO"}
+          canonicalUrl="/adhesion"
+        />
         <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground text-center px-4">
           <div className="container-cdeco max-w-2xl mx-auto space-y-4">
             <div className="w-16 h-16 rounded-full bg-accent/20 text-accent flex items-center justify-center mx-auto">
               <CheckCircle className="w-10 h-10" />
             </div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold">Demande d'adhésion reçue</h1>
+            <h1 className="font-heading text-3xl md:text-4xl font-bold">
+              {isEn ? "Membership Application Received" : "Demande d'adhésion reçue"}
+            </h1>
             <p className="text-primary-foreground/80 text-base md:text-lg">
-              Merci <strong className="text-white">{formData.firstName} {formData.lastName}</strong>. Votre dossier a été transmis à la commission d'examen des membres. Vous recevrez une notification par email à <strong className="text-white">{formData.email}</strong>.
+              {isEn ? (
+                <>
+                  Thank you <strong className="text-white">{formData.firstName} {formData.lastName}</strong>. Your application has been forwarded to the membership committee. You will receive an official notification at <strong className="text-white">{formData.email}</strong>.
+                </>
+              ) : (
+                <>
+                  Merci <strong className="text-white">{formData.firstName} {formData.lastName}</strong>. Votre dossier a été transmis à la commission d'examen des membres. Vous recevrez une notification par email à <strong className="text-white">{formData.email}</strong>.
+                </>
+              )}
             </p>
           </div>
         </section>
@@ -214,8 +235,12 @@ const Adhesion = () => {
   return (
     <Layout>
       <SEOHead
-        title="Adhésion - CDECO"
-        description="Rejoignez la Chambre de Diplomatie Économique du Congo. Devenez membre et bénéficiez d'opportunités uniques pour développer vos activités."
+        title={isEn ? "Join CDECO | Membership Application" : "Adhésion - CDECO"}
+        description={
+          isEn
+            ? "Join the Chamber of Economic Diplomacy of Congo. Become a member and unlock prestigious opportunities to scale your ventures."
+            : "Rejoignez la Chambre de Diplomatie Économique du Congo. Devenez membre et bénéficiez d'opportunités uniques pour développer vos activités."
+        }
         keywords="adhésion CDECO, membre, inscription, Congo, PME, PMI"
         canonicalUrl="/adhesion"
       />
@@ -272,7 +297,7 @@ const Adhesion = () => {
                     {currentStep > 1 ? (
                       <Button variant="outline" onClick={handlePrevious}>
                         <ChevronLeft className="w-4 h-4 mr-2" />
-                        Précédent
+                        {isEn ? "Previous" : "Précédent"}
                       </Button>
                     ) : (
                       <div />
@@ -280,12 +305,14 @@ const Adhesion = () => {
 
                     {currentStep < 4 ? (
                       <Button onClick={handleNext}>
-                        Suivant
+                        {isEn ? "Next" : "Suivant"}
                         <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
                     ) : (
                       <Button onClick={handleSubmit} disabled={isSubmitting}>
-                        {isSubmitting ? "Envoi en cours..." : "Soumettre mon adhésion"}
+                        {isSubmitting
+                          ? (isEn ? "Submitting..." : "Envoi en cours...")
+                          : (isEn ? "Submit Application" : "Soumettre mon adhésion")}
                       </Button>
                     )}
                   </div>
