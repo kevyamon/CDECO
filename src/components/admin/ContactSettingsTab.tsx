@@ -5,12 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 import { Phone, Mail, MapPin, Clock, Globe, Facebook, Linkedin, Twitter, Save, RefreshCw, GraduationCap } from "lucide-react";
 import { settingsService, ContactSettings, DEFAULT_CONTACT_SETTINGS } from "@/api/settingsService";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { AdminFormSkeleton } from "./AdminSkeletonLoader";
 
 export const ContactSettingsTab: FC = () => {
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === "en";
   const { updateSettingsLocal } = useSiteSettings();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -48,13 +52,15 @@ export const ContactSettingsTab: FC = () => {
       const updated = await settingsService.updateContactSettings(formData);
       updateSettingsLocal(updated || formData);
       toast({
-        title: "Paramètres enregistrés !",
-        description: "Les informations de contact et les données KAMPUS CDECO ont été mises à jour.",
+        title: isEn ? "Settings Saved!" : "Paramètres enregistrés !",
+        description: isEn
+          ? "Official contact details and KAMPUS CDECO info have been updated."
+          : "Les informations de contact et les données KAMPUS CDECO ont été mises à jour.",
       });
     } catch {
       toast({
-        title: "Erreur",
-        description: "Impossible d'enregistrer les paramètres.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Failed to save settings." : "Impossible d'enregistrer les paramètres.",
         variant: "destructive",
       });
     } finally {
@@ -80,7 +86,7 @@ export const ContactSettingsTab: FC = () => {
 
       <CardContent className="p-4 sm:p-6">
         {loading ? (
-          <div className="py-8 text-center text-xs text-muted-foreground">Chargement des paramètres...</div>
+          <AdminFormSkeleton />
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Section 1: Téléphone & Email */}

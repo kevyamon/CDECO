@@ -1,65 +1,50 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { z } from "zod";
-import { Eye, EyeOff, Lock, Mail, ArrowLeft, RefreshCw } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { authService } from "@/api/authService";
-import apiClient from "@/api/client";
-import logoCdeco from "@/assets/logo-cdeco.png";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { authService } from "@/api/authService";
+import { z } from "zod";
+import { ArrowLeft, Lock, Mail, Eye, EyeOff } from "lucide-react";
+import logo from "@/assets/logo-cdeco.png";
 
 const createAuthSchema = (isEn: boolean) =>
   z.object({
-    email: z
+    email: z.string().trim().min(1, isEn ? "Username or email is required." : "L'identifiant ou l'email est requis."),
+    password: z
       .string()
-      .min(3, isEn ? "Please provide a valid username or email" : "Veuillez renseigner un identifiant ou un email valide")
-      .toLowerCase()
-      .trim(),
-    password: z.string().min(1, isEn ? "Password is required" : "Le mot de passe est requis"),
+      .min(6, isEn ? "Password must be at least 6 characters." : "Le mot de passe doit contenir au moins 6 caractères."),
   });
 
 const MemberAuth = () => {
-  const { i18n } = useTranslation();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const isEn = i18n.language === "en";
 
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { user, isAdmin, loading } = useAuth();
-  const [searchParams] = useSearchParams();
-
-  const initialMode = searchParams.get("mode") === "signup" ? "signup" : "login";
-  const initialEmail = searchParams.get("email") || "";
-
-  const [email, setEmail] = useState(initialEmail);
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isServerWaking, setIsServerWaking] = useState(false);
-  const [mode, setMode] = useState<"login" | "signup">(initialMode);
-  const wakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    apiClient.get("/health").catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return;
-    if (isAdmin) {
-      navigate("/admin");
-    } else {
-      navigate("/espace-membre");
-    }
-  }, [user, isAdmin, loading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!navigator.onLine) {
+      toast({
+        title: isEn ? "No Internet Connection" : "Connexion Internet absente",
+        description: isEn
+          ? "You are currently offline. Please check your network connection and try again."
+          : "Vous êtes actuellement hors ligne. Veuillez vérifier votre connexion réseau et réessayer.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const authSchema = createAuthSchema(isEn);
     const validation = authSchema.safeParse({ email, password });
@@ -73,15 +58,9 @@ const MemberAuth = () => {
     }
 
     setIsLoading(true);
-    setIsServerWaking(false);
-
-    wakingTimerRef.current = setTimeout(() => {
-      setIsServerWaking(true);
-    }, 3500);
 
     try {
       const response = await authService.login(email, password);
-      if (wakingTimerRef.current) clearTimeout(wakingTimerRef.current);
 
       if (response.user.role === "admin") {
         toast({
@@ -97,15 +76,28 @@ const MemberAuth = () => {
         navigate("/espace-membre");
       }
     } catch (error: any) {
-      if (wakingTimerRef.current) clearTimeout(wakingTimerRef.current);
-      setIsServerWaking(false);
-
-      if (!error.response) {
+      if (!navigator.onLine || (error.code === "ERR_NETWORK" && !navigator.onLine)) {
         toast({
-          title: isEn ? "Server starting up" : "Serveur en cours de démarrage",
+          title: isEn ? "No Internet Connection" : "Connexion Internet absente",
           description: isEn
-            ? "The secure backend cloud server is waking up on Render. Please hold on 15 to 25 seconds then try again."
-            : "Le serveur sécurisé est en cours de réveil sur Render (cloud). Veuillez patienter 15 à 25 secondes puis réessayer.",
+            ? "Unable to reach the server. Please check your network connection."
+            : "Impossible de joindre le serveur. Veuillez vérifier votre connexion Internet.",
+          variant: "destructive",
+        });
+      } else if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+        toast({
+          title: isEn ? "Request Timed Out" : "Délai d'attente dépassé",
+          description: isEn
+            ? "The server took more than 60 seconds to respond. Please verify your connection and try again."
+            : "Le serveur a mis plus de 60 secondes à répondre. Veuillez vérifier votre connexion et réessayer.",
+          variant: "destructive",
+        });
+      } else if (!error.response) {
+        toast({
+          title: isEn ? "Service Temporarily Unavailable" : "Service temporairement indisponible",
+          description: isEn
+            ? "The server is taking longer than usual to respond. Please wait a few moments and try again."
+            : "Le serveur met plus de temps que d'habitude à répondre. Veuillez patienter un instant et réessayer.",
           variant: "destructive",
         });
       } else if (error.response.status === 429) {
@@ -129,12 +121,22 @@ const MemberAuth = () => {
       }
     } finally {
       setIsLoading(false);
-      setIsServerWaking(false);
     }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!navigator.onLine) {
+      toast({
+        title: isEn ? "No Internet Connection" : "Connexion Internet absente",
+        description: isEn
+          ? "You are currently offline. Please check your network connection and try again."
+          : "Vous êtes actuellement hors ligne. Veuillez vérifier votre connexion réseau et réessayer.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const authSchema = createAuthSchema(isEn);
     const validation = authSchema.safeParse({ email, password });
@@ -159,68 +161,84 @@ const MemberAuth = () => {
     setIsLoading(true);
 
     try {
-      await authService.login(email, password);
+      await authService.register(email, password);
       toast({
-        title: isEn ? "Account Configured" : "Compte configuré",
-        description: isEn ? "Your member credentials are ready." : "Votre compte membre est opérationnel.",
+        title: isEn ? "Account Created" : "Compte créé",
+        description: isEn ? "Your account was successfully registered. You can now log in." : "Votre compte a été créé. Vous pouvez désormais vous connecter.",
       });
-      navigate("/espace-membre");
-    } catch {
-      toast({
-        title: isEn ? "Information" : "Information",
-        description: isEn ? "Your account will be activated once your membership application is approved." : "Votre compte sera validé dès l'approbation de votre adhésion par le secrétariat.",
-      });
-      navigate("/adhesion");
+      setMode("login");
+    } catch (error: any) {
+      if (!navigator.onLine) {
+        toast({
+          title: isEn ? "No Internet Connection" : "Connexion Internet absente",
+          description: isEn ? "Network error. Please verify your connection." : "Erreur réseau. Veuillez vérifier votre connexion.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: isEn ? "Registration Failed" : "Échec d'inscription",
+          description: error.response?.data?.message || (isEn ? "Failed to create account. Please try again." : "Impossible de créer le compte. Veuillez réessayer."),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-muted/20 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md mb-4">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          {isEn ? "Return to CDECO Home" : "Retour au site CDECO"}
-        </Link>
-      </div>
-      <Card className="w-full max-w-md shadow-md border-border">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-3 h-16 w-16 rounded-2xl bg-white shadow-sm border border-border p-1.5 flex items-center justify-center overflow-hidden">
-            <img src={logoCdeco} alt="Logo CDECO" className="h-full w-full object-contain rounded-xl" />
+    <div className="min-h-screen bg-muted/30 flex flex-col items-center justify-center p-4">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {isEn ? "Return to CDECO Home" : "Retour à l'accueil CDECO"}
+      </Link>
+
+      <Card className="w-full max-w-md shadow-xl border-border">
+        <CardHeader className="text-center space-y-2 pb-6">
+          <div className="flex justify-center mb-2">
+            <div className="h-16 w-16 rounded-2xl bg-primary/5 p-2 border border-primary/10 flex items-center justify-center">
+              <img src={logo} alt="CDECO" className="h-full w-full object-contain" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-heading">
-            {mode === "signup"
-              ? (isEn ? "Create Member Account" : "Créer un compte membre")
-              : (isEn ? "CDECO Portal Sign In" : "Connexion CDECO")}
+          <CardTitle className="font-heading text-2xl font-bold">
+            {mode === "login"
+              ? (isEn ? "CDECO Portal Sign In" : "Connexion Portail CDECO")
+              : (isEn ? "Create Member Account" : "Créer un Compte Membre")}
           </CardTitle>
-          <CardDescription>
-            {mode === "signup"
-              ? (isEn ? "Create your login to monitor your membership status" : "Créez votre compte pour suivre le statut de votre demande d'adhésion")
-              : (isEn ? "Enter your credentials to access your member space" : "Renseignez vos identifiants pour accéder à votre espace")}
+          <CardDescription className="text-xs sm:text-sm">
+            {mode === "login"
+              ? (isEn ? "Enter your credentials to access your member space" : "Saisissez vos identifiants pour accéder à votre espace membre")
+              : (isEn ? "Fill in the form to register your account" : "Remplissez le formulaire pour enregistrer votre compte")}
           </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <form onSubmit={mode === "signup" ? handleSignup : handleLogin} className="space-y-4">
+          <form onSubmit={mode === "login" ? handleLogin : handleSignup} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="member-email">{isEn ? "Username or Email Address" : "Identifiant ou Adresse Email"}</Label>
+              <Label htmlFor="member-email" className="text-xs font-semibold">
+                {isEn ? "Username or Email Address" : "Identifiant ou Adresse Email"}
+              </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="member-email"
                   type="text"
-                  placeholder={isEn ? "your username or email" : "votre identifiant ou email"}
+                  placeholder={isEn ? "user@org or identifier" : "user@org ou identifiant"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
-                  autoComplete="username"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="member-password">{isEn ? "Password" : "Mot de passe"}</Label>
+              <Label htmlFor="member-password" className="text-xs font-semibold">
+                {isEn ? "Password" : "Mot de passe"}
+              </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -231,7 +249,6 @@ const MemberAuth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
                   required
-                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -245,7 +262,9 @@ const MemberAuth = () => {
 
             {mode === "signup" && (
               <div className="space-y-2">
-                <Label htmlFor="member-confirm-password">{isEn ? "Confirm Password" : "Confirmer le mot de passe"}</Label>
+                <Label htmlFor="member-confirm-password" className="text-xs font-semibold">
+                  {isEn ? "Confirm Password" : "Confirmer le mot de passe"}
+                </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -261,20 +280,9 @@ const MemberAuth = () => {
               </div>
             )}
 
-            {isServerWaking && (
-              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-700 dark:text-amber-300 flex items-center gap-2">
-                <RefreshCw className="h-4 w-4 animate-spin shrink-0" />
-                <span>
-                  {isEn
-                    ? "Backend cloud server is waking up on Render. Please hold on a few seconds..."
-                    : "Le serveur cloud sécurisé se réveille sur Render. Veuillez patienter quelques secondes..."}
-                </span>
-              </div>
-            )}
-
             <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-primary font-bold">
               {isLoading
-                ? (isEn ? "Verifying..." : "Vérification en cours...")
+                ? (isEn ? "Connecting..." : "Connexion en cours...")
                 : mode === "signup"
                 ? (isEn ? "Create Account" : "Créer mon compte")
                 : (isEn ? "Sign In" : "Se connecter")}

@@ -7,11 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 import { Calendar, PlusCircle, Edit2, Trash2, RefreshCw, Check, Sparkles, MapPin, X } from "lucide-react";
 import { DEFAULT_UPCOMING_EVENTS, DEFAULT_HIGHLIGHT_EVENTS, DEFAULT_PAST_EVENTS } from "@/components/events/defaultEventsData";
+import { AdminCardGridSkeleton } from "./AdminSkeletonLoader";
 
 export const EventsManagerTab: FC = () => {
   const { toast } = useToast();
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === "en";
   const [activeCategory, setActiveCategory] = useState<"upcoming" | "highlight" | "past">("upcoming");
   const [events, setEvents] = useState<CdecoEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -91,7 +95,11 @@ export const EventsManagerTab: FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title) {
-      toast({ title: "Titre requis", variant: "destructive" });
+      toast({
+        title: isEn ? "Title required" : "Titre requis",
+        description: isEn ? "Please specify an event title." : "Veuillez renseigner le titre de l'événement.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -115,30 +123,48 @@ export const EventsManagerTab: FC = () => {
     try {
       if (editingId && editingId.match(/^[0-9a-fA-F]{24}$/)) {
         await eventService.updateEvent(editingId, payload);
-        toast({ title: "Événement mis à jour avec succès !" });
+        toast({
+          title: isEn ? "Event Updated!" : "Événement mis à jour !",
+          description: isEn ? "Changes saved successfully." : "Les modifications ont été enregistrées avec succès.",
+        });
       } else {
         await eventService.createEvent(payload);
-        toast({ title: "Nouvel événement créé et publié !" });
+        toast({
+          title: isEn ? "New Event Published!" : "Nouvel événement publié !",
+          description: isEn ? "The event is now live." : "L'événement est désormais visible sur le site.",
+        });
       }
       resetForm();
       fetchEvents();
     } catch {
-      toast({ title: "Erreur lors de l'enregistrement", variant: "destructive" });
+      toast({
+        title: isEn ? "Error Saving Event" : "Erreur lors de l'enregistrement",
+        description: isEn ? "Failed to save event." : "Impossible d'enregistrer l'événement.",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string | number | undefined) => {
-    if (!id || !confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
+    const confirmMsg = isEn ? "Are you sure you want to delete this event?" : "Voulez-vous vraiment supprimer cet événement ?";
+    if (!id || !confirm(confirmMsg)) return;
     try {
       if (String(id).match(/^[0-9a-fA-F]{24}$/)) {
         await eventService.deleteEvent(String(id));
       }
       setEvents((prev) => prev.filter((e) => String(e._id || e.id) !== String(id)));
-      toast({ title: "Événement supprimé !" });
+      toast({
+        title: isEn ? "Event Deleted!" : "Événement supprimé !",
+        description: isEn ? "The event has been removed." : "L'événement a été retiré avec succès.",
+      });
     } catch {
-      toast({ title: "Erreur lors de la suppression", variant: "destructive" });
+      toast({
+        title: isEn ? "Delete Error" : "Erreur lors de la suppression",
+        description: isEn ? "Could not delete event." : "Impossible de supprimer l'événement.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -286,9 +312,11 @@ export const EventsManagerTab: FC = () => {
         {/* Liste des événements existants */}
         <CardContent className="p-4 sm:p-6">
           {loading ? (
-            <div className="py-8 text-center text-xs text-muted-foreground">Chargement des événements...</div>
+            <AdminCardGridSkeleton count={3} />
           ) : currentEvents.length === 0 ? (
-            <div className="py-8 text-center text-xs text-muted-foreground">Aucun événement enregistré dans cette catégorie.</div>
+            <div className="py-8 text-center text-xs text-muted-foreground">
+              {isEn ? "No events found in this category." : "Aucun événement enregistré dans cette catégorie."}
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {currentEvents.map((ev, index) => {

@@ -201,15 +201,36 @@ const Bureau = () => {
     }).catch(() => {});
   }, []);
 
-  const dynamicBureau = dbMembers.filter((m) => m.type === "bureau");
-  const dynamicCci = dbMembers.filter((m) => m.type === "cci");
+  const memberImageMap: Record<string, string> = {
+    "Arnold Wesley AKINA": presidentImg,
+    "Igor Theogene NDINGA": vicePresidentImg,
+    "Rachel NGUILI AKANDA": vicePresidenteImg,
+    "Makoumbou Laurensaint": secretaireImg,
+    "Grace BOUSSIMANITOU BENAZO": communicationImg,
+    "Dakar Boteba": tresoriereImg,
+    "Steve Patrick MBOUKOU": directeurKampusImg,
+    "NAJIB BREDAA": cciNajibImg,
+    "Deve MABOUNGOU": cciDeveImg,
+    "Dr Arsène TATSAZEU-KENFACK": cciArseneImg,
+    "Amina ONDZE": cciAminaImg,
+  };
+
+  const resolveMemberImage = (m: Member, fallback: string) => {
+    if (m.image && m.image.startsWith("http")) return m.image;
+    if (memberImageMap[m.name]) return memberImageMap[m.name];
+    if (m.image) return m.image;
+    return fallback;
+  };
+
+  const dynamicBureau = dbMembers.filter((m) => m.type === "bureau" || (m as any).category === "bureau");
+  const dynamicCci = dbMembers.filter((m) => m.type === "cci" || (m as any).category === "cci");
 
   const bureauToDisplay: FormattedMember[] = dynamicBureau.length > 0
     ? dynamicBureau.map((m) => ({
         name: m.name,
         role: isEn ? m.roleEn || m.role : m.role,
         description: isEn ? m.bioEn || m.bio || "" : m.bio || "",
-        image: m.image || presidentImg,
+        image: resolveMemberImage(m, presidentImg),
         roleColor: "bg-accent text-white",
       }))
     : defaultBureauMembers.map((m) => ({
@@ -223,7 +244,7 @@ const Bureau = () => {
         name: m.name,
         role: isEn ? m.roleEn || m.role : m.role,
         description: isEn ? m.bioEn || m.bio || "" : m.bio || "",
-        image: m.image || cciNajibImg,
+        image: resolveMemberImage(m, cciNajibImg),
         roleColor: "bg-primary text-white",
       }))
     : defaultCciMembers.map((m) => ({

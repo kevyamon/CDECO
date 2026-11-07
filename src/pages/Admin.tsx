@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 import { 
   LogOut, 
   Users, 
@@ -33,6 +34,8 @@ import { Badge } from "@/components/ui/badge";
 const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === "en";
   const { user, isAdmin, loading, signOut } = useAdminAuth();
 
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
@@ -84,14 +87,14 @@ const Admin = () => {
       setContactMessages(normalizedMessages);
     } catch {
       toast({
-        title: "Erreur de chargement",
-        description: "Impossible d'actualiser les données d'administration.",
+        title: isEn ? "Loading Error" : "Erreur de chargement",
+        description: isEn ? "Failed to refresh administration data." : "Impossible d'actualiser les données d'administration.",
         variant: "destructive",
       });
     } finally {
       setIsRefreshing(false);
     }
-  }, [toast]);
+  }, [isEn, toast]);
 
   useEffect(() => {
     if (user && isAdmin) {
@@ -106,13 +109,15 @@ const Admin = () => {
         prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r))
       );
       toast({
-        title: "Statut mis à jour",
-        description: `Demande marquée comme ${newStatus === "approved" ? "approuvée" : "rejetée"}.`,
+        title: isEn ? "Status Updated" : "Statut mis à jour",
+        description: isEn
+          ? `Application marked as ${newStatus === "approved" ? "approved" : "rejected"}.`
+          : `Demande marquée comme ${newStatus === "approved" ? "approuvée" : "rejetée"}.`,
       });
     } catch {
       toast({
-        title: "Erreur",
-        description: "Échec de la mise à jour du statut.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Failed to update status." : "Échec de la mise à jour du statut.",
         variant: "destructive",
       });
     }
@@ -123,13 +128,13 @@ const Admin = () => {
       await membershipService.deleteMembership(id);
       setMembershipRequests((prev) => prev.filter((r) => r.id !== id));
       toast({
-        title: "Demande supprimée",
-        description: "La demande d'adhésion a été définitivement supprimée.",
+        title: isEn ? "Application Deleted" : "Demande supprimée",
+        description: isEn ? "Membership application was permanently removed." : "La demande d'adhésion a été définitivement supprimée.",
       });
     } catch {
       toast({
-        title: "Erreur",
-        description: "Impossible de supprimer la demande.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Unable to delete application." : "Impossible de supprimer la demande.",
         variant: "destructive",
       });
     }
@@ -143,8 +148,8 @@ const Admin = () => {
       );
     } catch {
       toast({
-        title: "Erreur",
-        description: "Impossible de modifier l'état du message.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Unable to update message status." : "Impossible de modifier l'état du message.",
         variant: "destructive",
       });
     }
@@ -155,13 +160,13 @@ const Admin = () => {
       await contactService.deleteMessage(id);
       setContactMessages((prev) => prev.filter((m) => m.id !== id));
       toast({
-        title: "Message supprimé",
-        description: "Le message a été supprimé de la boîte de réception.",
+        title: isEn ? "Message Deleted" : "Message supprimé",
+        description: isEn ? "Message removed from inbox." : "Le message a été supprimé de la boîte de réception.",
       });
     } catch {
       toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le message.",
+        title: isEn ? "Error" : "Erreur",
+        description: isEn ? "Unable to delete message." : "Impossible de supprimer le message.",
         variant: "destructive",
       });
     }
