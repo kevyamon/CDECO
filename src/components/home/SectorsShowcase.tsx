@@ -129,7 +129,7 @@ const SectorsShowcase = () => {
     // Use requestAnimationFrame to batch DOM reads/writes
     requestAnimationFrame(() => {
       const elements = textContainerRef.current?.querySelectorAll(".animate-item");
-      if (!elements) return;
+      if (!elements || elements.length === 0) return;
       
       gsap.fromTo(elements, {
         opacity: 0,

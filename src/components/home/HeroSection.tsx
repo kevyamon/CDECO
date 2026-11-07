@@ -41,6 +41,7 @@ const HeroSection = () => {
   useEffect(() => {
     // Defer GSAP animations to avoid forced reflows during initial render
     const timeoutId = setTimeout(() => {
+      if (!badgeRef.current || !titleRef.current || !descRef.current || !ctaRef.current) return;
       const tl = gsap.timeline({
         defaults: {
           ease: "power3.out"

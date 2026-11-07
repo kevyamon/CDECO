@@ -81,42 +81,46 @@ const EconomicSectorsGrid = () => {
     if (!section || !header || !cards) return;
 
     // Animate header
-    gsap.fromTo(
-      header.children,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: header,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      }
-    );
+    if (header.children.length > 0) {
+      gsap.fromTo(
+        header.children,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: header,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
 
     // Animate cards with stagger
     const cardElements = cards.querySelectorAll(".sector-card");
-    gsap.fromTo(
-      cardElements,
-      { opacity: 0, y: 40, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        stagger: 0.12,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: cards,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      }
-    );
+    if (cardElements.length > 0) {
+      gsap.fromTo(
+        cardElements,
+        { opacity: 0, y: 40, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.12,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: cards,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
 
     // Animate progress bars
     cardElements.forEach((card) => {
