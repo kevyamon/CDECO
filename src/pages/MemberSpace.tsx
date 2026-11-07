@@ -58,18 +58,22 @@ const MemberSpace = () => {
 
   useEffect(() => {
     if (loading) return;
-    if (user && isAdmin) {
-      navigate("/admin");
+    if (!user) {
+      navigate("/auth-membre", { replace: true });
       return;
     }
-    if (user?.email && !isAdmin) {
+    if (isAdmin) {
+      navigate("/admin", { replace: true });
+      return;
+    }
+    if (user.email) {
       fetchMembershipByEmail(user.email);
     }
   }, [user, isAdmin, loading, fetchMembershipByEmail, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/");
+    navigate("/auth-membre", { replace: true });
   };
 
   const getStatusConfig = (status: string) => {
@@ -106,6 +110,23 @@ const MemberSpace = () => {
         };
     }
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-muted/20 py-24 sm:py-32 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3 text-muted-foreground text-sm">
+            <RefreshCw className="w-6 h-6 animate-spin text-accent" />
+            <p>{isEn ? "Checking session..." : "Vérification de session..."}</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const statusConfig = getStatusConfig(membershipRequest?.status || "pending");
   const StatusIcon = statusConfig.icon;
@@ -154,13 +175,17 @@ const MemberSpace = () => {
                     {isEn ? "Membership Application Status" : "Statut de votre demande d'adhésion"}
                   </CardTitle>
                   <CardDescription className="text-xs sm:text-sm">
-                    {statusConfig.description}
+                    {membershipRequest
+                      ? statusConfig.description
+                      : (isEn ? "Consult the status of your membership application." : "Consultez l'état d'avancement de votre dossier.")}
                   </CardDescription>
                 </div>
-                <Badge variant="outline" className={`gap-1.5 px-3 py-1 text-xs font-semibold ${statusConfig.className}`}>
-                  <StatusIcon className="w-3.5 h-3.5" />
-                  {statusConfig.label}
-                </Badge>
+                {membershipRequest && (
+                  <Badge variant="outline" className={`gap-1.5 px-3 py-1 text-xs font-semibold ${statusConfig.className}`}>
+                    <StatusIcon className="w-3.5 h-3.5" />
+                    {statusConfig.label}
+                  </Badge>
+                )}
               </div>
             </CardHeader>
             <CardContent className="p-6">

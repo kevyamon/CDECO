@@ -20,7 +20,9 @@ const Navbar = () => {
   const [isCdecoOpen, setIsCdecoOpen] = useState(false);
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  const { isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
+
+  const memberDestination = user ? (isAdmin ? "/admin" : "/espace-membre") : "/auth-membre";
 
   const [currentLang, setCurrentLang] = useState(() => {
     return (i18n.language || "fr").toUpperCase().substring(0, 2);
@@ -213,10 +215,10 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link to={isAdmin ? "/admin" : "/espace-membre"}>
+            <Link to={memberDestination}>
               <Button variant="outline" size="sm" className="gap-2">
                 <UserCircle className="h-4 w-4" />
-                {t("nav.memberSpace", "Espace Membre")}
+                {user ? (isAdmin ? "Admin" : t("nav.memberSpace", "Espace Membre")) : t("nav.memberSpace", "Espace Membre")}
               </Button>
             </Link>
 
@@ -250,6 +252,7 @@ const Navbar = () => {
           currentLang={currentLang}
           handleLanguageChange={handleLanguageChange}
           t={t}
+          user={user}
           isAdmin={isAdmin}
         />
       </nav>

@@ -23,6 +23,7 @@ interface NavbarMobileMenuProps {
   currentLang: string;
   handleLanguageChange: (lang: string) => void;
   t: any;
+  user?: any;
   isAdmin?: boolean;
 }
 
@@ -38,6 +39,7 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
   currentLang,
   handleLanguageChange,
   t,
+  user,
   isAdmin = false,
 }) => {
   const [mounted, setMounted] = useState(false);
@@ -183,10 +185,14 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
                   </Button>
                 </div>
 
-                <Link to={isAdmin ? "/admin" : "/espace-membre"} onClick={() => setIsOpen(false)} className="block">
+                <Link
+                  to={user ? (isAdmin ? "/admin" : "/espace-membre") : "/auth-membre"}
+                  onClick={() => setIsOpen(false)}
+                  className="block"
+                >
                   <Button variant="outline" className="w-full gap-2">
                     <UserCircle className="h-4 w-4" />
-                    {t("nav.memberSpace", "Espace Membre")}
+                    {user ? (isAdmin ? "Admin" : t("nav.memberSpace", "Espace Membre")) : t("nav.memberSpace", "Espace Membre")}
                   </Button>
                 </Link>
 
