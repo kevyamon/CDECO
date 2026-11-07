@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,13 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
   t,
   isAdmin = false,
 }) => {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const menuContent = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -53,7 +60,7 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
           />
 
           <motion.div
-            className="lg:hidden fixed top-0 right-0 h-full w-[280px] bg-background border-l border-border shadow-2xl z-[60]"
+            className="lg:hidden fixed top-0 right-0 h-full w-[280px] max-w-[85vw] bg-background border-l border-border shadow-2xl z-[60]"
             variants={mobileMenuSlide}
             initial="hidden"
             animate="visible"
@@ -79,6 +86,7 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
                 <motion.div variants={menuItem}>
                   <Link
                     to="/"
+                    onClick={() => setIsOpen(false)}
                     className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
                       pathname === "/"
                         ? "bg-accent/10 text-accent"
@@ -122,6 +130,7 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
                           >
                             <Link
                               to={item.href}
+                              onClick={() => setIsOpen(false)}
                               className={`block py-2 px-4 rounded-lg text-sm transition-colors ${
                                 pathname === item.href
                                   ? "bg-accent/10 text-accent"
@@ -141,6 +150,7 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
                   <motion.div key={link.href} variants={menuItem}>
                     <Link
                       to={link.href}
+                      onClick={() => setIsOpen(false)}
                       className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
                         pathname === link.href
                           ? "bg-accent/10 text-accent"
@@ -173,14 +183,14 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
                   </Button>
                 </div>
 
-                <Link to={isAdmin ? "/admin" : "/espace-membre"} className="block">
+                <Link to={isAdmin ? "/admin" : "/espace-membre"} onClick={() => setIsOpen(false)} className="block">
                   <Button variant="outline" className="w-full gap-2">
                     <UserCircle className="h-4 w-4" />
                     {t("nav.memberSpace", "Espace Membre")}
                   </Button>
                 </Link>
 
-                <Link to="/adhesion" className="block">
+                <Link to="/adhesion" onClick={() => setIsOpen(false)} className="block">
                   <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold">
                     {t("nav.joinNow", "Adhérer")}
                   </Button>
@@ -192,6 +202,12 @@ export const NavbarMobileMenu: FC<NavbarMobileMenuProps> = ({
       )}
     </AnimatePresence>
   );
+
+  if (!mounted || typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(menuContent, document.body);
 };
 
 export default NavbarMobileMenu;

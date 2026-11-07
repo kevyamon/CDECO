@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, ArrowUp } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter } from "lucide-react";
 import logo from "@/assets/logo-cdeco.png";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
 import FooterMobileAccordion from "./FooterMobileAccordion";
+import SmartScrollToTop from "./SmartScrollToTop";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,10 +32,6 @@ const Footer = () => {
       }
     );
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const quickLinks = [
     { name: t("nav.home", "Accueil"), href: "/" },
@@ -81,7 +78,9 @@ const Footer = () => {
         <div className="md:hidden space-y-4">
           <div className="space-y-4 pb-6 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="CDECO" width={57} height={48} className="h-12 w-auto" />
+              <div className="h-11 w-11 rounded-xl overflow-hidden bg-white/10 p-1 border border-white/20 flex items-center justify-center shrink-0">
+                <img src={logo} alt="CDECO" width={44} height={44} className="h-full w-full object-contain rounded-lg" />
+              </div>
               <div>
                 <span className="font-heading font-bold text-lg text-white">CDECO</span>
                 <p className="text-xs text-white/70">{t("hero.badge", "Diplomatie Économique")}</p>
@@ -101,7 +100,9 @@ const Footer = () => {
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="CDECO" width={57} height={48} className="h-12 w-auto" />
+              <div className="h-12 w-12 rounded-xl overflow-hidden bg-white/10 p-1 border border-white/20 flex items-center justify-center shrink-0">
+                <img src={logo} alt="CDECO" width={48} height={48} className="h-full w-full object-contain rounded-lg" />
+              </div>
               <div>
                 <span className="font-heading font-bold text-xl text-white">CDECO</span>
                 <p className="text-xs text-white/70">{t("hero.badge", "Diplomatie Économique")}</p>
@@ -206,14 +207,8 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bouton retour en haut */}
-      <button
-        onClick={scrollToTop}
-        className="fixed bottom-6 right-6 w-11 h-11 rounded-xl bg-accent text-white shadow-lg hover:scale-105 transition-all flex items-center justify-center z-40"
-        aria-label="Remonter en haut de page"
-      >
-        <ArrowUp className="h-5 w-5" />
-      </button>
+      {/* Bouton retour en haut intelligent avec auto-masquage */}
+      <SmartScrollToTop />
     </footer>
   );
 };

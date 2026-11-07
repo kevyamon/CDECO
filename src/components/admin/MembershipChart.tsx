@@ -73,20 +73,20 @@ const MembershipChart = ({ requests }: MembershipChartProps) => {
   const growth = lastMonth > 0 ? Math.round(((totalThisMonth - lastMonth) / lastMonth) * 100) : 0;
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
+    <Card className="shadow-sm w-full min-w-0 overflow-hidden">
+      <CardHeader className="pb-2 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary shrink-0" />
               Évolution des demandes
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               Demandes d'adhésion des 6 derniers mois
             </CardDescription>
           </div>
           {growth !== 0 && (
-            <div className={`text-sm font-medium px-3 py-1 rounded-full ${
+            <div className={`text-xs sm:text-sm font-medium px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full w-fit ${
               growth > 0 
                 ? "bg-emerald-100 text-emerald-700" 
                 : "bg-red-100 text-red-700"
@@ -96,8 +96,8 @@ const MembershipChart = ({ requests }: MembershipChartProps) => {
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[280px] w-full">
+      <CardContent className="p-2 sm:p-6 overflow-hidden">
+        <ChartContainer config={chartConfig} className="h-[220px] sm:h-[280px] w-full min-w-0 overflow-hidden">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>

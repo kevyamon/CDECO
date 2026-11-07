@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { z } from "zod";
-import { Eye, EyeOff, Lock, Mail, UserPlus, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/api/authService";
+import apiClient from "@/api/client";
+import logoCdeco from "@/assets/logo-cdeco.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +31,14 @@ const MemberAuth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isServerWaking, setIsServerWaking] = useState(false);
   const [mode, setMode] = useState<"login" | "signup">(initialMode);
+  const wakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Réveil silencieux anticipé de l'instance cloud Render dès l'accès à la page
+  useEffect(() => {
+    apiClient.get("/health").catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -55,9 +64,17 @@ const MemberAuth = () => {
     }
 
     setIsLoading(true);
+    setIsServerWaking(false);
+
+    // Déclenche un indicateur prévenant après 3.5s si Render est en phase de boot
+    wakingTimerRef.current = setTimeout(() => {
+      setIsServerWaking(true);
+    }, 3500);
 
     try {
       const response = await authService.login(email, password);
+      if (wakingTimerRef.current) clearTimeout(wakingTimerRef.current);
+
       if (response.user.role === "admin") {
         toast({
           title: "Accès Administrateur",
@@ -72,14 +89,37 @@ const MemberAuth = () => {
         navigate("/espace-membre");
       }
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Identifiants incorrects.";
-      toast({
-        title: "Erreur de connexion",
-        description: msg,
-        variant: "destructive",
-      });
+      if (wakingTimerRef.current) clearTimeout(wakingTimerRef.current);
+      setIsServerWaking(false);
+
+      if (!error.response) {
+        toast({
+          title: "Serveur en cours de démarrage",
+          description: "Le serveur sécurisé est en cours de réveil sur Render (cloud). Veuillez patienter 15 à 25 secondes puis réessayer.",
+          variant: "destructive",
+        });
+      } else if (error.response.status === 429) {
+        toast({
+          title: "Sécurité / Limite de débit",
+          description: error.response.data?.message || "Trop de tentatives consécutives. Veuillez patienter avant de réessayer.",
+          variant: "destructive",
+        });
+      } else if (error.response.status === 401 || error.response.status === 400) {
+        toast({
+          title: "Erreur d'authentification",
+          description: error.response.data?.message || "Identifiant ou mot de passe incorrect.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erreur de connexion",
+          description: error.response.data?.message || "Une erreur est survenue lors de la communication avec le serveur.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
+      setIsServerWaking(false);
     }
   };
 
@@ -136,8 +176,8 @@ const MemberAuth = () => {
       </div>
       <Card className="w-full max-w-md shadow-md border-border">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-            {mode === "signup" ? <UserPlus className="h-7 w-7" /> : <Lock className="h-7 w-7" />}
+          <div className="mx-auto mb-3 h-16 w-16 rounded-2xl bg-white shadow-sm border border-border p-1.5 flex items-center justify-center overflow-hidden">
+            <img src={logoCdeco} alt="Logo CDECO" className="h-full w-full object-contain rounded-xl" />
           </div>
           <CardTitle className="text-2xl font-heading">
             {mode === "signup" ? "Créer un compte membre" : "Connexion CDECO"}
@@ -208,9 +248,23 @@ const MemberAuth = () => {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Chargement..." : mode === "signup" ? "Créer mon compte" : "Se connecter"}
+            <Button type="submit" className="w-full relative" disabled={isLoading}>
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  {isServerWaking ? "Réveil du serveur Render..." : "Connexion en cours..."}
+                </span>
+              ) : mode === "signup" ? (
+                "Créer mon compte"
+              ) : (
+                "Se connecter"
+              )}
             </Button>
+            {isLoading && isServerWaking && (
+              <p className="text-xs text-center text-amber-600 dark:text-amber-400 animate-pulse pt-1">
+                Le serveur sécurisé sort de veille (Render cloud). Veuillez patienter quelques secondes...
+              </p>
+            )}
 
             <div className="text-center text-sm text-muted-foreground pt-2">
               {mode === "signup" ? (

@@ -101,7 +101,9 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group focus-visible:outline-primary">
             <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-              <img src={logoCdeco} alt="Logo CDECO" width={57} height={48} className="h-10 sm:h-12 w-auto" />
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl overflow-hidden bg-white/95 p-1 shadow-sm border border-white/20 flex items-center justify-center shrink-0">
+                <img src={logoCdeco} alt="Logo CDECO" width={48} height={48} className="h-full w-full object-contain rounded-lg" />
+              </div>
             </motion.div>
             <div className="flex flex-col">
               <span

@@ -86,18 +86,18 @@ const ContactMessagesTable = ({
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+        <div className="relative flex-1 w-full max-w-full sm:max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Rechercher un message..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 w-full"
           />
         </div>
         <Select value={readFilter} onValueChange={setReadFilter}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Filtrer" />
           </SelectTrigger>
           <SelectContent>
@@ -121,7 +121,7 @@ const ContactMessagesTable = ({
           <p>Aucun message trouvé</p>
         </div>
       ) : (
-        <div className="rounded-lg border overflow-hidden">
+        <div className="rounded-lg border overflow-x-auto w-full max-w-full">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">

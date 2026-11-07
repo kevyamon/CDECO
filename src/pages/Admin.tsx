@@ -185,36 +185,43 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="min-h-screen bg-muted/20 w-full overflow-x-hidden">
       {/* Barre supérieure */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-              <Home className="h-5 w-5" />
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur w-full">
+        <div className="container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 max-w-full">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors shrink-0" title="Retour au site">
+              <Home className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
-            <span className="text-muted-foreground">/</span>
-            <h1 className="font-heading font-bold text-lg md:text-xl text-foreground">
+            <span className="text-muted-foreground shrink-0">/</span>
+            <h1 className="font-heading font-bold text-sm sm:text-base md:text-xl text-foreground truncate">
               Dashboard Administration CDECO
             </h1>
-            <Badge variant="secondary" className="hidden sm:inline-flex bg-primary/10 text-primary">
+            <Badge variant="secondary" className="hidden md:inline-flex bg-primary/10 text-primary shrink-0 text-xs">
               MERN Stack
             </Badge>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={fetchData}
               disabled={isRefreshing}
-              className="gap-2"
+              className="gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-9"
+              title="Actualiser les données"
             >
-              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isRefreshing ? "animate-spin" : ""}`} />
               <span className="hidden sm:inline">Actualiser</span>
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2 text-destructive hover:text-destructive">
-              <LogOut className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignOut}
+              className="gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-9 text-destructive hover:text-destructive"
+              title="Déconnexion"
+            >
+              <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Déconnexion</span>
             </Button>
           </div>
@@ -222,27 +229,27 @@ const Admin = () => {
       </header>
 
       {/* Contenu principal */}
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-6 sm:space-y-8 max-w-full overflow-x-hidden">
         {/* Cartes de statistiques */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           <StatsCard
             title="Total Adhésions"
             value={membershipRequests.length}
-            subtitle="Toutes catégories confondues"
+            subtitle="Toutes catégories"
             icon={Users}
             iconClassName="bg-primary/10"
           />
           <StatsCard
             title="En attente"
             value={pendingCount}
-            subtitle="Demandes à valider"
+            subtitle="À valider"
             icon={Clock}
             iconClassName="bg-amber-500/10"
           />
           <StatsCard
-            title="Taux d'approbation"
+            title="Taux approbation"
             value={`${approvalRate}%`}
-            subtitle={`${approvedCount} adhésions validées`}
+            subtitle={`${approvedCount} validées`}
             icon={TrendingUp}
             iconClassName="bg-emerald-500/10"
           />
@@ -256,42 +263,46 @@ const Admin = () => {
         </div>
 
         {/* Évolution des adhésions */}
-        <MembershipChart requests={membershipRequests} />
+        <div className="w-full min-w-0 overflow-hidden">
+          <MembershipChart requests={membershipRequests} />
+        </div>
 
         {/* Onglets d'administration */}
-        <Tabs defaultValue="memberships" className="space-y-6">
-          <TabsList className="bg-muted/50 p-1">
-            <TabsTrigger value="memberships" className="gap-2">
-              <Users className="h-4 w-4" />
-              Demandes d'adhésion
-              {pendingCount > 0 && (
-                <Badge className="ml-1 h-5 min-w-5 px-1.5 flex items-center justify-center text-xs bg-amber-500 text-white">
-                  {pendingCount}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="messages" className="gap-2">
-              <Mail className="h-4 w-4" />
-              Messages
-              {unreadCount > 0 && (
-                <Badge className="ml-1 h-5 min-w-5 px-1.5 flex items-center justify-center text-xs bg-primary">
-                  {unreadCount}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="media" className="gap-2">
-              <ImageIcon className="h-4 w-4" />
-              Médiathèque Cloudinary
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="memberships" className="space-y-4 sm:space-y-6 w-full min-w-0">
+          <div className="w-full overflow-x-auto pb-1 scrollbar-none">
+            <TabsList className="inline-flex w-auto min-w-full sm:min-w-0 sm:w-auto p-1 bg-muted/60 justify-start sm:justify-center gap-1">
+              <TabsTrigger value="memberships" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Adhésions</span>
+                {pendingCount > 0 && (
+                  <Badge className="ml-0.5 h-4 sm:h-5 min-w-4 px-1 flex items-center justify-center text-[10px] sm:text-xs bg-amber-500 text-white">
+                    {pendingCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="messages" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Messages</span>
+                {unreadCount > 0 && (
+                  <Badge className="ml-0.5 h-4 sm:h-5 min-w-4 px-1 flex items-center justify-center text-[10px] sm:text-xs bg-primary text-white">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="media" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Médiathèque</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="memberships">
-            <Card className="shadow-sm">
-              <CardHeader className="border-b bg-muted/20">
-                <CardTitle className="text-lg">Demandes d'adhésion</CardTitle>
-                <CardDescription>Gérez et validez les adhésions des particuliers et entreprises.</CardDescription>
+          <TabsContent value="memberships" className="w-full min-w-0">
+            <Card className="shadow-sm w-full overflow-hidden">
+              <CardHeader className="border-b bg-muted/20 p-4 sm:p-6">
+                <CardTitle className="text-base sm:text-lg">Demandes d'adhésion</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">Gérez et validez les adhésions des particuliers et entreprises.</CardDescription>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-6 overflow-x-auto">
                 <MembershipRequestsTable
                   requests={membershipRequests}
                   onUpdateStatus={updateRequestStatus}
@@ -301,13 +312,13 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="messages">
-            <Card className="shadow-sm">
-              <CardHeader className="border-b bg-muted/20">
-                <CardTitle className="text-lg">Messages de contact</CardTitle>
-                <CardDescription>Consultez les messages reçus depuis le site officiel.</CardDescription>
+          <TabsContent value="messages" className="w-full min-w-0">
+            <Card className="shadow-sm w-full overflow-hidden">
+              <CardHeader className="border-b bg-muted/20 p-4 sm:p-6">
+                <CardTitle className="text-base sm:text-lg">Messages de contact</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">Consultez les messages reçus depuis le site officiel.</CardDescription>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-6 overflow-x-auto">
                 <ContactMessagesTable
                   messages={contactMessages}
                   onMarkAsRead={markMessageAsRead}
@@ -317,7 +328,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="media">
+          <TabsContent value="media" className="w-full min-w-0">
             <MediaManagerTab />
           </TabsContent>
         </Tabs>
