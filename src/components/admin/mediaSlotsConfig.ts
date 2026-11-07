@@ -189,6 +189,7 @@ export const KEY_SLOTS: MediaSlot[] = [
 export interface DestinationCategory {
   value: "gallery" | "partner" | "leadership" | "kampus" | "resources" | "general";
   label: string;
+  shortTarget: string;
   pageTarget: string;
   hint: string;
 }
@@ -196,38 +197,44 @@ export interface DestinationCategory {
 export const DESTINATION_CATEGORIES: DestinationCategory[] = [
   {
     value: "gallery",
-    label: "Événements & Conférences (Galerie Photos)",
-    pageTarget: "Page /evenements",
+    label: "Événements & Conférences",
+    shortTarget: "/evenements",
+    pageTarget: "Page Événements (/evenements)",
     hint: "La photo s'affichera immédiatement dans la galerie des moments forts de la page Événements.",
   },
   {
     value: "partner",
-    label: "Partenaires & Institutions (Logos Officiels)",
-    pageTarget: "Page d'Accueil /",
+    label: "Logos Partenaires",
+    shortTarget: "Accueil /",
+    pageTarget: "Page d'Accueil (Réseau Partenaires)",
     hint: "Le logo sera automatiquement intégré au bandeau de défilement des partenaires officiels.",
   },
   {
     value: "leadership",
-    label: "Gouvernance & Présidence (Audiences & Bureau)",
-    pageTarget: "Pages /cdeco/message-president et /cdeco/bureau",
+    label: "Présidence & Bureau",
+    shortTarget: "Pages CDECO",
+    pageTarget: "Pages Présidence & Bureau (/cdeco/...)",
     hint: "Photos officielles des audiences de la présidence et portraits des membres du bureau.",
   },
   {
     value: "kampus",
-    label: "KAMPUS CDECO (Sessions & Ateliers)",
-    pageTarget: "Page /kampus-cdeco",
+    label: "KAMPUS CDECO",
+    shortTarget: "/kampus-cdeco",
+    pageTarget: "Page KAMPUS CDECO (/kampus-cdeco)",
     hint: "Photos des ateliers pratiques, formations de cadres et promotions d'étudiants KAMPUS.",
   },
   {
     value: "resources",
-    label: "Ressources & Publications (Couvertures de Guides)",
-    pageTarget: "Page /ressources",
+    label: "Ressources & Guides",
+    shortTarget: "/ressources",
+    pageTarget: "Page Ressources (/ressources)",
     hint: "Visuels de couverture pour les rapports économiques, guides sectoriels et documents.",
   },
   {
     value: "general",
-    label: "Presse & Archives Officielles (Usage Général)",
-    pageTarget: "Documentation générale",
+    label: "Presse & Archives",
+    shortTarget: "Archives",
+    pageTarget: "Documentation & Presse générale",
     hint: "Banque d'images institutionnelles pour les communiqués et la communication globale.",
   },
 ];

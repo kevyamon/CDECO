@@ -50,11 +50,7 @@ export const MediaManagerTab = () => {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      toast({
-        title: "Fichier requis",
-        description: "Veuillez sélectionner un fichier image à téléverser.",
-        variant: "destructive",
-      });
+      toast({ title: "Fichier requis", description: "Veuillez sélectionner un fichier image à téléverser.", variant: "destructive" });
       return;
     }
 
@@ -62,8 +58,7 @@ export const MediaManagerTab = () => {
     try {
       const formData = new FormData();
       formData.append("image", file);
-      const generatedKey = `${category}_${Date.now()}`;
-      formData.append("key", generatedKey);
+      formData.append("key", `${category}_${Date.now()}`);
       formData.append("title", title || file.name);
       formData.append("category", category);
       formData.append("altText", altText || title || "Photo officielle CDECO");
@@ -75,7 +70,6 @@ export const MediaManagerTab = () => {
         description: `Le média "${title || file.name}" a été publié dans la section ${activeCategoryConfig?.label || category}.`,
       });
 
-      // Réinitialisation
       setFile(null);
       setTitle("");
       setAltText("");
@@ -83,12 +77,7 @@ export const MediaManagerTab = () => {
       if (fileInput) fileInput.value = "";
       fetchMedias();
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Échec de l'enregistrement du média.";
-      toast({
-        title: "Erreur de téléversement",
-        description: msg,
-        variant: "destructive",
-      });
+      toast({ title: "Erreur de téléversement", description: error.response?.data?.message || "Échec de l'enregistrement.", variant: "destructive" });
     } finally {
       setUploading(false);
     }
@@ -96,20 +85,12 @@ export const MediaManagerTab = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Voulez-vous vraiment supprimer définitivement ce média du site ?")) return;
-
     try {
       await mediaService.deleteMedia(id);
       setMedias((prev) => prev.filter((m) => (m._id || m.id) !== id));
-      toast({
-        title: "Média supprimé",
-        description: "La ressource a été retirée du site.",
-      });
+      toast({ title: "Média supprimé", description: "La ressource a été retirée du site." });
     } catch {
-      toast({
-        title: "Erreur",
-        description: "Échec de la suppression du média.",
-        variant: "destructive",
-      });
+      toast({ title: "Erreur", description: "Échec de la suppression du média.", variant: "destructive" });
     }
   };
 
@@ -117,10 +98,7 @@ export const MediaManagerTab = () => {
     navigator.clipboard.writeText(url);
     setCopiedKey(id);
     setTimeout(() => setCopiedKey(null), 2000);
-    toast({
-      title: "Lien copié",
-      description: "Le lien direct a été copié dans le presse-papiers.",
-    });
+    toast({ title: "Lien copié", description: "Le lien direct a été copié dans le presse-papiers." });
   };
 
   const filteredMedias = filterCategory === "all"
@@ -159,9 +137,16 @@ export const MediaManagerTab = () => {
                   id="media-file"
                   type="file"
                   accept="image/*"
+                  className="cursor-pointer file:cursor-pointer file:text-xs file:font-semibold file:text-primary file:bg-primary/10 file:rounded-md file:border-0 file:px-2.5 file:py-1 file:mr-2 hover:border-accent/60 transition-colors text-xs"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                   required
                 />
+                {file && (
+                  <p className="text-[11px] text-emerald-600 font-medium truncate flex items-center gap-1">
+                    <Check className="w-3 h-3 shrink-0" />
+                    Sélectionné : {file.name} ({(file.size / 1024).toFixed(0)} Ko)
+                  </p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -170,15 +155,31 @@ export const MediaManagerTab = () => {
                   value={category}
                   onValueChange={(v: DestinationCategory["value"]) => setCategory(v)}
                 >
-                  <SelectTrigger id="media-category">
-                    <SelectValue placeholder="Choisir l'emplacement" />
+                  <SelectTrigger
+                    id="media-category"
+                    className="w-full min-h-[46px] h-auto py-2 px-3 text-left bg-background border border-input rounded-md flex items-center justify-between text-xs sm:text-sm shadow-sm [&>span]:w-full [&>span]:line-clamp-none hover:border-accent/60 transition-colors"
+                  >
+                    <SelectValue>
+                      <div className="flex items-center justify-between gap-2 w-full text-left pr-2">
+                        <span className="font-semibold text-foreground truncate">
+                          {activeCategoryConfig?.label || "Choisir l'emplacement"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0 font-normal">
+                          {activeCategoryConfig?.shortTarget}
+                        </span>
+                      </div>
+                    </SelectValue>
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="w-[calc(100vw-2.5rem)] sm:w-[var(--radix-select-trigger-width)] max-w-[460px] p-1.5 shadow-xl border border-border z-50">
                     {DESTINATION_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat.value} value={cat.value}>
-                        <div className="flex flex-col text-left py-0.5">
-                          <span className="font-semibold">{cat.label}</span>
-                          <span className="text-[11px] text-muted-foreground">{cat.pageTarget}</span>
+                      <SelectItem key={cat.value} value={cat.value} className="py-2.5 px-3 cursor-pointer">
+                        <div className="flex items-center justify-between gap-2 w-full text-left">
+                          <span className="font-semibold text-xs sm:text-sm text-foreground truncate">
+                            {cat.label}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0 font-normal">
+                            {cat.shortTarget}
+                          </span>
                         </div>
                       </SelectItem>
                     ))}
@@ -203,7 +204,7 @@ export const MediaManagerTab = () => {
                 <Label htmlFor="media-title">Titre ou Sujet du média *</Label>
                 <Input
                   id="media-title"
-                  placeholder="ex: Conférence de Paris 2026, Logo Banque Mondiale..."
+                  placeholder="ex: Sommet de Paris 2026, Logo BCI..."
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
