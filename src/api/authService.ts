@@ -36,12 +36,15 @@ export const authService = {
   },
 
   async getMe(): Promise<UserProfile | null> {
-    const token = localStorage.getItem("cdeco_access_token");
+    const token = typeof window !== "undefined" ? localStorage.getItem("cdeco_access_token") : null;
     if (!token) return null;
     try {
       const response = await apiClient.get<{ success: boolean; user: UserProfile }>("/auth/me");
       return response.data.user;
-    } catch {
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        throw err;
+      }
       return null;
     }
   },

@@ -32,6 +32,18 @@ const MemberAuth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    // Préchargement en arrière-plan du module Admin pour une redirection à 0ms
+    const preloadAdmin = () => {
+      import("@/pages/Admin");
+    };
+    if ("requestIdleCallback" in window) {
+      (window as any).requestIdleCallback(preloadAdmin);
+    } else {
+      setTimeout(preloadAdmin, 200);
+    }
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -67,7 +79,7 @@ const MemberAuth = () => {
           title: isEn ? "Admin Portal Access" : "Accès Administrateur",
           description: isEn ? "Welcome to CDECO management dashboard." : "Bienvenue dans le tableau de bord de gestion CDECO.",
         });
-        navigate("/admin");
+        navigate("/admin", { replace: true });
       } else {
         toast({
           title: isEn ? "Login Successful" : "Connexion réussie",

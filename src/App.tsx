@@ -40,6 +40,7 @@ import RouteProgressBar from "@/components/layout/RouteProgressBar";
 
 // Page d'accueil chargée immédiatement (above the fold)
 import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
 
 // Lazy loading avec tolérance aux coupures réseau et reconnexions automatiques
 const Events = lazyWithRetry(() => import("./pages/Events"));
@@ -50,7 +51,6 @@ const Auth = lazyWithRetry(() => import("./pages/Auth"));
 const Admin = lazyWithRetry(() => import("./pages/Admin"));
 const MemberSpace = lazyWithRetry(() => import("./pages/MemberSpace"));
 const MemberAuth = lazyWithRetry(() => import("./pages/MemberAuth"));
-const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 const Resources = lazyWithRetry(() => import("./pages/Resources"));
 const KampusCdeco = lazyWithRetry(() => import("./pages/KampusCdeco"));
 const LeCongo = lazyWithRetry(() => import("./pages/LeCongo"));
@@ -65,6 +65,30 @@ const Bureau = lazyWithRetry(() => import("./pages/cdeco/Bureau"));
  * Client React Query pour la gestion du cache des requêtes API
  */
 const queryClient = new QueryClient();
+
+/**
+ * Gardien strict pour /admin :
+ * Rend immédiatement la page 404 si l'utilisateur n'est pas un administrateur connecté.
+ */
+const AdminGuard = () => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("cdeco_access_token") : null;
+  const raw = typeof window !== "undefined" ? localStorage.getItem("cdeco_admin_user") : null;
+  let isAuthorized = false;
+  if (token && raw) {
+    try {
+      const user = JSON.parse(raw);
+      isAuthorized = user?.role === "admin";
+    } catch {
+      isAuthorized = false;
+    }
+  }
+
+  if (!isAuthorized) {
+    return <NotFound />;
+  }
+
+  return <Admin />;
+};
 
 /**
  * Composant principal de l'application
@@ -104,7 +128,7 @@ const App = () => {
               <Route path="/auth-membre" element={<MemberAuth />} />
               
               {/* Pages protégées */}
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin" element={<AdminGuard />} />
               <Route path="/espace-membre" element={<MemberSpace />} />
               
               {/* Pages de contenu */}

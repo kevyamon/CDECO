@@ -29,6 +29,8 @@ import EventsManagerTab from "@/components/admin/EventsManagerTab";
 import ContactSettingsTab from "@/components/admin/ContactSettingsTab";
 import BureauManagerTab from "@/components/admin/BureauManagerTab";
 import ResourcesManagerTab from "@/components/admin/ResourcesManagerTab";
+import NotFound from "@/pages/NotFound";
+import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 
 const Admin = () => {
@@ -41,12 +43,6 @@ const Admin = () => {
   const [membershipRequests, setMembershipRequests] = useState<any[]>([]);
   const [contactMessages, setContactMessages] = useState<any[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    if (!loading && (!user || !isAdmin)) {
-      navigate("/auth-membre");
-    }
-  }, [user, isAdmin, loading, navigate]);
 
   const fetchData = useCallback(async () => {
     setIsRefreshing(true);
@@ -174,7 +170,7 @@ const Admin = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   const pendingCount = membershipRequests.filter((r) => r.status === "pending").length;
@@ -185,16 +181,23 @@ const Admin = () => {
       ? Math.round((approvedCount / membershipRequests.length) * 100)
       : 0;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <RefreshCw className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  if (!user || !isAdmin) {
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+    return <NotFound />;
   }
 
   return (
     <div className="min-h-screen bg-muted/20 w-full overflow-x-hidden">
+      <SEOHead
+        title={isEn ? "Administration Dashboard | CDECO" : "Tableau de Bord Administration | CDECO"}
+        noIndex={true}
+      />
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur w-full">
         <div className="container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 max-w-full">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
