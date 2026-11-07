@@ -39,66 +39,73 @@ const SectorsShowcase = () => {
   const slidesData = [
     {
       id: 1,
-      image: getMedia("sectors_banner", hydrocarburesImg),
+      image: getMedia("sector_slide_1", getMedia("sectors_banner", hydrocarburesImg)),
       title: t("sectors.hydrocarbures", "Hydrocarbures"),
       subtitle: t("sectors.hydrocarburesSub", "Pilier Central de l'Économie"),
       description: t("sectors.hydrocarburesDesc", "Le secteur pétrolier Amont constitue le pilier central de l'économie congolaise, représentant plus de 80% des recettes d'exportation.")
     },
     {
       id: 2,
-      image: tourismeImg,
+      image: getMedia("sector_slide_2", tourismeImg),
       title: t("sectors.tourisme", "Tourisme"),
       subtitle: t("sectors.tourismeSub", "Ambitions Stratégiques et Projets Clés"),
       description: t("sectors.tourismeDesc", "Le gouvernement congolais s'est engagé à transformer le pays en une destination d'écotourisme de premier plan.")
     },
     {
       id: 3,
-      image: agricultureImg,
+      image: getMedia("sector_slide_3", agricultureImg),
       title: t("sectors.agriculture", "Agriculture"),
       subtitle: t("sectors.agricultureSub", "Potentiel Inexploité"),
       description: t("sectors.agricultureDesc", "Avec plus de 10 millions d'hectares de terres arables fertiles et un climat favorable, le Congo offre un potentiel agro-industriel exceptionnel.")
     },
     {
       id: 4,
-      image: minesImg,
+      image: getMedia("sector_slide_4", minesImg),
       title: t("sectors.mines", "Mines"),
       subtitle: t("sectors.minesSub", "Richesses du Sous-Sol"),
       description: t("sectors.minesDesc", "Le sous-sol congolais regorge de ressources minières diversifiées : fer, potasse, phosphate, or, diamants et métaux rares.")
     },
     {
       id: 5,
-      image: foretsImg,
+      image: getMedia("sector_slide_5", foretsImg),
       title: t("sectors.forets", "Forêts"),
       subtitle: t("sectors.foretsSub", "Patrimoine Durable"),
       description: t("sectors.foretsDesc", "Deuxième massif forestier tropical au monde après l'Amazonie, le bassin du Congo constitue un pilier de la biodiversité mondiale.")
     },
     {
       id: 6,
-      image: infrastructureImg,
+      image: getMedia("sector_slide_6", infrastructureImg),
       title: t("sectors.infrastructure", "Infrastructures"),
       subtitle: t("sectors.infrastructureSub", "Bâtir l'Avenir du Congo"),
       description: t("sectors.infrastructureDesc", "Modernisation des corridors routiers et renforcement du Port Autonome de Pointe-Noire en eau profonde.")
     },
     {
       id: 7,
-      image: educationImg,
+      image: getMedia("sector_slide_7", educationImg),
       title: t("sectors.education", "Éducation"),
       subtitle: t("sectors.educationSub", "Réformes Stratégiques"),
       description: t("sectors.educationDesc", "La formation professionnelle et l'excellence académique préparent la jeunesse congolaise aux métiers de la mondialisation.")
     },
     {
       id: 8,
-      image: numeriqueImg,
+      image: getMedia("sector_slide_8", numeriqueImg),
       title: t("sectors.numerique", "Numérique"),
       subtitle: t("sectors.numeriqueSub", "Transformation Digitale"),
       description: t("sectors.numeriqueDesc", "Hub numérique régional en pleine émergence grâce au déploiement de la fibre optique et aux startups innovantes.")
     },
     {
       id: 9,
-      image: energieImg,
+      image: getMedia("sector_slide_9", energieImg),
       title: t("sectors.energie", "Énergie"),
       subtitle: t("sectors.energieSub", "Mix Énergétique Diversifié"),
       description: t("sectors.energieDesc", "Le potentiel hydroélectrique et solaire offre de vastes opportunités pour l'électrification propre et l'industrialisation durable.")
+    },
+    {
+      id: 10,
+      image: getMedia("sector_slide_10", autresImg),
+      title: t("sectors.autres", "Diversification & Services"),
+      subtitle: t("sectors.autresSub", "Services et Commerce"),
+      description: t("sectors.autresDesc", "Finances, banques, télécommunications et services logistiques pour accompagner les flux économiques transfrontaliers.")
     }
   ];
 

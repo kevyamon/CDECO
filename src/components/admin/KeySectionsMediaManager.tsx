@@ -5,87 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { mediaService } from "@/api/mediaService";
 import { useSiteMedia } from "@/hooks/useSiteMedia";
-import { VideoSkeleton, BrandedSkeleton } from "@/components/ui/BrandedSkeleton";
-import { RefreshCw, Upload, Video, Image as ImageIcon, CheckCircle } from "lucide-react";
-
-import heroMeetingImg from "@/assets/hero-meeting.jpg";
-import diplomatieImg from "@/assets/missions/diplomatie.jpg";
-import pmeImg from "@/assets/missions/pme.jpg";
-import intermediationImg from "@/assets/missions/intermediation.jpg";
-import hydrocarburesImg from "@/assets/sectors/hydrocarbures.jpg";
-
-interface MediaSlot {
-  key: string;
-  title: string;
-  section: string;
-  description: string;
-  type: "image" | "video";
-  category: "hero" | "video" | "section";
-  defaultAsset: string;
-}
-
-const KEY_SLOTS: MediaSlot[] = [
-  {
-    key: "hero_banner",
-    title: "Bannière d'en-tête (Haut du site)",
-    section: "Chambre de Diplomatie Économique",
-    description: "Image de fond plein écran du haut de page d'accueil",
-    type: "image",
-    category: "hero",
-    defaultAsset: heroMeetingImg,
-  },
-  {
-    key: "home_video",
-    title: "Vidéo de Présentation CDECO",
-    section: "Découvrez la CDECO en Vidéo",
-    description: "Vidéo institutionnelle intégrée sous la section d'accueil (MP4/WebM)",
-    type: "video",
-    category: "video",
-    defaultAsset: "/videos/presentation-cdeco.mp4",
-  },
-  {
-    key: "mission_pillar_1",
-    title: "Pilier 1 : Diplomatie Commerciale",
-    section: "Trois Piliers d'Intervention",
-    description: "Carte du premier pilier d'intervention",
-    type: "image",
-    category: "section",
-    defaultAsset: diplomatieImg,
-  },
-  {
-    key: "mission_pillar_2",
-    title: "Pilier 2 : Soutien aux PME/PMI",
-    section: "Trois Piliers d'Intervention",
-    description: "Carte du deuxième pilier d'intervention",
-    type: "image",
-    category: "section",
-    defaultAsset: pmeImg,
-  },
-  {
-    key: "mission_pillar_3",
-    title: "Pilier 3 : Promotion de l'Excellence",
-    section: "Trois Piliers d'Intervention",
-    description: "Carte du troisième pilier d'intervention",
-    type: "image",
-    category: "section",
-    defaultAsset: intermediationImg,
-  },
-  {
-    key: "sectors_banner",
-    title: "Secteurs Stratégiques d'Investissement",
-    section: "Secteurs Stratégiques",
-    description: "Image vedette de la vitrine des secteurs économiques",
-    type: "image",
-    category: "section",
-    defaultAsset: hydrocarburesImg,
-  },
-];
+import { RefreshCw, Upload, Video, Image as ImageIcon, CheckCircle, Layers, Grid } from "lucide-react";
+import { KEY_SLOTS, MediaSlot, MediaGroup } from "./mediaSlotsConfig";
 
 export const KeySectionsMediaManager: FC = () => {
   const { toast } = useToast();
   const { getMedia, updateMediaLocal } = useSiteMedia();
+  const [activeGroup, setActiveGroup] = useState<MediaGroup>("all");
   const [uploadingKey, setUploadingKey] = useState<string | null>(null);
   const fileInputsRef = useRef<Record<string, HTMLInputElement | null>>({});
+
+  const filteredSlots = activeGroup === "all" 
+    ? KEY_SLOTS 
+    : KEY_SLOTS.filter(s => s.group === activeGroup);
 
   const handleFileChange = async (slot: MediaSlot, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,6 +36,9 @@ export const KeySectionsMediaManager: FC = () => {
 
       // Met à jour instantanément le cache local et notifie l'application entière
       updateMediaLocal(slot.key, savedMedia.url);
+      if (slot.fallbackKey) {
+        updateMediaLocal(slot.fallbackKey, savedMedia.url);
+      }
 
       toast({
         title: "Média remplacé avec succès !",
@@ -118,7 +53,6 @@ export const KeySectionsMediaManager: FC = () => {
       });
     } finally {
       setUploadingKey(null);
-      // Réinitialise l'input
       if (fileInputsRef.current[slot.key]) {
         fileInputsRef.current[slot.key]!.value = "";
       }
@@ -132,25 +66,71 @@ export const KeySectionsMediaManager: FC = () => {
   return (
     <Card className="border-border shadow-sm mb-6">
       <CardHeader className="bg-muted/20 border-b pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <CardTitle className="text-base sm:text-lg flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-accent" />
-              Médias des Sections Clés (Accueil & Plateforme)
+              Médias des Sections Clés (Accueil & Secteurs)
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
-              Visualisez et modifiez instantanément les images de fond et vidéos des sections principales via Cloudinary.
+              Visualisez et modifiez instantanément les 10 images de fond des secteurs, les 3 piliers, la vidéo et le haut du site.
             </CardDescription>
           </div>
           <Badge variant="outline" className="w-fit bg-primary/10 text-primary border-primary/20">
-            Mise à jour en direct
+            {KEY_SLOTS.length} emplacements modifiables
           </Badge>
         </div>
+
+        {/* Barre de filtrage par groupe */}
+        <div className="flex flex-wrap gap-2 pt-3">
+          <Button
+            type="button"
+            size="sm"
+            variant={activeGroup === "all" ? "default" : "outline"}
+            className="text-xs h-8"
+            onClick={() => setActiveGroup("all")}
+          >
+            <Grid className="w-3.5 h-3.5 mr-1" />
+            Tous ({KEY_SLOTS.length})
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={activeGroup === "sectors" ? "default" : "outline"}
+            className="text-xs h-8"
+            onClick={() => setActiveGroup("sectors")}
+          >
+            <Layers className="w-3.5 h-3.5 mr-1" />
+            10 Secteurs d'Investissement (10)
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={activeGroup === "pillars" ? "default" : "outline"}
+            className="text-xs h-8"
+            onClick={() => setActiveGroup("pillars")}
+          >
+            Trois Piliers (3)
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={activeGroup === "hero_video" ? "default" : "outline"}
+            className="text-xs h-8"
+            onClick={() => setActiveGroup("hero_video")}
+          >
+            Haut & Vidéo (2)
+          </Button>
+        </div>
       </CardHeader>
+
       <CardContent className="p-4 sm:p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {KEY_SLOTS.map((slot) => {
-            const currentUrl = getMedia(slot.key, slot.defaultAsset);
+          {filteredSlots.map((slot) => {
+            const fallbackVal = slot.fallbackKey 
+              ? getMedia(slot.fallbackKey, slot.defaultAsset) 
+              : slot.defaultAsset;
+            const currentUrl = getMedia(slot.key, fallbackVal);
             const isUploading = uploadingKey === slot.key;
 
             return (
@@ -245,4 +225,3 @@ export const KeySectionsMediaManager: FC = () => {
 };
 
 export default KeySectionsMediaManager;
-
