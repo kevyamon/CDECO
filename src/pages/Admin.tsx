@@ -12,21 +12,22 @@ import {
   Users, 
   Mail, 
   RefreshCw, 
-  CheckCircle,
   Home,
-  TrendingUp,
-  Clock,
   Calendar,
   Phone,
-  Image as ImageIcon
+  Image as ImageIcon,
+  UserCheck,
+  FileText
 } from "lucide-react";
-import StatsCard from "@/components/admin/StatsCard";
+import AdminStatsGrid from "@/components/admin/AdminStatsGrid";
 import MembershipRequestsTable from "@/components/admin/MembershipRequestsTable";
 import ContactMessagesTable from "@/components/admin/ContactMessagesTable";
 import MembershipChart from "@/components/admin/MembershipChart";
 import MediaManagerTab from "@/components/admin/MediaManagerTab";
 import EventsManagerTab from "@/components/admin/EventsManagerTab";
 import ContactSettingsTab from "@/components/admin/ContactSettingsTab";
+import BureauManagerTab from "@/components/admin/BureauManagerTab";
+import ResourcesManagerTab from "@/components/admin/ResourcesManagerTab";
 import { Badge } from "@/components/ui/badge";
 
 const Admin = () => {
@@ -171,7 +172,6 @@ const Admin = () => {
     navigate("/auth");
   };
 
-  // Indicateurs statistiques
   const pendingCount = membershipRequests.filter((r) => r.status === "pending").length;
   const approvedCount = membershipRequests.filter((r) => r.status === "approved").length;
   const unreadCount = contactMessages.filter((m) => !m.is_read).length;
@@ -190,7 +190,6 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-muted/20 w-full overflow-x-hidden">
-      {/* Barre supérieure */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur w-full">
         <div className="container mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 max-w-full">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
@@ -198,80 +197,54 @@ const Admin = () => {
               <Home className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
             <span className="text-muted-foreground shrink-0">/</span>
-            <h1 className="font-heading font-bold text-sm sm:text-base md:text-xl text-foreground truncate">
-              Dashboard Administration CDECO
-            </h1>
-            <Badge variant="secondary" className="hidden md:inline-flex bg-primary/10 text-primary shrink-0 text-xs">
-              MERN Stack
-            </Badge>
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <h1 className="font-heading font-bold text-sm sm:text-base md:text-lg text-primary truncate">
+                Tableau de bord
+              </h1>
+              <Badge variant="outline" className="hidden md:inline-flex text-[10px] sm:text-xs shrink-0 border-accent/40 text-accent font-semibold">
+                Administration CDECO
+              </Badge>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={fetchData}
               disabled={isRefreshing}
-              className="gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-9"
-              title="Actualiser les données"
+              className="gap-1 sm:gap-1.5 text-xs h-8 sm:h-9 px-2 sm:px-3"
             >
-              <RefreshCw className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isRefreshing ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">Actualiser</span>
+              <RefreshCw className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+              <span className="hidden xs:inline">Actualiser</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleSignOut}
-              className="gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-9 text-destructive hover:text-destructive"
-              title="Déconnexion"
+              className="gap-1 sm:gap-1.5 text-xs h-8 sm:h-9 px-2 sm:px-3 text-muted-foreground hover:text-foreground"
             >
-              <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               <span className="hidden sm:inline">Déconnexion</span>
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Contenu principal */}
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-6 sm:space-y-8 max-w-full overflow-x-hidden">
-        {/* Cartes de statistiques */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          <StatsCard
-            title="Total Adhésions"
-            value={membershipRequests.length}
-            subtitle="Toutes catégories"
-            icon={Users}
-            iconClassName="bg-primary/10"
-          />
-          <StatsCard
-            title="En attente"
-            value={pendingCount}
-            subtitle="À valider"
-            icon={Clock}
-            iconClassName="bg-amber-500/10"
-          />
-          <StatsCard
-            title="Taux approbation"
-            value={`${approvalRate}%`}
-            subtitle={`${approvedCount} validées`}
-            icon={TrendingUp}
-            iconClassName="bg-emerald-500/10"
-          />
-          <StatsCard
-            title="Messages"
-            value={contactMessages.length}
-            subtitle={`${unreadCount} non lu${unreadCount !== 1 ? "s" : ""}`}
-            icon={Mail}
-            iconClassName="bg-blue-500/10"
-          />
-        </div>
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 max-w-full">
+        <AdminStatsGrid
+          totalRequests={membershipRequests.length}
+          pendingCount={pendingCount}
+          approvalRate={approvalRate}
+          approvedCount={approvedCount}
+          totalMessages={contactMessages.length}
+          unreadCount={unreadCount}
+        />
 
-        {/* Évolution des adhésions */}
         <div className="w-full min-w-0 overflow-hidden">
           <MembershipChart requests={membershipRequests} />
         </div>
 
-        {/* Onglets d'administration */}
         <Tabs defaultValue="memberships" className="space-y-4 sm:space-y-6 w-full min-w-0">
           <div className="w-full overflow-x-auto pb-1 scrollbar-none">
             <TabsList className="inline-flex w-auto min-w-full sm:min-w-0 sm:w-auto p-1 bg-muted/60 justify-start sm:justify-center gap-1">
@@ -292,6 +265,14 @@ const Admin = () => {
                     {unreadCount}
                   </Badge>
                 )}
+              </TabsTrigger>
+              <TabsTrigger value="bureau" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <UserCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Bureau & CCI</span>
+              </TabsTrigger>
+              <TabsTrigger value="resources" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Ressources</span>
               </TabsTrigger>
               <TabsTrigger value="events" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
                 <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
@@ -338,6 +319,14 @@ const Admin = () => {
                 />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="bureau" className="w-full min-w-0">
+            <BureauManagerTab />
+          </TabsContent>
+
+          <TabsContent value="resources" className="w-full min-w-0">
+            <ResourcesManagerTab />
           </TabsContent>
 
           <TabsContent value="events" className="w-full min-w-0">

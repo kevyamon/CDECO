@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, Clock, Globe, Facebook, Linkedin, Twitter, Save, RefreshCw } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Globe, Facebook, Linkedin, Twitter, Save, RefreshCw, GraduationCap } from "lucide-react";
 import { settingsService, ContactSettings, DEFAULT_CONTACT_SETTINGS } from "@/api/settingsService";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
@@ -47,13 +48,13 @@ export const ContactSettingsTab: FC = () => {
       const updated = await settingsService.updateContactSettings(formData);
       updateSettingsLocal(updated || formData);
       toast({
-        title: "Coordonnées enregistrées !",
-        description: "Les informations de contact et les réseaux sociaux ont été mis à jour partout sur le site.",
+        title: "Paramètres enregistrés !",
+        description: "Les informations de contact et les données KAMPUS CDECO ont été mises à jour.",
       });
     } catch {
       toast({
         title: "Erreur",
-        description: "Impossible d'enregistrer les coordonnées.",
+        description: "Impossible d'enregistrer les paramètres.",
         variant: "destructive",
       });
     } finally {
@@ -68,10 +69,10 @@ export const ContactSettingsTab: FC = () => {
           <div>
             <CardTitle className="text-base sm:text-lg flex items-center gap-2">
               <Phone className="w-5 h-5 text-accent" />
-              Paramètres des Coordonnées & Réseaux Sociaux
+              Paramètres des Coordonnées & KAMPUS CDECO
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
-              Modifiez l'adresse, les téléphones, emails, horaires et liens sociaux diffusés sur la page Contact et le bas de page.
+              Modifiez l'adresse, les emails, réseaux sociaux et informations du Directeur KAMPUS CDECO.
             </CardDescription>
           </div>
         </div>
@@ -142,7 +143,7 @@ export const ContactSettingsTab: FC = () => {
               </div>
             </div>
 
-            {/* Section 3: Horaires d'ouverture */}
+            {/* Section 3: Horaires */}
             <div className="space-y-3">
               <h4 className="font-heading font-semibold text-sm text-foreground flex items-center gap-2 pb-1 border-b">
                 <Clock className="w-4 h-4 text-accent" />
@@ -170,7 +171,7 @@ export const ContactSettingsTab: FC = () => {
               </div>
             </div>
 
-            {/* Section 4: Réseaux Sociaux & Liens Externes */}
+            {/* Section 4: Réseaux Sociaux */}
             <div className="space-y-3">
               <h4 className="font-heading font-semibold text-sm text-foreground flex items-center gap-2 pb-1 border-b">
                 <Globe className="w-4 h-4 text-accent" />
@@ -224,6 +225,90 @@ export const ContactSettingsTab: FC = () => {
               </div>
             </div>
 
+            {/* Section 5: KAMPUS CDECO Configuration Dynamique */}
+            <div className="space-y-3 pt-2">
+              <h4 className="font-heading font-semibold text-sm text-foreground flex items-center gap-2 pb-1 border-b">
+                <GraduationCap className="w-4 h-4 text-accent" />
+                KAMPUS CDECO — Directeur & Coordonnées
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Nom du Directeur KAMPUS</Label>
+                  <Input
+                    value={formData.kampusDirectorName || ""}
+                    onChange={(e) => handleChange("kampusDirectorName", e.target.value)}
+                    placeholder="Steve Patrick MBOUKOU"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">URL Photo du Directeur</Label>
+                  <Input
+                    value={formData.kampusDirectorImage || ""}
+                    onChange={(e) => handleChange("kampusDirectorImage", e.target.value)}
+                    placeholder="https://... ou laissez vide pour la photo par défaut"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Titre du poste (Français)</Label>
+                  <Input
+                    value={formData.kampusDirectorTitle || ""}
+                    onChange={(e) => handleChange("kampusDirectorTitle", e.target.value)}
+                    placeholder="Directeur KAMPUS CDECO"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Titre du poste (English)</Label>
+                  <Input
+                    value={formData.kampusDirectorTitleEn || ""}
+                    onChange={(e) => handleChange("kampusDirectorTitleEn", e.target.value)}
+                    placeholder="Director of KAMPUS CDECO"
+                  />
+                </div>
+                <div className="space-y-1.5 md:col-span-2">
+                  <Label className="text-xs font-semibold">Biographie / Rôle (Français)</Label>
+                  <Textarea
+                    value={formData.kampusDirectorBio || ""}
+                    onChange={(e) => handleChange("kampusDirectorBio", e.target.value)}
+                    placeholder="Chargé de l'entrepreneuriat des jeunes..."
+                    rows={2}
+                  />
+                </div>
+                <div className="space-y-1.5 md:col-span-2">
+                  <Label className="text-xs font-semibold">Biographie / Rôle (English)</Label>
+                  <Textarea
+                    value={formData.kampusDirectorBioEn || ""}
+                    onChange={(e) => handleChange("kampusDirectorBioEn", e.target.value)}
+                    placeholder="In charge of youth entrepreneurship..."
+                    rows={2}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Adresse KAMPUS CDECO</Label>
+                  <Input
+                    value={formData.kampusAddress || ""}
+                    onChange={(e) => handleChange("kampusAddress", e.target.value)}
+                    placeholder="n°40 Av. des 3 martyrs, Moungali Brazzaville"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Email KAMPUS</Label>
+                  <Input
+                    value={formData.kampusEmail || ""}
+                    onChange={(e) => handleChange("kampusEmail", e.target.value)}
+                    placeholder="contact@cdeco.com"
+                  />
+                </div>
+                <div className="space-y-1.5 md:col-span-2">
+                  <Label className="text-xs font-semibold">Site Web KAMPUS</Label>
+                  <Input
+                    value={formData.kampusWebsite || ""}
+                    onChange={(e) => handleChange("kampusWebsite", e.target.value)}
+                    placeholder="www.cdeco.com"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="pt-2">
               <Button type="submit" disabled={saving} className="w-full sm:w-auto gap-2 bg-accent hover:bg-accent/90 text-white font-semibold">
                 {saving ? (
@@ -234,7 +319,7 @@ export const ContactSettingsTab: FC = () => {
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    Enregistrer les coordonnées
+                    Enregistrer toutes les coordonnées
                   </>
                 )}
               </Button>
@@ -247,4 +332,3 @@ export const ContactSettingsTab: FC = () => {
 };
 
 export default ContactSettingsTab;
-

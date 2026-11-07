@@ -39,7 +39,7 @@ const Footer = () => {
 
   const quickLinks = [
     { name: t("nav.home", "Accueil"), href: "/" },
-    { name: t("nav.congo", "Le Congo"), href: "/le-congo" },
+    { name: t("nav.congo", "Le Congo-Brazzaville"), href: "/le-congo" },
     { name: t("nav.presentation", "Présentation"), href: "/cdeco/presentation" },
     { name: t("nav.bureau", "Bureau"), href: "/cdeco/bureau" },
     { name: t("nav.missions", "Missions"), href: "/cdeco/missions" },

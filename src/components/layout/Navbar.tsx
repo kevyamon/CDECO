@@ -79,7 +79,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: t("nav.home", "Accueil"), href: "/" },
-    { name: t("nav.congo", "Le Congo"), href: "/le-congo" },
+    { name: t("nav.congo", "Le Congo-Brazzaville"), href: "/le-congo" },
     { name: "KAMPUS CDECO", href: "/kampus-cdeco" },
     { name: t("nav.events", "Événements"), href: "/evenements" },
     { name: t("nav.contact", "Contact"), href: "/contact" },

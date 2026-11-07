@@ -1,14 +1,3 @@
-/**
- * =============================================================================
- * MESSAGE-PRESIDENT.TSX - Message du Président Fondateur
- * =============================================================================
- * 
- * Cette page présente le message et la vision de M. Arnold Wesley AKINA,
- * Président-Fondateur de la CDECO.
- * 
- * ROUTE : /cdeco/message-president
- */
-
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Shield, Award, Target } from "lucide-react";
@@ -16,29 +5,20 @@ import presidentImage from "@/assets/members/president-fondateur.jpg";
 import { useTranslation } from "react-i18next";
 
 const MessagePresident = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === "en";
+
   return (
     <Layout>
       <SEOHead
-        title="Message du Président Fondateur | CDECO"
-        description="Découvrez le leadership de M. Arnold Wesley AKINA, Président-Fondateur de la Chambre de Diplomatie Économique du Congo."
+        title={isEn ? "Founding President's Message | CDECO" : "Message du Président Fondateur | CDECO"}
+        description={
+          isEn
+            ? "Discover the leadership and vision of Mr. Arnold Wesley AKINA, Founding President of the Chamber of Economic Diplomacy of Congo."
+            : "Découvrez le leadership de M. Arnold Wesley AKINA, Président-Fondateur de la Chambre de Diplomatie Économique du Congo."
+        }
         keywords="Arnold Wesley AKINA, président CDECO, fondateur CDECO, leadership Congo"
         canonicalUrl="/cdeco/message-president"
-        ogType="profile"
-        author="Arnold Wesley AKINA"
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Arnold Wesley AKINA",
-          "jobTitle": "Président-Fondateur",
-          "worksFor": {
-            "@type": "Organization",
-            "name": "Chambre de Diplomatie Économique du Congo",
-            "alternateName": "CDECO"
-          },
-          "description": "Président-Fondateur de la Chambre de Diplomatie Économique du Congo, leader visionnaire pour le développement économique du Congo.",
-          "url": "https://cdeco.org/cdeco/message-president"
-        }}
       />
 
       {/* Hero Section */}
@@ -46,10 +26,12 @@ const MessagePresident = () => {
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5" aria-hidden="true" />
         <div className="container-cdeco relative z-10 text-center">
           <h1 id="president-title" className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            {t("president.title", "Message du Président Fondateur")}
+            {isEn ? "Founding President's Message" : "Message du Président Fondateur"}
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-            {t("president.subtitle", "Découvrez la vision et le message de M. Arnold Wesley AKINA")}
+            {isEn
+              ? "Discover the vision and strategic orientations of Mr. Arnold Wesley AKINA, Founding President of CDECO."
+              : "Découvrez la vision et le message de M. Arnold Wesley AKINA"}
           </p>
         </div>
       </section>
@@ -74,7 +56,7 @@ const MessagePresident = () => {
                       M. Arnold Wesley AKINA
                     </h2>
                     <p className="text-accent font-semibold mt-1">
-                      Président-Fondateur
+                      {isEn ? "Founding President" : "Président-Fondateur"}
                     </p>
                   </figcaption>
                 </figure>
@@ -88,54 +70,57 @@ const MessagePresident = () => {
               </div>
 
               <p className="text-lg">
-                Sous l'impulsion du leadership transformationnel et stratégique de M. Arnold Wesley AKINA, 
-                la Chambre de Diplomatie Économique du Congo (CDECO) s'installe officiellement en République du Congo. 
-                Cette étape fondatrice incarne une vision éclairée bâtir des ponts durables en faveur d'une Afrique 
-                connectée, économiquement influente et commercialement active sur la scène internationale.
+                {isEn
+                  ? "Under the transformational and strategic leadership of Mr. Arnold Wesley AKINA, the Chamber of Economic Diplomacy of Congo (CDECO) is officially anchored in the Republic of Congo. This foundational act embodies a clear and resolute vision: to build lasting bridges for an Africa that is connected, economically influential, and proactively integrated into global commerce."
+                  : "Sous l'impulsion du leadership transformationnel et stratégique de M. Arnold Wesley AKINA, la Chambre de Diplomatie Économique du Congo (CDECO) s'installe officiellement en République du Congo. Cette étape fondatrice incarne une vision éclairée bâtir des ponts durables en faveur d'une Afrique connectée, économiquement influente et commercialement active sur la scène internationale."}
               </p>
 
               <p>
-                Porteur d'une vision ambitieuse pour un développement économique plus dynamique et un écosystème 
-                entrepreneurial inclusif, M. AKINA positionne la CDECO comme un catalyseur stratégique de coopération 
-                intelligente, d'innovation économique et de diplomatie proactive. L'institution est la réponse qui 
-                converge de façon diplomatique et économique avec les États, les investisseurs internationaux, 
-                les communautés économiques et les acteurs du changement.
+                {isEn
+                  ? "Driven by an ambitious blueprint for dynamic economic growth and an inclusive business ecosystem, Mr. AKINA positions CDECO as a prime strategic catalyst for intelligent bilateral cooperation, financial innovation, and proactive economic diplomacy. The institution is the structured answer converging sovereign states, global investors, and innovative economic actors."
+                  : "Porteur d'une vision ambitieuse pour un développement économique plus dynamique et un écosystème entrepreneurial inclusif, M. AKINA positionne la CDECO comme un catalyseur stratégique de coopération intelligente, d'innovation économique et de diplomatie proactive. L'institution est la réponse qui converge de façon diplomatique et économique avec les États, les investisseurs internationaux, les communautés économiques et les acteurs du changement."}
               </p>
 
               <p>
-                À travers cette mission, la CDECO affirme sa volonté de faire émerger une diplomatie économique solide, 
-                inclusive et ancrée dans les réalités africaines contemporaines.
+                {isEn
+                  ? "Through this mission, CDECO asserts its determination to champion a resilient, inclusive economic diplomacy firmly rooted in contemporary African opportunities."
+                  : "À travers cette mission, la CDECO affirme sa volonté de faire émerger une diplomatie économique solide, inclusive et ancrée dans les réalités africaines contemporaines."}
               </p>
 
               <section className="bg-muted/50 rounded-xl p-6 my-8" aria-labelledby="national-scope">
                 <h3 id="national-scope" className="font-heading text-xl font-bold text-foreground mb-4">
-                  {t("president.nationalTitle", "Sur le plan national")}
+                  {isEn ? "On the National Level" : "Sur le plan national"}
                 </h3>
                 <p>
-                  {t("president.nationalText", "La CDECO s'engage à promouvoir les relations économiques et commerciales de la République du Congo, à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces vives.")}
+                  {isEn
+                    ? "CDECO is committed to advancing the economic and commercial partnerships of the Republic of Congo, promoting its abundant resources, supporting domestic entrepreneurial capacity, and mobilizing key stakeholders around value creation and economic diversification."
+                    : "La CDECO s'engage à promouvoir les relations économiques et commerciales de la République du Congo, à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces vives."}
                 </p>
               </section>
 
               <section className="bg-muted/50 rounded-xl p-6 my-8" aria-labelledby="international-scope">
                 <h3 id="international-scope" className="font-heading text-xl font-bold text-foreground mb-4">
-                  {t("president.intlTitle", "Sur le plan international")}
+                  {isEn ? "On the International Stage" : "Sur le plan international"}
                 </h3>
                 <p>
-                  {t("president.intlText", "La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges économiques entre le Congo, les États africains et les partenaires mondiaux.")}
+                  {isEn
+                    ? "CDECO aims to serve as a top-tier strategic interface, facilitating cross-border economic exchanges between Congo, fellow African countries, and international institutional partners."
+                    : "La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges économiques entre le Congo, les États africains et les partenaires mondiaux."}
                 </p>
               </section>
 
               <p>
-                À travers cette installation, la CDECO invite solennellement les gouvernements africains, 
-                les acteurs économiques, ainsi que les institutions régionales et internationales à s'unir 
-                à ses côtés afin de promouvoir une innovation continue dans les domaines économique, 
-                diplomatique et commercial.
+                {isEn
+                  ? "Through this institutional milestone, CDECO warmly invites African governments, economic leaders, and regional and international organizations to collaborate closely to drive continuous innovation in economic, diplomatic, and commercial spheres."
+                  : "À travers cette installation, la CDECO invite solennellement les gouvernements africains, les acteurs économiques, ainsi que les institutions régionales et internationales à s'unir à ses côtés afin de promouvoir une innovation continue dans les domaines économique, diplomatique et commercial."}
               </p>
 
               {/* Values */}
               <section className="mt-10" aria-labelledby="values-title">
                 <h3 id="values-title" className="font-heading text-xl font-bold text-foreground mb-6">
-                  Cette initiative s'inscrit dans le respect de nos valeurs fondamentales:
+                  {isEn
+                    ? "This initiative is anchored in our foundational values:"
+                    : "Cette initiative s'inscrit dans le respect de nos valeurs fondamentales:"}
                 </h3>
                 
                 <ul className="grid gap-4" role="list">
@@ -144,9 +129,13 @@ const MessagePresident = () => {
                       <Shield className="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground">L'intégrité</h4>
+                      <h4 className="font-semibold text-foreground">
+                        {isEn ? "Integrity" : "L'intégrité"}
+                      </h4>
                       <p className="text-sm">
-                        En agissant avec éthique, responsabilité et transparence
+                        {isEn
+                          ? "Acting with high ethics, personal responsibility, and total transparency"
+                          : "En agissant avec éthique, responsabilité et transparence"}
                       </p>
                     </div>
                   </li>
@@ -156,9 +145,13 @@ const MessagePresident = () => {
                       <Target className="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground">Le leadership</h4>
+                      <h4 className="font-semibold text-foreground">
+                        {isEn ? "Leadership" : "Le leadership"}
+                      </h4>
                       <p className="text-sm">
-                        En anticipant les enjeux et en proposant des solutions intelligentes
+                        {isEn
+                          ? "Anticipating strategic changes and delivering agile solutions"
+                          : "En anticipant les enjeux et en proposant des solutions intelligentes"}
                       </p>
                     </div>
                   </li>
@@ -168,9 +161,13 @@ const MessagePresident = () => {
                       <Award className="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground">L'excellence</h4>
+                      <h4 className="font-semibold text-foreground">
+                        {isEn ? "Excellence" : "L'excellence"}
+                      </h4>
                       <p className="text-sm">
-                        Dans la recherche constante de qualité et d'impact
+                        {isEn
+                          ? "Dedicated to the continuous quest for quality and sustainable impact"
+                          : "Dans la recherche constante de qualité et d'impact"}
                       </p>
                     </div>
                   </li>
@@ -179,7 +176,9 @@ const MessagePresident = () => {
 
               <blockquote className="mt-10 p-6 bg-gradient-to-r from-accent/10 to-primary/10 rounded-xl border border-accent/20">
                 <p className="text-lg font-medium text-foreground italic text-center">
-                  "Ensemble, nous avons l'opportunité de bâtir une Afrique plus unie, plus influente et tournée vers l'avenir."
+                  {isEn
+                    ? '"Together, we have the historic opportunity to build a more united, influential, and forward-looking Africa."'
+                    : '"Ensemble, nous avons l\'opportunité de bâtir une Afrique plus unie, plus influente et tournée vers l\'avenir."'}
                 </p>
               </blockquote>
             </div>
