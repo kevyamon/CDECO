@@ -16,6 +16,8 @@ import {
   Home,
   TrendingUp,
   Clock,
+  Calendar,
+  Phone,
   Image as ImageIcon
 } from "lucide-react";
 import StatsCard from "@/components/admin/StatsCard";
@@ -23,6 +25,8 @@ import MembershipRequestsTable from "@/components/admin/MembershipRequestsTable"
 import ContactMessagesTable from "@/components/admin/ContactMessagesTable";
 import MembershipChart from "@/components/admin/MembershipChart";
 import MediaManagerTab from "@/components/admin/MediaManagerTab";
+import EventsManagerTab from "@/components/admin/EventsManagerTab";
+import ContactSettingsTab from "@/components/admin/ContactSettingsTab";
 import { Badge } from "@/components/ui/badge";
 
 const Admin = () => {
@@ -289,9 +293,17 @@ const Admin = () => {
                   </Badge>
                 )}
               </TabsTrigger>
+              <TabsTrigger value="events" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Événements</span>
+              </TabsTrigger>
               <TabsTrigger value="media" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
                 <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                 <span>Médiathèque</span>
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-1.5 sm:gap-2 px-3 text-xs sm:text-sm whitespace-nowrap">
+                <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span>Coordonnées</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -328,8 +340,16 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="events" className="w-full min-w-0">
+            <EventsManagerTab />
+          </TabsContent>
+
           <TabsContent value="media" className="w-full min-w-0">
             <MediaManagerTab />
+          </TabsContent>
+
+          <TabsContent value="settings" className="w-full min-w-0">
+            <ContactSettingsTab />
           </TabsContent>
         </Tabs>
       </main>

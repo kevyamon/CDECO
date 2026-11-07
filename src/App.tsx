@@ -40,6 +40,7 @@ import Index from "./pages/Index";
 
 // Lazy loading des autres pages pour réduire le bundle initial
 const Events = lazy(() => import("./pages/Events"));
+const EventDetail = lazy(() => import("./pages/EventDetail"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Adhesion = lazy(() => import("./pages/Adhesion"));
 const Auth = lazy(() => import("./pages/Auth"));
@@ -91,6 +92,7 @@ const App = () => (
               
               {/* Pages publiques */}
               <Route path="/evenements" element={<Events />} />
+              <Route path="/evenements/:id" element={<EventDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/adhesion" element={<Adhesion />} />
               

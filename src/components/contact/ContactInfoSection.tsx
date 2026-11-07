@@ -4,7 +4,9 @@ import { motion, Variants } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Clock, Globe, Facebook, Linkedin, Twitter } from "lucide-react";
-import { fadeInRight, staggerContainer, staggerItem, scaleIn } from "@/animations/variants";
+import { fadeInRight, staggerContainer, staggerItem } from "@/animations/variants";
+import { useTranslation } from "react-i18next";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 interface ContactInfoSectionProps {
   getVariants: (v: Variants) => Variants;
@@ -19,26 +21,31 @@ interface ContactItem {
 }
 
 export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants }) => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === "en";
+  const { settings } = useSiteSettings();
+
+  const currentAddress = isEn ? (settings.addressEn || settings.address) : settings.address;
+  const currentHours = isEn ? (settings.hoursEn || settings.hours) : settings.hours;
+
   const contactItems: ContactItem[] = [
     {
       icon: MapPin,
-      title: "Adresse",
+      title: isEn ? "Address" : "Adresse",
       content: (
-        <>
-          Moungali Centre-Ville
-          <br />
-          Brazzaville, République du Congo
-        </>
+        <span className="text-muted-foreground text-xs md:text-sm leading-relaxed block">
+          {currentAddress}
+        </span>
       ),
       bgClass: "bg-primary/10",
       iconClass: "text-primary",
     },
     {
       icon: Phone,
-      title: "Téléphone",
+      title: isEn ? "Phone" : "Téléphone",
       content: (
-        <a href="tel:+242055958119" className="text-muted-foreground text-xs md:text-sm hover:text-primary transition-colors">
-          +242 05 595 8119
+        <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="text-muted-foreground text-xs md:text-sm hover:text-accent transition-colors font-medium">
+          {settings.phone}
         </a>
       ),
       bgClass: "bg-accent/10",
@@ -48,8 +55,8 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
       icon: Mail,
       title: "Email",
       content: (
-        <a href="mailto:contact@cdeco.com" className="text-muted-foreground text-xs md:text-sm hover:text-primary transition-colors">
-          contact@cdeco.com
+        <a href={`mailto:${settings.email}`} className="text-muted-foreground text-xs md:text-sm hover:text-accent transition-colors font-medium">
+          {settings.email}
         </a>
       ),
       bgClass: "bg-primary/10",
@@ -57,13 +64,11 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
     },
     {
       icon: Clock,
-      title: "Horaires",
+      title: isEn ? "Office Hours" : "Horaires",
       content: (
-        <>
-          Lun - Ven : 8h00 - 17h00
-          <br />
-          Sam : 9h00 - 13h00
-        </>
+        <span className="text-muted-foreground text-xs md:text-sm leading-relaxed block">
+          {currentHours}
+        </span>
       ),
       bgClass: "bg-accent/10",
       iconClass: "text-accent",
@@ -71,18 +76,10 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
   ];
 
   const socialLinks = [
-    {
-      icon: Facebook,
-      href: "https://www.facebook.com/share/1B3SMHVzWk/?mibextid=wwXIfr",
-      label: "Facebook",
-    },
-    {
-      icon: Linkedin,
-      href: "https://www.linkedin.com/company/chambre-de-diplomatie-economique-du-congo/",
-      label: "LinkedIn",
-    },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Globe, href: "#", label: "Site web" },
+    { icon: Facebook, href: settings.facebook || "#", label: "Facebook" },
+    { icon: Linkedin, href: settings.linkedin || "#", label: "LinkedIn" },
+    { icon: Twitter, href: settings.twitter || "#", label: "Twitter" },
+    { icon: Globe, href: settings.website || "https://cdeco.org", label: isEn ? "Website" : "Site web" },
   ];
 
   return (
@@ -97,29 +94,25 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
         <Card className="card-hover">
           <CardContent className="p-4 md:p-5 lg:p-6">
             <h3 className="font-heading text-base md:text-lg font-bold text-foreground mb-3 md:mb-4">
-              Nos coordonnées
+              {isEn ? "Our Coordinates" : "Nos coordonnées"}
             </h3>
-            <motion.div className="space-y-3 md:space-y-4" variants={getVariants(staggerContainer)}>
+            <div className="space-y-3 md:space-y-4">
               {contactItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-start gap-3"
-                  variants={getVariants(staggerItem)}
-                  whileHover={{ x: 4 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <div key={index} className="flex items-start gap-2.5 md:gap-3">
                   <div
-                    className={`w-8 h-8 md:w-10 md:h-10 rounded-lg ${item.bgClass} flex items-center justify-center flex-shrink-0`}
+                    className={`w-9 h-9 md:w-10 md:h-10 rounded-lg ${item.bgClass} flex items-center justify-center shrink-0 mt-0.5`}
                   >
                     <item.icon className={`w-4 h-4 md:w-5 md:h-5 ${item.iconClass}`} />
                   </div>
-                  <div>
-                    <p className="font-medium text-foreground text-sm md:text-base">{item.title}</p>
-                    <p className="text-muted-foreground text-xs md:text-sm">{item.content}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground text-xs md:text-sm mb-0.5">
+                      {item.title}
+                    </p>
+                    {item.content}
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
@@ -128,41 +121,40 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
         <Card className="card-hover">
           <CardContent className="p-4 md:p-5 lg:p-6">
             <h3 className="font-heading text-base md:text-lg font-bold text-foreground mb-3 md:mb-4">
-              Suivez-nous
+              {isEn ? "Follow our official channels" : "Suivez nos canaux officiels"}
             </h3>
-            <motion.div className="flex gap-2 md:gap-3" variants={getVariants(staggerContainer)}>
+            <div className="flex flex-wrap gap-2 md:gap-3">
               {socialLinks.map((social, index) => (
-                <motion.a
+                <a
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-                  aria-label={social.label}
-                  variants={getVariants(staggerItem)}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:py-2 rounded-lg bg-secondary hover:bg-accent hover:text-white transition-all text-xs md:text-sm font-medium"
                 >
-                  <social.icon className="w-4 h-4 md:w-5 md:h-5" />
-                </motion.a>
+                  <social.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span>{social.label}</span>
+                </a>
               ))}
-            </motion.div>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
 
-      <motion.div variants={getVariants(scaleIn)}>
-        <Card className="bg-accent/10 border-accent/20">
-          <CardContent className="p-4 md:p-5 lg:p-6">
-            <h3 className="font-heading text-base md:text-lg font-bold text-foreground mb-1.5 md:mb-2">
-              Besoin d'adhérer ?
-            </h3>
-            <p className="text-muted-foreground text-xs md:text-sm mb-3 md:mb-4">
-              Rejoignez la CDECO et participez au développement économique du Congo.
+      <motion.div variants={getVariants(fadeInRight)}>
+        <Card className="bg-primary text-primary-foreground border-none shadow-lg">
+          <CardContent className="p-4 md:p-5 lg:p-6 text-center space-y-2 md:space-y-3">
+            <h4 className="font-heading font-bold text-sm md:text-base">
+              {isEn ? "Want to join CDECO?" : "Vous souhaitez rejoindre la CDECO ?"}
+            </h4>
+            <p className="text-primary-foreground/80 text-xs md:text-sm">
+              {isEn 
+                ? "Become an active member and access our global trade networks and strategic programs."
+                : "Devenez membre adhérent et accédez à nos réseaux d'affaires internationaux."}
             </p>
-            <Link to="/adhesion">
-              <Button variant="outline" className="w-full text-sm md:text-base">
-                Formulaire d'adhésion
+            <Link to="/adhesion" className="inline-block pt-1">
+              <Button size="sm" className="bg-accent hover:bg-accent/90 text-white font-semibold">
+                {isEn ? "Submit Membership" : "Faire une demande d'adhésion"}
               </Button>
             </Link>
           </CardContent>
@@ -173,4 +165,3 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({ getVariants })
 };
 
 export default ContactInfoSection;
-

@@ -7,12 +7,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
 import FooterMobileAccordion from "./FooterMobileAccordion";
 import SmartScrollToTop from "./SmartScrollToTop";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { settings } = useSiteSettings();
+  const isEn = i18n.language === "en";
+  const currentAddress = isEn ? (settings.addressEn || settings.address) : settings.address;
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -48,15 +52,15 @@ const Footer = () => {
   const socialLinks = [
     {
       icon: Linkedin,
-      href: "https://www.linkedin.com/company/chambre-de-diplomatie-economique-du-congo/",
+      href: settings.linkedin || "https://www.linkedin.com/company/chambre-de-diplomatie-economique-du-congo/",
       label: "LinkedIn",
     },
     {
       icon: Facebook,
-      href: "https://www.facebook.com/share/1B3SMHVzWk/?mibextid=wwXIfr",
+      href: settings.facebook || "https://www.facebook.com/share/1B3SMHVzWk/?mibextid=wwXIfr",
       label: "Facebook",
     },
-    { icon: Twitter, href: "https://twitter.com/cdeco", label: "Twitter" },
+    { icon: Twitter, href: settings.twitter || "https://twitter.com/cdeco", label: "Twitter" },
   ];
 
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -152,18 +156,18 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
-                <span>{t("footer.address", "Moungali Centre-Ville, Brazzaville, République du Congo")}</span>
+                <span>{currentAddress}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 text-accent flex-shrink-0" />
-                <a href="tel:+242055958119" className="hover:text-accent transition-colors">
-                  +242 05 595 8119
+                <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="hover:text-accent transition-colors">
+                  {settings.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                <a href="mailto:contact@cdeco.com" className="hover:text-accent transition-colors">
-                  contact@cdeco.com
+                <a href={`mailto:${settings.email}`} className="hover:text-accent transition-colors">
+                  {settings.email}
                 </a>
               </li>
             </ul>
