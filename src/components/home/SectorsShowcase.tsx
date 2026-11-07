@@ -6,6 +6,7 @@ import type { Swiper as SwiperType } from "swiper";
 import gsap from "gsap";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useSiteMedia } from "@/hooks/useSiteMedia";
 
 // Import styles
 import "swiper/css";
@@ -27,6 +28,7 @@ import energieImg from "@/assets/sectors/energie.jpg";
 
 const SectorsShowcase = () => {
   const { t } = useTranslation();
+  const { getMedia } = useSiteMedia();
   const swiperRef = useRef<SwiperType | null>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -37,7 +39,7 @@ const SectorsShowcase = () => {
   const slidesData = [
     {
       id: 1,
-      image: hydrocarburesImg,
+      image: getMedia("sectors_banner", hydrocarburesImg),
       title: t("sectors.hydrocarbures", "Hydrocarbures"),
       subtitle: t("sectors.hydrocarburesSub", "Pilier Central de l'Économie"),
       description: t("sectors.hydrocarburesDesc", "Le secteur pétrolier Amont constitue le pilier central de l'économie congolaise, représentant plus de 80% des recettes d'exportation.")

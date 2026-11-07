@@ -122,7 +122,13 @@
     "statHydroLabel": "Hydrocarbures",
     "statServicesLabel": "Services",
     "ctaOpportunities": "Découvrir les Opportunités",
-    "ctaContact": "Nous Contacter"
+    "ctaContact": "Nous Contacter",
+    "partnerCardTitle": "La CDECO, votre partenaire stratégique",
+    "partnerCardDesc": "Nous œuvrons à attirer et sécuriser les investissements directs étrangers pour un développement durable et partagé. À travers des ressources ciblées, des programmes d'accompagnement adaptés et un réseau dynamique, nous garantissons aux PME, PMI et Start-ups leur développement et intégration aux marchés locaux et régionaux.",
+    "partnerPoint1": "Facilitation des échanges économiques et commerciaux",
+    "partnerPoint2": "Soutien aux PME/PMI pour leur croissance durable",
+    "partnerPoint3": "Amélioration du climat des affaires",
+    "partnerPoint4": "Organisation d'événements économiques B2B/B2C/B2G"
   },
   "video": {
     "badge": "Présentation Vidéo",
@@ -134,6 +140,7 @@
   "partners": {
     "badge": "Partenariats & Réseaux",
     "title": "Un Réseau d'Excellence",
+    "sectionTitle": "NOTRE RÉSEAU DE PARTENAIRES",
     "description": "Des alliances stratégiques avec les institutions publiques, organisations patronales et chambres de commerce internationales."
   },
   "cta": {

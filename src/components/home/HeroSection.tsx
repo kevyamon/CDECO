@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
+import { useSiteMedia } from "@/hooks/useSiteMedia";
 
 // Gallery images for carousel
 import event1 from "@/assets/gallery/event-1.jpg";
@@ -14,11 +15,14 @@ import event4 from "@/assets/gallery/event-4.jpg";
 import event5 from "@/assets/gallery/event-5.jpg";
 import team1 from "@/assets/gallery/team-1.jpg";
 gsap.registerPlugin(ScrollTrigger);
-const carouselImages = [event1, event2, event3, event4, event5, team1];
+const defaultCarouselImages = [event1, event2, event3, event4, event5, team1];
 const HeroSection = () => {
-  const {
-    t
-  } = useTranslation();
+  const { t } = useTranslation();
+  const { getMedia } = useSiteMedia();
+  const customHero = getMedia("hero_banner", "");
+  const carouselImages = useMemo(() => {
+    return customHero ? [customHero, ...defaultCarouselImages] : defaultCarouselImages;
+  }, [customHero]);
   const badgeRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, Trash2, Image as ImageIcon, Copy, Check, RefreshCw } from "lucide-react";
+import KeySectionsMediaManager from "./KeySectionsMediaManager";
 
 export const MediaManagerTab = () => {
   const { toast } = useToast();
@@ -119,6 +120,9 @@ export const MediaManagerTab = () => {
 
   return (
     <div className="space-y-6">
+      {/* Modification en direct des médias des sections clés */}
+      <KeySectionsMediaManager />
+
       {/* Formulaire d'upload Cloudinary */}
       <Card className="border-border shadow-sm">
         <CardHeader className="bg-muted/20 border-b">

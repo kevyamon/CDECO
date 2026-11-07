@@ -158,20 +158,22 @@ const WhyInvestSection = () => {
             once: true
           }}>
               <h3 className="font-heading text-xl md:text-2xl font-bold mb-4">
-                La CDECO, votre partenaire stratégique
+                {t("whyInvest.partnerCardTitle", "La CDECO, votre partenaire stratégique")}
               </h3>
               <p className="text-primary-foreground/80 text-sm md:text-base leading-relaxed mb-6">
-                Nous œuvrons à attirer et sécuriser les investissements directs étrangers 
-                pour un développement durable et partagé. À travers des ressources ciblées, 
-                des programmes d'accompagnement adaptés et un réseau dynamique, nous garantissons 
-                aux PME, PMI et Start-ups leur développement et intégration aux marchés locaux et régionaux.
+                {t("whyInvest.partnerCardDesc", "Nous œuvrons à attirer et sécuriser les investissements directs étrangers pour un développement durable et partagé. À travers des ressources ciblées, des programmes d'accompagnement adaptés et un réseau dynamique, nous garantissons aux PME, PMI et Start-ups leur développement et intégration aux marchés locaux et régionaux.")}
               </p>
               
             </motion.div>
             <motion.div className="space-y-3" variants={staggerContainer} initial={shouldReduceMotion ? undefined : "hidden"} whileInView={shouldReduceMotion ? undefined : "visible"} viewport={{
             once: true
           }}>
-              {["Facilitation des échanges économiques et commerciaux", "Soutien aux PME/PMI pour leur croissance durable", "Amélioration du climat des affaires", "Organisation d'événements économiques B2B/B2C/B2G"].map((item, i) => <motion.div key={i} className="flex items-start gap-3" variants={staggerItem}>
+              {[
+                t("whyInvest.partnerPoint1", "Facilitation des échanges économiques et commerciaux"),
+                t("whyInvest.partnerPoint2", "Soutien aux PME/PMI pour leur croissance durable"),
+                t("whyInvest.partnerPoint3", "Amélioration du climat des affaires"),
+                t("whyInvest.partnerPoint4", "Organisation d'événements économiques B2B/B2C/B2G")
+              ].map((item, i) => <motion.div key={i} className="flex items-start gap-3" variants={staggerItem}>
                   <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
                   <span className="text-sm text-primary-foreground/90">{item}</span>
                 </motion.div>)}

@@ -13,6 +13,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 // =============================================================================
 // CONFIGURATION DES PARTENAIRES
@@ -54,6 +55,7 @@ const PlaceholderLogo = ({ name }: { name: string }) => {
 };
 
 const PartnersSection = () => {
+  const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Animation de défilement automatique
@@ -103,7 +105,7 @@ const PartnersSection = () => {
       <div className="container mx-auto px-4">
         {/* Titre */}
         <h2 className="text-2xl md:text-3xl font-bold text-center text-primary mb-2">
-          NOTRE RÉSEAU DE PARTENAIRES
+          {t("partners.sectionTitle", "NOTRE RÉSEAU DE PARTENAIRES")}
         </h2>
         <div className="w-16 h-1 bg-cdeco-orange mx-auto mb-10" />
 

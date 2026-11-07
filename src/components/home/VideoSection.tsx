@@ -8,15 +8,21 @@
  */
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import SectionHeader from "@/components/ui/section-header";
 import { staggerContainer, staggerItem, scaleIn } from "@/animations/variants";
 import { useTranslation } from "react-i18next";
+import { useSiteMedia } from "@/hooks/useSiteMedia";
+import { VideoSkeleton } from "@/components/ui/BrandedSkeleton";
 
 const VideoSection = () => {
   const { t } = useTranslation();
+  const { getMedia, isLoading } = useSiteMedia();
   const videoRef = useRef<HTMLVideoElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const [isVideoReady, setIsVideoReady] = useState(false);
+
+  const videoUrl = getMedia("home_video", "/videos/presentation-cdeco.mp4");
 
   // Return static version if reduced motion is preferred
   if (shouldReduceMotion) {
@@ -25,14 +31,16 @@ const VideoSection = () => {
         <div className="container-cdeco px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
+              {isLoading && !videoUrl && <VideoSkeleton />}
               <video
                 ref={videoRef}
+                key={videoUrl}
                 className="w-full h-full object-cover"
                 controls
                 preload="metadata"
-                poster="/videos/presentation-cdeco.mp4#t=0.5"
+                onLoadedData={() => setIsVideoReady(true)}
               >
-                <source src="/videos/presentation-cdeco.mp4" type="video/mp4" />
+                <source src={videoUrl} type="video/mp4" />
                 Votre navigateur ne supporte pas la lecture de vidéos.
               </video>
             </div>
@@ -65,14 +73,20 @@ const VideoSection = () => {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
           >
+            {(!isVideoReady && isLoading) && (
+              <div className="absolute inset-0 z-10">
+                <VideoSkeleton className="w-full h-full" />
+              </div>
+            )}
             <video
               ref={videoRef}
+              key={videoUrl}
               className="w-full h-full object-cover"
               controls
               preload="metadata"
-              poster="/videos/presentation-cdeco.mp4#t=0.5"
+              onLoadedData={() => setIsVideoReady(true)}
             >
-              <source src="/videos/presentation-cdeco.mp4" type="video/mp4" />
+              <source src={videoUrl} type="video/mp4" />
               Votre navigateur ne supporte pas la lecture de vidéos.
             </video>
           </motion.div>

@@ -122,7 +122,13 @@
     "statHydroLabel": "Hydrocarbons",
     "statServicesLabel": "Services",
     "ctaOpportunities": "Discover Opportunities",
-    "ctaContact": "Contact Us"
+    "ctaContact": "Contact Us",
+    "partnerCardTitle": "CDECO, Your Strategic Partner",
+    "partnerCardDesc": "We work to attract and secure foreign direct investments for sustainable and shared development. Through targeted resources, tailored support programs, and a dynamic network, we guarantee SMEs, SMIs, and Start-ups their growth and integration into local and regional markets.",
+    "partnerPoint1": "Facilitation of economic and trade exchanges",
+    "partnerPoint2": "Support for SMEs/SMIs for sustainable growth",
+    "partnerPoint3": "Improvement of the business environment",
+    "partnerPoint4": "Organization of B2B/B2C/B2G economic events"
   },
   "video": {
     "badge": "Video Presentation",
@@ -134,6 +140,7 @@
   "partners": {
     "badge": "Partnerships & Networks",
     "title": "A Network of Excellence",
+    "sectionTitle": "OUR PARTNER NETWORK",
     "description": "Strategic alliances with public institutions, business federations, and international chambers of commerce."
   },
   "cta": {

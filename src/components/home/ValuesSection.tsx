@@ -1,4 +1,4 @@
-import { Scale, Award, Handshake, Target, Leaf, LucideIcon } from "lucide-react";
+import { Scale, Award, Handshake, Target, Leaf, LucideIcon, Pause, Play } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 import { useRef, useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
@@ -65,6 +65,7 @@ const ValuesSection = () => {
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [isAutoplay, setIsAutoplay] = useState(true);
 
   const values: ValueItem[] = [
     {
@@ -101,6 +102,21 @@ const ValuesSection = () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  // Autoplay sur mobile avec intervalle fluide
+  useEffect(() => {
+    if (!api || !isAutoplay) return;
+    const interval = setInterval(() => {
+      if (api.canScrollNext()) {
+        api.scrollNext();
+      } else {
+        api.scrollTo(0);
+      }
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [api, isAutoplay]);
+
   return <section className="py-16 md:py-20 lg:py-24 bg-primary relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -134,9 +150,20 @@ const ValuesSection = () => {
             </CarouselContent>
           </Carousel>
           
-          {/* Carousel Dots */}
-          <div className="flex justify-center gap-2 mt-6">
-            {values.map((_, index) => <button key={index} onClick={() => api?.scrollTo(index)} className={`h-2.5 rounded-full transition-all duration-300 ${current === index ? "bg-accent w-7" : "bg-white/30 w-2.5 hover:bg-white/50"}`} aria-label={`Go to slide ${index + 1}`} />)}
+          {/* Carousel Dots & Play/Pause Button */}
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <button
+              type="button"
+              onClick={() => setIsAutoplay((prev) => !prev)}
+              className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-accent flex items-center justify-center transition-colors"
+              aria-label={isAutoplay ? "Arrêter le défilement automatique" : "Reprendre le défilement automatique"}
+              title={isAutoplay ? "Pause" : "Play"}
+            >
+              {isAutoplay ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
+            </button>
+            <div className="flex gap-2">
+              {values.map((_, index) => <button key={index} type="button" onClick={() => api?.scrollTo(index)} className={`h-2.5 rounded-full transition-all duration-300 ${current === index ? "bg-accent w-7" : "bg-white/30 w-2.5 hover:bg-white/50"}`} aria-label={`Go to slide ${index + 1}`} />)}
+            </div>
           </div>
         </div>
 

@@ -3,6 +3,9 @@ import { useRef, useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import SectionHeader from "@/components/ui/section-header";
 import { useTranslation } from "react-i18next";
+import { useSiteMedia } from "@/hooks/useSiteMedia";
+import { Pause, Play } from "lucide-react";
+import { PillarCardSkeleton } from "@/components/ui/BrandedSkeleton";
 
 // Mission images
 import diplomatieImg from "@/assets/missions/diplomatie.jpg";
@@ -18,6 +21,7 @@ interface MissionItem {
 
 const MissionCard = ({ mission }: { mission: MissionItem }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   useEffect(() => {
     const card = cardRef.current;
@@ -45,13 +49,22 @@ const MissionCard = ({ mission }: { mission: MissionItem }) => {
       className="relative rounded-2xl overflow-hidden h-[280px] md:h-[320px] shadow-lg"
       style={{ transition: "transform 0.3s ease" }}
     >
+      {!imageLoaded && (
+        <div className="absolute inset-0 z-0">
+          <PillarCardSkeleton className="w-full h-full" />
+        </div>
+      )}
+
       {/* Background Image */}
       <img
         src={mission.image}
         alt={mission.title}
         loading="lazy"
         decoding="async"
-        className="absolute inset-0 w-full h-full object-cover"
+        onLoad={() => setImageLoaded(true)}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          imageLoaded ? "opacity-100" : "opacity-0"
+        }`}
       />
       
       {/* Dark Overlay */}
@@ -77,27 +90,29 @@ const MissionCard = ({ mission }: { mission: MissionItem }) => {
 
 const MissionSection = () => {
   const { t } = useTranslation();
+  const { getMedia } = useSiteMedia();
   const headerRef = useScrollAnimation<HTMLDivElement>({ type: "fadeUp" });
   const gridRef = useStaggerAnimation<HTMLDivElement>({ staggerAmount: 0.1 });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [isAutoplay, setIsAutoplay] = useState(true);
 
   const missions: MissionItem[] = [
     {
       number: "01",
-      image: diplomatieImg,
+      image: getMedia("mission_pillar_1", diplomatieImg),
       title: t("mission.p1Title", "Diplomatie Commerciale"),
       description: t("mission.p1Desc", "Faciliter les relations commerciales entre le Congo et les partenaires internationaux à travers une diplomatie économique active.")
     },
     {
       number: "02",
-      image: pmeImg,
+      image: getMedia("mission_pillar_2", pmeImg),
       title: t("mission.p2Title", "Soutien aux PME/PMI"),
       description: t("mission.p2Desc", "Accompagner les petites et moyennes entreprises congolaises dans leur développement et leur internationalisation.")
     },
     {
       number: "03",
-      image: intermediationImg,
+      image: getMedia("mission_pillar_3", intermediationImg),
       title: t("mission.p3Title", "Promotion de l'Excellence"),
       description: t("mission.p3Desc", "Créer des passerelles entre les acteurs économiques locaux et les investisseurs internationaux.")
     }
@@ -108,6 +123,20 @@ const MissionSection = () => {
     setCurrent(api.selectedScrollSnap());
     api.on("select", () => setCurrent(api.selectedScrollSnap()));
   }, [api]);
+
+  // Défilement automatique intelligent sur mobile avec option pause/reprise
+  useEffect(() => {
+    if (!api || !isAutoplay) return;
+    const interval = setInterval(() => {
+      if (api.canScrollNext()) {
+        api.scrollNext();
+      } else {
+        api.scrollTo(0);
+      }
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [api, isAutoplay]);
 
   return (
     <section id="mission-section" className="py-14 md:py-20 lg:py-24 bg-background">
@@ -123,7 +152,7 @@ const MissionSection = () => {
           </p>
         </div>
 
-        {/* Mobile Carousel (<768px) */}
+        {/* Mobile Carousel (<768px) avec Autoplay et Contrôle Stop/Play */}
         <div className="md:hidden">
           <Carousel
             setApi={setApi}
@@ -139,20 +168,34 @@ const MissionSection = () => {
             </CarouselContent>
           </Carousel>
           
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-5">
-            {missions.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => api?.scrollTo(index)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  current === index
-                    ? "bg-accent w-7"
-                    : "bg-primary/30 w-2.5 hover:bg-primary/50"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+          {/* Contrôles Défilement Mobile : Play/Pause + Indicateurs Dots */}
+          <div className="flex items-center justify-center gap-3 mt-5">
+            <button
+              type="button"
+              onClick={() => setIsAutoplay((prev) => !prev)}
+              className="w-7 h-7 rounded-full bg-accent/15 hover:bg-accent/30 text-accent flex items-center justify-center transition-colors"
+              aria-label={isAutoplay ? "Arrêter le défilement automatique" : "Reprendre le défilement automatique"}
+              title={isAutoplay ? "Pause" : "Play"}
+            >
+              {isAutoplay ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
+            </button>
+            <div className="flex gap-2">
+              {missions.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => {
+                    api?.scrollTo(index);
+                  }}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    current === index
+                      ? "bg-accent w-7"
+                      : "bg-primary/30 w-2.5 hover:bg-primary/50"
+                  }`}
+                  aria-label={`Aller au slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
