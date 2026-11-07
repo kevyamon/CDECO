@@ -18,7 +18,8 @@ export const mediaService = {
   async getMediaDictionary(): Promise<Record<string, string>> {
     try {
       const response = await apiClient.get<{ success: boolean; data: Record<string, string> }>(
-        "/media/dictionary"
+        "/media/dictionary",
+        { timeout: 15000 }
       );
       return response.data.data || {};
     } catch {

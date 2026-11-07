@@ -75,14 +75,15 @@ const HeroSection = () => {
       behavior: "smooth"
     });
   };
-  return <section ref={sectionRef} className="relative min-h-screen flex flex-col overflow-hidden contain-paint">
+  return <section ref={sectionRef} className="relative min-h-screen flex flex-col overflow-hidden contain-paint bg-[#0c1f36]">
       {/* Background Image Carousel with CSS transitions - optimisé */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 bg-[#0c1f36]">
         {carouselImages.map((image, index) => (
           <img 
             key={index} 
             src={image} 
-            alt={`CDECO Event ${index + 1}`} 
+            alt="" 
+            aria-hidden="true"
             loading={index === 0 ? "eager" : "lazy"} 
             {...({ fetchpriority: index === 0 ? "high" : "low" } as any)}
             decoding={index === 0 ? "sync" : "async"} 
