@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Shield, Award, Target } from "lucide-react";
-import presidentImage from "@/assets/members/president-fondateur.jpg";
+import presidentImage from "@/assets/members/president-fondateur.webp";
 import { useTranslation } from "react-i18next";
 
 const MessagePresident = () => {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Plane, Ship, Train, Building2 } from "lucide-react";
-import congoMapImage from "@/assets/congo-map.png";
+import congoMapImage from "@/assets/congo-map.webp";
 import { useTranslation } from "react-i18next";
 
 interface MapPoint {

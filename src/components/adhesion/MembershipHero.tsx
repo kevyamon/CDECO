@@ -1,8 +1,8 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoImg from "@/assets/logo-cdeco.png";
-import heroImg from "@/assets/hero-meeting.jpg";
+import logoImg from "@/assets/logo-cdeco.webp";
+import heroImg from "@/assets/hero-meeting.webp";
 import { useTranslation } from "react-i18next";
 
 const MembershipHero = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, ChevronDown, ChevronUp } from "lucide-react";
-import logo from "@/assets/logo-cdeco.png";
+import logo from "@/assets/logo-cdeco.webp";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";

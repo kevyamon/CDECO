@@ -10,7 +10,7 @@ import { fadeInUp, staggerContainer } from "@/animations/variants";
 import CongoMap from "@/components/congo/CongoMap";
 import { InfrastructureSection, EconomySection } from "@/components/congo/CongoInfrastructures";
 import { InvestorEnvironmentSection, WhyInvestSection } from "@/components/congo/CongoInvestmentReasons";
-import congoFlag from "@/assets/congo-flag.jpg";
+import congoFlag from "@/assets/congo-flag.webp";
 import { useTranslation } from "react-i18next";
 
 gsap.registerPlugin(ScrollTrigger);

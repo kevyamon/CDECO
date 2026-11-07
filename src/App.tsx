@@ -26,7 +26,7 @@
  * - "*" : Page 404 (route non trouvée)
  */
 
-import { lazy, Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,29 +34,32 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import ScrollToTop from "@/components/ScrollToTop";
+import { lazyWithRetry } from "@/utils/lazyWithRetry";
+import { prefetchPublicRoutes } from "@/utils/routePrefetch";
+import RouteProgressBar from "@/components/layout/RouteProgressBar";
 
 // Page d'accueil chargée immédiatement (above the fold)
 import Index from "./pages/Index";
 
-// Lazy loading des autres pages pour réduire le bundle initial
-const Events = lazy(() => import("./pages/Events"));
-const EventDetail = lazy(() => import("./pages/EventDetail"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Adhesion = lazy(() => import("./pages/Adhesion"));
-const Auth = lazy(() => import("./pages/Auth"));
-const Admin = lazy(() => import("./pages/Admin"));
-const MemberSpace = lazy(() => import("./pages/MemberSpace"));
-const MemberAuth = lazy(() => import("./pages/MemberAuth"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Resources = lazy(() => import("./pages/Resources"));
-const KampusCdeco = lazy(() => import("./pages/KampusCdeco"));
-const LeCongo = lazy(() => import("./pages/LeCongo"));
+// Lazy loading avec tolérance aux coupures réseau et reconnexions automatiques
+const Events = lazyWithRetry(() => import("./pages/Events"));
+const EventDetail = lazyWithRetry(() => import("./pages/EventDetail"));
+const Contact = lazyWithRetry(() => import("./pages/Contact"));
+const Adhesion = lazyWithRetry(() => import("./pages/Adhesion"));
+const Auth = lazyWithRetry(() => import("./pages/Auth"));
+const Admin = lazyWithRetry(() => import("./pages/Admin"));
+const MemberSpace = lazyWithRetry(() => import("./pages/MemberSpace"));
+const MemberAuth = lazyWithRetry(() => import("./pages/MemberAuth"));
+const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
+const Resources = lazyWithRetry(() => import("./pages/Resources"));
+const KampusCdeco = lazyWithRetry(() => import("./pages/KampusCdeco"));
+const LeCongo = lazyWithRetry(() => import("./pages/LeCongo"));
 
 // Pages CDECO lazy loaded
-const Presentation = lazy(() => import("./pages/cdeco/Presentation"));
-const MessagePresident = lazy(() => import("./pages/cdeco/MessagePresident"));
-const MissionsCdeco = lazy(() => import("./pages/cdeco/MissionsCdeco"));
-const Bureau = lazy(() => import("./pages/cdeco/Bureau"));
+const Presentation = lazyWithRetry(() => import("./pages/cdeco/Presentation"));
+const MessagePresident = lazyWithRetry(() => import("./pages/cdeco/MessagePresident"));
+const MissionsCdeco = lazyWithRetry(() => import("./pages/cdeco/MissionsCdeco"));
+const Bureau = lazyWithRetry(() => import("./pages/cdeco/Bureau"));
 
 /**
  * Client React Query pour la gestion du cache des requêtes API
@@ -64,23 +67,23 @@ const Bureau = lazy(() => import("./pages/cdeco/Bureau"));
 const queryClient = new QueryClient();
 
 /**
- * Fallback invisible pour le lazy loading - transition instantanée
- */
-const PageLoader = () => null;
-
-/**
  * Composant principal de l'application
  */
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <ScrollToTop />
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+const App = () => {
+  useEffect(() => {
+    prefetchPublicRoutes();
+  }, []);
+
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <ScrollToTop />
+            <Suspense fallback={<RouteProgressBar />}>
+              <Routes>
               {/* Page d'accueil */}
               <Route path="/" element={<Index />} />
               
@@ -116,7 +119,8 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  </HelmetProvider>
-);
+    </HelmetProvider>
+  );
+};
 
 export default App;

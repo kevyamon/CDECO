@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Globe, ChevronDown, UserCircle } from "lucide-react";
-import logoCdeco from "@/assets/logo-cdeco.png";
+import logoCdeco from "@/assets/logo-cdeco.webp";
 import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,

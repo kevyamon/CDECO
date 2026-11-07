@@ -8,12 +8,12 @@ import { useTranslation } from "react-i18next";
 import { useSiteMedia } from "@/hooks/useSiteMedia";
 
 // Gallery images for carousel
-import event1 from "@/assets/gallery/event-1.jpg";
-import event2 from "@/assets/gallery/event-2.jpg";
-import event3 from "@/assets/gallery/event-3.jpg";
-import event4 from "@/assets/gallery/event-4.jpg";
-import event5 from "@/assets/gallery/event-5.jpg";
-import team1 from "@/assets/gallery/team-1.jpg";
+import event1 from "@/assets/gallery/event-1.webp";
+import event2 from "@/assets/gallery/event-2.webp";
+import event3 from "@/assets/gallery/event-3.webp";
+import event4 from "@/assets/gallery/event-4.webp";
+import event5 from "@/assets/gallery/event-5.webp";
+import team1 from "@/assets/gallery/team-1.webp";
 gsap.registerPlugin(ScrollTrigger);
 const defaultCarouselImages = [event1, event2, event3, event4, event5, team1];
 const HeroSection = () => {

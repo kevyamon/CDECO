@@ -1,17 +1,17 @@
-import heroMeetingImg from "@/assets/hero-meeting.jpg";
-import diplomatieImg from "@/assets/missions/diplomatie.jpg";
-import pmeImg from "@/assets/missions/pme.jpg";
-import intermediationImg from "@/assets/missions/intermediation.jpg";
-import hydrocarburesImg from "@/assets/sectors/hydrocarbures.jpg";
-import tourismeImg from "@/assets/sectors/tourisme.jpg";
-import agricultureImg from "@/assets/sectors/agriculture.jpg";
-import minesImg from "@/assets/sectors/mines.jpg";
-import foretsImg from "@/assets/sectors/forets.jpg";
-import infrastructureImg from "@/assets/sectors/infrastructure.jpg";
-import educationImg from "@/assets/sectors/education.jpg";
-import numeriqueImg from "@/assets/sectors/numerique.jpg";
-import energieImg from "@/assets/sectors/energie.jpg";
-import autresImg from "@/assets/sectors/autres.jpg";
+import heroMeetingImg from "@/assets/hero-meeting.webp";
+import diplomatieImg from "@/assets/missions/diplomatie.webp";
+import pmeImg from "@/assets/missions/pme.webp";
+import intermediationImg from "@/assets/missions/intermediation.webp";
+import hydrocarburesImg from "@/assets/sectors/hydrocarbures.webp";
+import tourismeImg from "@/assets/sectors/tourisme.webp";
+import agricultureImg from "@/assets/sectors/agriculture.webp";
+import minesImg from "@/assets/sectors/mines.webp";
+import foretsImg from "@/assets/sectors/forets.webp";
+import infrastructureImg from "@/assets/sectors/infrastructure.webp";
+import educationImg from "@/assets/sectors/education.webp";
+import numeriqueImg from "@/assets/sectors/numerique.webp";
+import energieImg from "@/assets/sectors/energie.webp";
+import autresImg from "@/assets/sectors/autres.webp";
 
 export type MediaGroup = "all" | "sectors" | "pillars" | "hero_video";
 

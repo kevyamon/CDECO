@@ -1,15 +1,15 @@
-import eventsForum from "@/assets/gallery/events-forum.jpg";
-import eventsDiplomatie from "@/assets/gallery/events-diplomatie.jpg";
-import parisConference1 from "@/assets/gallery/paris-conference-1.jpg";
-import parisOcdeTeam from "@/assets/gallery/paris-ocde-team.jpg";
-import parisIefaConference from "@/assets/gallery/paris-iefa-conference.jpg";
-import eventsConference from "@/assets/gallery/events-conference.jpg";
-import eventsEquipe from "@/assets/gallery/events-equipe.jpg";
-import eventsPartenariat from "@/assets/gallery/events-partenariat.jpg";
-import eventsWef from "@/assets/gallery/events-wef.jpg";
-import eventsAudience from "@/assets/gallery/events-audience.jpg";
-import eventsNetworking from "@/assets/gallery/events-networking.jpg";
-import eventsRencontre from "@/assets/gallery/events-rencontre.jpg";
+import eventsForum from "@/assets/gallery/events-forum.webp";
+import eventsDiplomatie from "@/assets/gallery/events-diplomatie.webp";
+import parisConference1 from "@/assets/gallery/paris-conference-1.webp";
+import parisOcdeTeam from "@/assets/gallery/paris-ocde-team.webp";
+import parisIefaConference from "@/assets/gallery/paris-iefa-conference.webp";
+import eventsConference from "@/assets/gallery/events-conference.webp";
+import eventsEquipe from "@/assets/gallery/events-equipe.webp";
+import eventsPartenariat from "@/assets/gallery/events-partenariat.webp";
+import eventsWef from "@/assets/gallery/events-wef.webp";
+import eventsAudience from "@/assets/gallery/events-audience.webp";
+import eventsNetworking from "@/assets/gallery/events-networking.webp";
+import eventsRencontre from "@/assets/gallery/events-rencontre.webp";
 import { CdecoEvent } from "@/api/eventService";
 
 export const DEFAULT_UPCOMING_EVENTS: CdecoEvent[] = [

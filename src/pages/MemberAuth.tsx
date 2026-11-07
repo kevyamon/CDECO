@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { authService } from "@/api/authService";
 import { z } from "zod";
 import { ArrowLeft, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import logo from "@/assets/logo-cdeco.png";
+import logo from "@/assets/logo-cdeco.webp";
 
 const createAuthSchema = (isEn: boolean) =>
   z.object({

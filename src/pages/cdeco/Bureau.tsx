@@ -7,19 +7,19 @@ import { useTranslation } from "react-i18next";
 import { memberService, Member } from "@/api/memberService";
 
 // Images par défaut des membres du Bureau Exécutif
-import presidentImg from "@/assets/members/president-new.jpg";
-import vicePresidentImg from "@/assets/members/vice-president.jpg";
-import vicePresidenteImg from "@/assets/members/vice-presidente.jpg";
-import secretaireImg from "@/assets/members/secretaire-new.jpg";
-import communicationImg from "@/assets/members/communication.jpg";
-import tresoriereImg from "@/assets/members/tresoriere-new.jpg";
-import directeurKampusImg from "@/assets/members/directeur-kampus.jpg";
+import presidentImg from "@/assets/members/president-new.webp";
+import vicePresidentImg from "@/assets/members/vice-president.webp";
+import vicePresidenteImg from "@/assets/members/vice-presidente.webp";
+import secretaireImg from "@/assets/members/secretaire-new.webp";
+import communicationImg from "@/assets/members/communication.webp";
+import tresoriereImg from "@/assets/members/tresoriere-new.webp";
+import directeurKampusImg from "@/assets/members/directeur-kampus.webp";
 
 // Images par défaut des membres du CCI
-import cciNajibImg from "@/assets/members/cci-najib.jpg";
-import cciDeveImg from "@/assets/members/cci-deve.jpg";
-import cciArseneImg from "@/assets/members/cci-arsene.jpg";
-import cciAminaImg from "@/assets/members/cci-amina.jpg";
+import cciNajibImg from "@/assets/members/cci-najib.webp";
+import cciDeveImg from "@/assets/members/cci-deve.webp";
+import cciArseneImg from "@/assets/members/cci-arsene.webp";
+import cciAminaImg from "@/assets/members/cci-amina.webp";
 
 interface FormattedMember {
   name: string;

@@ -8,9 +8,9 @@ import { Pause, Play } from "lucide-react";
 import { PillarCardSkeleton } from "@/components/ui/BrandedSkeleton";
 
 // Mission images
-import diplomatieImg from "@/assets/missions/diplomatie.jpg";
-import pmeImg from "@/assets/missions/pme.jpg";
-import intermediationImg from "@/assets/missions/intermediation.jpg";
+import diplomatieImg from "@/assets/missions/diplomatie.webp";
+import pmeImg from "@/assets/missions/pme.webp";
+import intermediationImg from "@/assets/missions/intermediation.webp";
 
 interface MissionItem {
   number: string;

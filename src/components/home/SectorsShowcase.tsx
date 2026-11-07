@@ -15,16 +15,16 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 // Import sector images
-import hydrocarburesImg from "@/assets/sectors/hydrocarbures.jpg";
-import tourismeImg from "@/assets/sectors/tourisme.jpg";
-import agricultureImg from "@/assets/sectors/agriculture.jpg";
-import minesImg from "@/assets/sectors/mines.jpg";
-import foretsImg from "@/assets/sectors/forets.jpg";
-import autresImg from "@/assets/sectors/autres.jpg";
-import infrastructureImg from "@/assets/sectors/infrastructure.jpg";
-import educationImg from "@/assets/sectors/education.jpg";
-import numeriqueImg from "@/assets/sectors/numerique.jpg";
-import energieImg from "@/assets/sectors/energie.jpg";
+import hydrocarburesImg from "@/assets/sectors/hydrocarbures.webp";
+import tourismeImg from "@/assets/sectors/tourisme.webp";
+import agricultureImg from "@/assets/sectors/agriculture.webp";
+import minesImg from "@/assets/sectors/mines.webp";
+import foretsImg from "@/assets/sectors/forets.webp";
+import autresImg from "@/assets/sectors/autres.webp";
+import infrastructureImg from "@/assets/sectors/infrastructure.webp";
+import educationImg from "@/assets/sectors/education.webp";
+import numeriqueImg from "@/assets/sectors/numerique.webp";
+import energieImg from "@/assets/sectors/energie.webp";
 
 const SectorsShowcase = () => {
   const { t } = useTranslation();
