@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { membershipService } from "@/api/membershipService";
@@ -13,25 +13,28 @@ import {
   Users, 
   Mail, 
   RefreshCw, 
-  Home,
-  Calendar,
-  Phone,
-  Image as ImageIcon,
-  UserCheck,
-  FileText
+  Home, 
+  Calendar, 
+  Phone, 
+  Image as ImageIcon, 
+  UserCheck, 
+  FileText 
 } from "lucide-react";
 import AdminStatsGrid from "@/components/admin/AdminStatsGrid";
 import MembershipRequestsTable from "@/components/admin/MembershipRequestsTable";
 import ContactMessagesTable from "@/components/admin/ContactMessagesTable";
 import MembershipChart from "@/components/admin/MembershipChart";
-import MediaManagerTab from "@/components/admin/MediaManagerTab";
-import EventsManagerTab from "@/components/admin/EventsManagerTab";
-import ContactSettingsTab from "@/components/admin/ContactSettingsTab";
-import BureauManagerTab from "@/components/admin/BureauManagerTab";
-import ResourcesManagerTab from "@/components/admin/ResourcesManagerTab";
+import { AdminFormSkeleton } from "@/components/admin/AdminSkeletonLoader";
 import NotFound from "@/pages/NotFound";
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
+
+// Chargement différé des onglets secondaires pour diviser le bundle initial de l'admin par 5
+const MediaManagerTab = lazy(() => import("@/components/admin/MediaManagerTab"));
+const EventsManagerTab = lazy(() => import("@/components/admin/EventsManagerTab"));
+const ContactSettingsTab = lazy(() => import("@/components/admin/ContactSettingsTab"));
+const BureauManagerTab = lazy(() => import("@/components/admin/BureauManagerTab"));
+const ResourcesManagerTab = lazy(() => import("@/components/admin/ResourcesManagerTab"));
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -170,7 +173,7 @@ const Admin = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/");
+    window.location.replace("/");
   };
 
   const pendingCount = membershipRequests.filter((r) => r.status === "pending").length;
@@ -330,23 +333,33 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="bureau" className="w-full min-w-0">
-            <BureauManagerTab />
+            <Suspense fallback={<AdminFormSkeleton />}>
+              <BureauManagerTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="resources" className="w-full min-w-0">
-            <ResourcesManagerTab />
+            <Suspense fallback={<AdminFormSkeleton />}>
+              <ResourcesManagerTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="events" className="w-full min-w-0">
-            <EventsManagerTab />
+            <Suspense fallback={<AdminFormSkeleton />}>
+              <EventsManagerTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="media" className="w-full min-w-0">
-            <MediaManagerTab />
+            <Suspense fallback={<AdminFormSkeleton />}>
+              <MediaManagerTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="settings" className="w-full min-w-0">
-            <ContactSettingsTab />
+            <Suspense fallback={<AdminFormSkeleton />}>
+              <ContactSettingsTab />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </main>

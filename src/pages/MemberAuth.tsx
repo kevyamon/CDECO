@@ -79,15 +79,18 @@ const MemberAuth = () => {
           title: isEn ? "Admin Portal Access" : "Accès Administrateur",
           description: isEn ? "Welcome to CDECO management dashboard." : "Bienvenue dans le tableau de bord de gestion CDECO.",
         });
-        navigate("/admin", { replace: true });
+        window.location.replace("/admin");
+        return;
       } else {
         toast({
           title: isEn ? "Login Successful" : "Connexion réussie",
           description: isEn ? "Welcome to your member portal." : "Bienvenue dans votre espace membre.",
         });
-        navigate("/espace-membre");
+        window.location.replace("/espace-membre");
+        return;
       }
     } catch (error: any) {
+      setIsLoading(false);
       if (!navigator.onLine || (error.code === "ERR_NETWORK" && !navigator.onLine)) {
         toast({
           title: isEn ? "No Internet Connection" : "Connexion Internet absente",
@@ -131,8 +134,6 @@ const MemberAuth = () => {
           variant: "destructive",
         });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 

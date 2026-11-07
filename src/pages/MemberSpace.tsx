@@ -63,7 +63,7 @@ const MemberSpace = () => {
       return;
     }
     if (isAdmin) {
-      navigate("/admin", { replace: true });
+      window.location.replace("/admin");
       return;
     }
     if (user.email) {
@@ -73,7 +73,7 @@ const MemberSpace = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/auth-membre", { replace: true });
+    window.location.replace("/auth-membre");
   };
 
   const getStatusConfig = (status: string) => {
