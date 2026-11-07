@@ -78,3 +78,4 @@ export const SmartScrollToTop = () => {
 };
 
 export default SmartScrollToTop;
+
