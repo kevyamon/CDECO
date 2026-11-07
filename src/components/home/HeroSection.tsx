@@ -27,7 +27,6 @@ const HeroSection = () => {
   const badgeRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -37,38 +36,19 @@ const HeroSection = () => {
       setCurrentIndex(prev => (prev + 1) % carouselImages.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [carouselImages.length]);
+
   useEffect(() => {
-    // Defer GSAP animations to avoid forced reflows during initial render
-    const timeoutId = setTimeout(() => {
-      if (!badgeRef.current || !titleRef.current || !descRef.current || !ctaRef.current) return;
-      const tl = gsap.timeline({
-        defaults: {
-          ease: "power3.out"
-        }
-      });
-      tl.to(badgeRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6
-      }).to(titleRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7
-      }, "-=0.3").to(descRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6
-      }, "-=0.4").to(ctaRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6
-      }, "-=0.3");
-    }, 100);
-    return () => {
-      clearTimeout(timeoutId);
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
+    if (!badgeRef.current || !titleRef.current || !descRef.current) return;
+    const elements = [badgeRef.current, titleRef.current, descRef.current];
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        elements,
+        { opacity: 0.3, y: 15 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out" }
+      );
+    });
+    return () => ctx.revert();
   }, []);
   const scrollToContent = () => {
     const element = document.getElementById("mission-section");
@@ -101,7 +81,7 @@ const HeroSection = () => {
         <div className="container-cdeco">
           <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
             {/* Location Badge */}
-            <div ref={badgeRef} className="opacity-0 translate-y-8">
+            <div ref={badgeRef} className="transition-all duration-500">
               <div className="flex items-center justify-center gap-3">
                 <div className="h-px w-8 sm:w-12 bg-white/40" />
                 <span className="flex items-center gap-2 text-xs sm:text-sm font-medium uppercase tracking-[0.15em] text-white/90">
@@ -113,7 +93,7 @@ const HeroSection = () => {
             </div>
 
             {/* Title */}
-            <h1 ref={titleRef} className="opacity-0 translate-y-10 font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary-foreground leading-tight">
+            <h1 ref={titleRef} className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary-foreground leading-tight">
               {t("hero.title")}<br />
               <span className="relative inline-block">
                 <span className="text-accent">{t("hero.titleHighlight")}</span>
@@ -122,7 +102,7 @@ const HeroSection = () => {
             </h1>
 
             {/* Description */}
-            <p ref={descRef} className="opacity-0 translate-y-8 text-lg sm:text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-3xl mx-auto">
+            <p ref={descRef} className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-3xl mx-auto">
               {t("hero.subtitle")}
             </p>
 
