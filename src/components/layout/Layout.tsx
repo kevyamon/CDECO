@@ -23,14 +23,23 @@
  */
 
 import { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import SmartScrollToTop from "./SmartScrollToTop";
 
 interface LayoutProps {
   children: ReactNode;
+  showFooter?: boolean;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, showFooter }: LayoutProps) => {
+  const location = useLocation();
+
+  // Le footer n'est visible que sur la page d'accueil "/" (sauf surcharge explicite)
+  const isHomePage = location.pathname === "/";
+  const shouldRenderFooter = showFooter !== undefined ? showFooter : isHomePage;
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* 
@@ -60,8 +69,11 @@ const Layout = ({ children }: LayoutProps) => {
         {children}
       </main>
 
-      {/* Pied de page */}
-      <Footer />
+      {/* Pied de page : rendu UNIQUEMENT sur la page d'accueil */}
+      {shouldRenderFooter && <Footer />}
+
+      {/* Bouton retour en haut intelligent avec masquage automatique présent sur toutes les pages */}
+      <SmartScrollToTop />
     </div>
   );
 };
