@@ -76,3 +76,4 @@ export const PillarCardSkeleton: FC<{ className?: string }> = ({ className }) =>
 };
 
 export default BrandedSkeleton;
+

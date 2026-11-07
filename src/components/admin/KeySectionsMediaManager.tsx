@@ -245,3 +245,4 @@ export const KeySectionsMediaManager: FC = () => {
 };
 
 export default KeySectionsMediaManager;
+
