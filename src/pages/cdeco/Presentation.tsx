@@ -14,6 +14,7 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import SectionHeader from "@/components/ui/section-header";
 import { Shield, Target, Award, Globe, Building2, Handshake } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { 
   FadeInUp, 
   FadeInDown, 
@@ -26,6 +27,7 @@ import {
 } from "@/components/animations/MotionWrapper";
 
 const Presentation = () => {
+  const { t } = useTranslation();
   return (
     <Layout>
       <SEOHead
@@ -40,16 +42,16 @@ const Presentation = () => {
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5" aria-hidden="true" />
         <div className="container-cdeco relative z-10 text-center">
           <FadeInDown delay={0}>
-            <SectionHeader label="Notre Histoire" variant="light" />
+            <SectionHeader label={t("about.historyBadge", "Notre Histoire")} variant="light" />
           </FadeInDown>
           <FadeInDown delay={0.1}>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Présentation de la CDECO
+              {t("nav.presentation", "Présentation de la CDECO")}
             </h1>
           </FadeInDown>
           <FadeInUp delay={0.2}>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-              Une institution stratégique au service du développement économique du Congo
+              {t("about.description", "Une institution stratégique au service du développement économique du Congo")}
             </p>
           </FadeInUp>
         </div>
@@ -96,13 +98,10 @@ const Presentation = () => {
                     <Building2 className="w-7 h-7" />
                   </PulseIcon>
                   <h3 className="font-heading text-xl font-bold text-foreground mb-4">
-                    Sur le plan national
+                    {t("president.nationalTitle", "Sur le plan national")}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    S'engage à promouvoir les relations économiques et commerciales de la République du Congo, 
-                    à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces 
-                    vives autour d'objectifs clairs : créer de la valeur ajoutée, attirer des investissements porteurs, 
-                    et encourager la diversification économique pour un développement durable.
+                    {t("president.nationalText", "S'engage à promouvoir les relations économiques et commerciales de la République du Congo, à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces vives.")}
                   </p>
                 </HoverCard>
               </FadeInLeft>
@@ -113,13 +112,10 @@ const Presentation = () => {
                     <Globe className="w-7 h-7" />
                   </PulseIcon>
                   <h3 className="font-heading text-xl font-bold text-foreground mb-4">
-                    Sur le plan international
+                    {t("president.intlTitle", "Sur le plan international")}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges 
-                    économiques entre le Congo, les États africains, les partenaires internationaux. À travers cette 
-                    installation, la CDECO invite solennellement les gouvernements africains, les acteurs économiques, 
-                    ainsi que les institutions régionales et internationales à s'unir à ses côtés.
+                    {t("president.intlText", "La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges économiques entre le Congo, les États africains et les partenaires mondiaux.")}
                   </p>
                 </HoverCard>
               </FadeInRight>

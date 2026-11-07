@@ -11,8 +11,10 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import SectionHeader from "@/components/ui/section-header";
 import { staggerContainer, staggerItem, scaleIn } from "@/animations/variants";
+import { useTranslation } from "react-i18next";
 
 const VideoSection = () => {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -35,18 +37,13 @@ const VideoSection = () => {
               </video>
             </div>
             <div className="space-y-6">
-              <SectionHeader label="Découvrez la CDECO" className="justify-start" />
+              <SectionHeader label={t("video.badge", "Présentation Vidéo")} className="justify-start" />
               <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-                La CDECO : Chambre de Diplomatie{" "}
-                <span className="text-primary">Économique du Congo</span>
+                {t("video.title", "Découvrez la CDECO en Vidéo")}
               </h2>
               <div className="space-y-4">
-                <h3 className="font-heading text-xl md:text-2xl font-semibold text-foreground">
-                  Présentation
-                </h3>
                 <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed">
-                  La Chambre de Diplomatie Économique du Congo (CDECO) est une organisation à vocation stratégique, 
-                  dédiée à la promotion des intérêts économiques et commerciaux de la République du Congo.
+                  {t("video.description", "La Chambre de Diplomatie Économique du Congo (CDECO) est une organisation à vocation stratégique, dédiée à la promotion des intérêts économiques et commerciaux de la République du Congo.")}
                 </p>
               </div>
             </div>
@@ -89,37 +86,19 @@ const VideoSection = () => {
             viewport={{ once: true, margin: "-50px" }}
           >
             <motion.div variants={staggerItem}>
-              <SectionHeader label="Découvrez la CDECO" className="justify-start" />
+              <SectionHeader label={t("video.badge", "Présentation Vidéo")} className="justify-start" />
             </motion.div>
             
             <motion.h2 
               variants={staggerItem}
               className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground"
             >
-              La CDECO : Chambre de Diplomatie{" "}
-              <span className="text-primary">Économique du Congo</span>
+              {t("video.title", "Découvrez la CDECO en Vidéo")}
             </motion.h2>
 
             <motion.div variants={staggerItem} className="space-y-4">
-              <h3 className="font-heading text-xl md:text-2xl font-semibold text-foreground">
-                Présentation
-              </h3>
               <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed">
-                La Chambre de Diplomatie Économique du Congo (CDECO) est une organisation à vocation stratégique, 
-                dédiée à la promotion des intérêts économiques et commerciaux de la République du Congo sur la scène 
-                régionale qu'internationale. Elle œuvre à travers la facilitation des investissements, le renforcement 
-                des échanges commerciaux, l'accompagnement des opérateurs économiques, entrepreneurs africains et le 
-                développement de la coopération technique dans l'espace économique mondial.
-              </p>
-            </motion.div>
-
-            <motion.div variants={staggerItem} className="space-y-4">
-              <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed">
-                Dans un contexte où les relations économiques et commerciales sont étroitement liées aux enjeux diplomatiques, 
-                la République du Congo affirme sa place sur l'échiquier international grâce à une diplomatie proactive, 
-                innovante et inclusive. La CDECO se positionne comme un hub et un levier stratégique pour l'attractivité 
-                des investissements étrangers, jouer le rôle de passerelle économique entre les secteurs publics-privés, 
-                créer des synergies économiques avec la diaspora africaine.
+                {t("video.description", "La Chambre de Diplomatie Économique du Congo (CDECO) est une organisation à vocation stratégique, dédiée à la promotion des intérêts économiques et commerciaux de la République du Congo sur la scène régionale qu'internationale.")}
               </p>
             </motion.div>
           </motion.div>

@@ -2,15 +2,9 @@ import { useStaggerAnimation } from "@/hooks/useScrollAnimation";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTranslation } from "react-i18next";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const stats = [
-  { value: 100, suffix: "+", label: "Partenaires" },
-  { value: 6, suffix: "", label: "Secteurs Clés" },
-  { value: 500, suffix: "+", label: "Membres" },
-  { value: 50, suffix: "+", label: "Événements/an" },
-];
 
 interface AnimatedCounterProps {
   value: number;
@@ -58,7 +52,15 @@ const AnimatedCounter = ({ value, suffix, duration = 2 }: AnimatedCounterProps) 
 };
 
 const StatsSection = () => {
+  const { t } = useTranslation();
   const statsRef = useStaggerAnimation<HTMLDivElement>({ staggerAmount: 0.1 });
+
+  const stats = [
+    { value: 100, suffix: "+", label: t("stats.partners", "Partenaires") },
+    { value: 6, suffix: "", label: t("stats.sectors", "Secteurs Clés") },
+    { value: 500, suffix: "+", label: t("stats.members", "Membres") },
+    { value: 50, suffix: "+", label: t("stats.eventsYear", "Événements/an") },
+  ];
 
   return (
     <section className="py-16 md:py-24 bg-background">

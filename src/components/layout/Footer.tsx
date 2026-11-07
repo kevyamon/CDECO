@@ -4,12 +4,14 @@ import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, ArrowUp } from "lucid
 import logo from "@/assets/logo-cdeco.png";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTranslation } from "react-i18next";
 import FooterMobileAccordion from "./FooterMobileAccordion";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -35,15 +37,15 @@ const Footer = () => {
   };
 
   const quickLinks = [
-    { name: "Accueil", href: "/" },
-    { name: "Le Congo", href: "/le-congo" },
-    { name: "Présentation", href: "/cdeco/presentation" },
-    { name: "Bureau", href: "/cdeco/bureau" },
-    { name: "Missions", href: "/cdeco/missions" },
-    { name: "Événements", href: "/evenements" },
-    { name: "Ressources", href: "/ressources" },
+    { name: t("nav.home", "Accueil"), href: "/" },
+    { name: t("nav.congo", "Le Congo"), href: "/le-congo" },
+    { name: t("nav.presentation", "Présentation"), href: "/cdeco/presentation" },
+    { name: t("nav.bureau", "Bureau"), href: "/cdeco/bureau" },
+    { name: t("nav.missions", "Missions"), href: "/cdeco/missions" },
+    { name: t("nav.events", "Événements"), href: "/evenements" },
+    { name: t("nav.resources", "Ressources"), href: "/ressources" },
     { name: "KAMPUS CDECO", href: "/kampus-cdeco" },
-    { name: "Contact", href: "/contact" },
+    { name: t("nav.contact", "Contact"), href: "/contact" },
   ];
 
   const socialLinks = [
@@ -82,14 +84,14 @@ const Footer = () => {
               <img src={logo} alt="CDECO" width={57} height={48} className="h-12 w-auto" />
               <div>
                 <span className="font-heading font-bold text-lg text-white">CDECO</span>
-                <p className="text-xs text-white/70">Diplomatie Économique</p>
+                <p className="text-xs text-white/70">{t("hero.badge", "Diplomatie Économique")}</p>
               </div>
             </div>
             <p className="text-white/80 text-sm leading-relaxed">
-              La CDECO œuvre pour le rayonnement économique du Congo en facilitant les partenariats stratégiques.
+              {t("footer.description", "La CDECO œuvre pour le rayonnement économique du Congo en facilitant les partenariats stratégiques.")}
             </p>
             <p className="text-accent font-heading font-semibold italic text-sm">
-              "Agir localement. Rayonner globalement."
+              "{t("footer.slogan", "Agir localement. Rayonner globalement.")}"
             </p>
           </div>
           <FooterMobileAccordion quickLinks={quickLinks} />
@@ -102,19 +104,19 @@ const Footer = () => {
               <img src={logo} alt="CDECO" width={57} height={48} className="h-12 w-auto" />
               <div>
                 <span className="font-heading font-bold text-xl text-white">CDECO</span>
-                <p className="text-xs text-white/70">Diplomatie Économique</p>
+                <p className="text-xs text-white/70">{t("hero.badge", "Diplomatie Économique")}</p>
               </div>
             </div>
             <p className="text-white/80 text-sm leading-relaxed">
-              La Chambre de Diplomatie Économique du Congo promeut le développement des PME/PMI, valorise les atouts du pays et attire les investissements stratégiques.
+              {t("footer.description", "La Chambre de Diplomatie Économique du Congo promeut le développement des PME/PMI, valorise les atouts du pays et attire les investissements stratégiques.")}
             </p>
             <p className="text-accent font-heading font-semibold italic text-sm">
-              "Agir localement. Rayonner globalement."
+              "{t("footer.slogan", "Agir localement. Rayonner globalement.")}"
             </p>
           </div>
 
           <div className="space-y-4">
-            <SectionTitle>Navigation</SectionTitle>
+            <SectionTitle>{t("footer.navigation", "Navigation")}</SectionTitle>
             <ul className="space-y-2.5">
               {quickLinks.slice(0, 5).map((link) => (
                 <li key={link.href}>
@@ -127,7 +129,7 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <SectionTitle>Opportunités</SectionTitle>
+            <SectionTitle>{t("footer.opportunities", "Opportunités")}</SectionTitle>
             <ul className="space-y-2.5">
               {quickLinks.slice(5).map((link) => (
                 <li key={link.href}>
@@ -138,18 +140,18 @@ const Footer = () => {
               ))}
               <li>
                 <Link to="/adhesion" className="text-accent hover:underline font-semibold text-sm">
-                  Devenir membre adhérent →
+                  {t("footer.becomeMember", "Devenir membre adhérent →")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div className="space-y-4">
-            <SectionTitle>Coordonnées</SectionTitle>
+            <SectionTitle>{t("footer.coordinates", "Coordonnées")}</SectionTitle>
             <ul className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
-                <span>Moungali Centre-Ville, Brazzaville, République du Congo</span>
+                <span>{t("footer.address", "Moungali Centre-Ville, Brazzaville, République du Congo")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 text-accent flex-shrink-0" />
@@ -188,16 +190,16 @@ const Footer = () => {
         <div className="container-cdeco py-5 px-4 sm:px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-white/60 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} CDECO — Tous droits réservés.
+              © {new Date().getFullYear()} CDECO — {t("footer.rights", "Tous droits réservés.")}
             </p>
 
             <nav aria-label="Liens légaux" className="flex items-center gap-4 text-sm text-white/60">
               <Link to="/cdeco/presentation" className="hover:text-accent transition-colors">
-                Mentions Légales
+                {t("footer.legal", "Mentions Légales")}
               </Link>
               <span className="text-white/30" aria-hidden="true">|</span>
               <Link to="/contact" className="hover:text-accent transition-colors">
-                Contact
+                {t("nav.contact", "Contact")}
               </Link>
             </nav>
           </div>

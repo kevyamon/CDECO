@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 import { GraduationCap, Users, Briefcase, Lightbulb, Globe, BookOpen, Award, Rocket, Building2, MapPin, Mail, ArrowRight, Handshake } from "lucide-react";
 import directeurKampus from "@/assets/members/directeur-kampus.jpg";
 import logoKampus from "@/assets/logo-kampus.png";
+import { useTranslation } from "react-i18next";
 import { FadeInUp, FadeInDown, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem, HoverCard, HoverButton, PulseIcon, ScaleIn } from "@/components/animations/MotionWrapper";
+
 const KampusCdeco = () => {
+  const { t } = useTranslation();
   const missions = [{
     icon: Users,
     title: "Accompagnement Carrière",

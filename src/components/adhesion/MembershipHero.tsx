@@ -4,8 +4,10 @@ import { ArrowRight, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoImg from "@/assets/logo-cdeco.png";
 import heroImg from "@/assets/hero-meeting.jpg";
+import { useTranslation } from "react-i18next";
 
 const MembershipHero = () => {
+  const { t } = useTranslation();
   const textRef = useScrollAnimation<HTMLDivElement>({ type: "fadeUp" });
 
   return (
@@ -38,7 +40,7 @@ const MembershipHero = () => {
 
         {/* Subtitle */}
         <p className="text-accent text-lg md:text-xl font-semibold mb-6">
-          Agir localement. Rayonner globalement.
+          {t("footer.slogan", "Agir localement. Rayonner globalement.")}
         </p>
 
         {/* CTA Button */}
@@ -52,7 +54,7 @@ const MembershipHero = () => {
             }
           }}
         >
-          Adhérer maintenant
+          {t("cta.joinNow", "Adhérer maintenant")}
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
 

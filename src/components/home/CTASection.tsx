@@ -1,28 +1,41 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/ui/section-header";
-import { ArrowRight, Building, GraduationCap, Globe, Users, Briefcase, BookOpen, CheckCircle } from "lucide-react";
+import { ArrowRight, Building, GraduationCap, Globe, Users, Briefcase, BookOpen, CheckCircle, LucideIcon } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
+import { useTranslation } from "react-i18next";
 
-const memberTypes = [
-  { icon: Building, label: "Sociétés PME/PMI" },
-  { icon: Globe, label: "Institutions Publiques" },
-  { icon: Users, label: "Corps Diplomatiques" },
-  { icon: Briefcase, label: "Organisations Économiques" },
-  { icon: GraduationCap, label: "Écoles & Universités" },
-  { icon: BookOpen, label: "Professionnels & Étudiants" },
-];
-
-const benefits = [
-  "Accès aux événements exclusifs B2B/B2C/B2G",
-  "Réseau de partenaires internationaux",
-  "Formations et renforcement des capacités",
-  "Accompagnement personnalisé",
-];
+interface MemberTypeItem {
+  icon: LucideIcon;
+  label: string;
+}
 
 const CTASection = () => {
+  const { t } = useTranslation();
   const cardRef = useScrollAnimation<HTMLDivElement>({ type: "scaleIn" });
   const memberTypesRef = useStaggerAnimation<HTMLDivElement>({ staggerAmount: 0.08 });
+
+  const memberTypes: MemberTypeItem[] = [
+    { icon: Building, label: t("memberTypes.pme", "Sociétés PME/PMI") },
+    { icon: Globe, label: t("memberTypes.public", "Institutions Publiques") },
+    { icon: Users, label: t("memberTypes.diplomatic", "Corps Diplomatiques") },
+    { icon: Briefcase, label: t("memberTypes.economic", "Organisations Économiques") },
+    { icon: GraduationCap, label: t("memberTypes.schools", "Écoles & Universités") },
+    { icon: BookOpen, label: t("memberTypes.professionals", "Professionnels & Étudiants") },
+  ];
+
+  const benefits = [
+    t("cta.benefit1", "Accès aux événements exclusifs B2B/B2C/B2G"),
+    t("cta.benefit2", "Réseau de partenaires internationaux"),
+    t("cta.benefit3", "Formations et renforcement des capacités"),
+    t("cta.benefit4", "Accompagnement personnalisé"),
+  ];
+
+  const steps = [
+    { step: 1, label: t("cta.step1", "Demande") },
+    { step: 2, label: t("cta.step2", "Validation") },
+    { step: 3, label: t("cta.step3", "Adhésion") },
+  ];
 
   return (
     <section className="py-16 md:py-24 lg:py-32 bg-secondary/30 relative overflow-hidden">
@@ -65,7 +78,7 @@ const CTASection = () => {
                     size="lg" 
                     className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg px-8 py-6 text-base sm:text-lg font-semibold group"
                   >
-                    Adhérer maintenant
+                    {t("cta.joinNow", "Adhérer maintenant")}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -74,7 +87,7 @@ const CTASection = () => {
               {/* Right - Member Types */}
               <div className="bg-primary p-6 sm:p-8 lg:p-12 text-primary-foreground">
                 <h3 className="font-heading text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                  Types de Membres
+                  {t("cta.memberTypes", "Types de Membres")}
                 </h3>
                 
                 <div ref={memberTypesRef} className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -94,14 +107,10 @@ const CTASection = () => {
                 {/* Process Steps */}
                 <div className="mt-8 pt-8 border-t border-primary-foreground/10">
                   <p className="text-primary-foreground/70 text-sm mb-4">
-                    Processus d'adhésion simple et rapide
+                    {t("cta.process", "Processus d'adhésion simple et rapide")}
                   </p>
                   <div className="flex items-center justify-between md:justify-start md:gap-6">
-                    {[
-                      { step: 1, label: "Demande" },
-                      { step: 2, label: "Validation" },
-                      { step: 3, label: "Adhésion" },
-                    ].map((item, index) => (
+                    {steps.map((item, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center text-sm md:text-base font-bold">
                           {item.step}

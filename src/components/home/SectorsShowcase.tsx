@@ -5,6 +5,7 @@ import { EffectFade, Autoplay, Navigation, Pagination } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import gsap from "gsap";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Import styles
 import "swiper/css";
@@ -24,69 +25,80 @@ import educationImg from "@/assets/sectors/education.jpg";
 import numeriqueImg from "@/assets/sectors/numerique.jpg";
 import energieImg from "@/assets/sectors/energie.jpg";
 
-// Slides data with detailed descriptions
-const slidesData = [{
-  id: 1,
-  image: hydrocarburesImg,
-  title: "Hydrocarbures",
-  subtitle: "Pilier Central de l'Économie",
-  description: `Le secteur pétrolier Amont constitue le pilier central de l'économie congolaise, représentant plus de 80% des recettes d'exportation et près de 60% des revenus budgétaires. Avec des réserves prouvées de pétrole brut estimées entre 1,8 et 2,0 milliards de barils, la République du Congo se positionne parmi les principaux producteurs de la sous-région. Les investissements dans l'exploration et le développement de nouveaux gisements, notamment en offshore profond, ouvrent des perspectives prometteuses pour les partenaires internationaux.`
-}, {
-  id: 2,
-  image: tourismeImg,
-  title: "Tourisme",
-  subtitle: "Ambitions Stratégiques et Projets Clés",
-  description: `Le Tourisme, Ambitions Stratégiques et Projets Clés Le gouvernement congolais s'est engagé à transformer le pays en une destination d'écotourisme de premier plan, tout en développant les segments mémoriel et balnéaire.`
-}, {
-  id: 3,
-  image: agricultureImg,
-  title: "Agriculture",
-  subtitle: "Potentiel Inexploité",
-  description: `Potentiel inexploité : Bien que le pays dispose de vastes terres arables, l'agriculture paysanne traditionnelle (souvent peu mécanisée) occupe encore la majorité des actifs.`
-}, {
-  id: 4,
-  image: minesImg,
-  title: "Mines",
-  subtitle: "Richesses du Sous-Sol",
-  description: `Le sous-sol congolais regorge de ressources minières diversifiées : fer, potasse, phosphate, or, diamants et métaux rares. Le nouveau code minier adopté en 2022 renforce la transparence et offre un cadre juridique sécurisé pour les investisseurs. Les projets de développement des mines de fer de Mayoko et de potasse de Mengo illustrent l'attractivité croissante du secteur minier congolais.`
-}, {
-  id: 5,
-  image: foretsImg,
-  title: "Forêts",
-  subtitle: "Patrimoine Durable",
-  description: `La République du Congo est riche en ressources forestières, faisant partie du bassin du Congo, le deuxième plus grand massif forestier tropical au monde après l'Amazonie. Ces forêts constituent un pilier essentiel de l'économie nationale et de la biodiversité mondiale.`
-}, {
-  id: 6,
-  image: infrastructureImg,
-  title: "Infrastructures",
-  subtitle: "Bâtir l'Avenir du Congo",
-  description: `Infrastructure, en 2026, la République du Congo poursuit la modernisation de ses infrastructures dans le cadre de son Plan National de Développement (PND) 2022-2026. L'accent est mis sur la diversification économique et l'amélioration de la connectivité nationale et régionale.`
-}, {
-  id: 7,
-  image: educationImg,
-  title: "Éducation",
-  subtitle: "Réformes Stratégiques",
-  description: `Le secteur de l'éducation en République du Congo (Congo-Brazzaville) est marqué par la mise en œuvre de réformes structurelles profondes issues de la Stratégie Sectorielle de l'Éducation (SSE) 2021-2030 et du Plan National de Développement (PND) 2022-2026.`
-}, {
-  id: 8,
-  image: numeriqueImg,
-  title: "Numérique",
-  subtitle: "Transformation Digitale",
-  description: `En 2026, le secteur numérique et des TIC en République du Congo (Congo-Brazzaville) est au cœur du Plan National de Développement (PND) 2022-2026, visant à faire de la technologie un levier majeur de diversification économique.`
-}, {
-  id: 9,
-  image: energieImg,
-  title: "Énergie",
-  subtitle: "Mix Énergétique Diversifié",
-  description: `En 2026, la République du Congo (Congo-Brazzaville) accélère la diversification de son mix énergétique, historiquement dominé par le gaz naturel (72 % en 2022), pour exploiter ses vastes ressources renouvelables.`
-}];
 const SectorsShowcase = () => {
+  const { t } = useTranslation();
   const swiperRef = useRef<SwiperType | null>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const slidesData = [
+    {
+      id: 1,
+      image: hydrocarburesImg,
+      title: t("sectors.hydrocarbures", "Hydrocarbures"),
+      subtitle: t("sectors.hydrocarburesSub", "Pilier Central de l'Économie"),
+      description: t("sectors.hydrocarburesDesc", "Le secteur pétrolier Amont constitue le pilier central de l'économie congolaise, représentant plus de 80% des recettes d'exportation.")
+    },
+    {
+      id: 2,
+      image: tourismeImg,
+      title: t("sectors.tourisme", "Tourisme"),
+      subtitle: t("sectors.tourismeSub", "Ambitions Stratégiques et Projets Clés"),
+      description: t("sectors.tourismeDesc", "Le gouvernement congolais s'est engagé à transformer le pays en une destination d'écotourisme de premier plan.")
+    },
+    {
+      id: 3,
+      image: agricultureImg,
+      title: t("sectors.agriculture", "Agriculture"),
+      subtitle: t("sectors.agricultureSub", "Potentiel Inexploité"),
+      description: t("sectors.agricultureDesc", "Avec plus de 10 millions d'hectares de terres arables fertiles et un climat favorable, le Congo offre un potentiel agro-industriel exceptionnel.")
+    },
+    {
+      id: 4,
+      image: minesImg,
+      title: t("sectors.mines", "Mines"),
+      subtitle: t("sectors.minesSub", "Richesses du Sous-Sol"),
+      description: t("sectors.minesDesc", "Le sous-sol congolais regorge de ressources minières diversifiées : fer, potasse, phosphate, or, diamants et métaux rares.")
+    },
+    {
+      id: 5,
+      image: foretsImg,
+      title: t("sectors.forets", "Forêts"),
+      subtitle: t("sectors.foretsSub", "Patrimoine Durable"),
+      description: t("sectors.foretsDesc", "Deuxième massif forestier tropical au monde après l'Amazonie, le bassin du Congo constitue un pilier de la biodiversité mondiale.")
+    },
+    {
+      id: 6,
+      image: infrastructureImg,
+      title: t("sectors.infrastructure", "Infrastructures"),
+      subtitle: t("sectors.infrastructureSub", "Bâtir l'Avenir du Congo"),
+      description: t("sectors.infrastructureDesc", "Modernisation des corridors routiers et renforcement du Port Autonome de Pointe-Noire en eau profonde.")
+    },
+    {
+      id: 7,
+      image: educationImg,
+      title: t("sectors.education", "Éducation"),
+      subtitle: t("sectors.educationSub", "Réformes Stratégiques"),
+      description: t("sectors.educationDesc", "La formation professionnelle et l'excellence académique préparent la jeunesse congolaise aux métiers de la mondialisation.")
+    },
+    {
+      id: 8,
+      image: numeriqueImg,
+      title: t("sectors.numerique", "Numérique"),
+      subtitle: t("sectors.numeriqueSub", "Transformation Digitale"),
+      description: t("sectors.numeriqueDesc", "Hub numérique régional en pleine émergence grâce au déploiement de la fibre optique et aux startups innovantes.")
+    },
+    {
+      id: 9,
+      image: energieImg,
+      title: t("sectors.energie", "Énergie"),
+      subtitle: t("sectors.energieSub", "Mix Énergétique Diversifié"),
+      description: t("sectors.energieDesc", "Le potentiel hydroélectrique et solaire offre de vastes opportunités pour l'électrification propre et l'industrialisation durable.")
+    }
+  ];
 
   // Intersection Observer for section visibility
   useEffect(() => {
@@ -155,19 +167,19 @@ const SectorsShowcase = () => {
             <div className="flex items-center justify-center gap-4 mb-2">
               <div className="h-px w-12 md:w-16 bg-accent/60" />
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-accent">
-                Économie Congolaise
+                {t("sectors.badge", "Secteurs Clés")}
               </span>
               <div className="h-px w-12 md:w-16 bg-accent/60" />
             </div>
             
             {/* Title */}
             <h1 className="font-heading text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white tracking-wide text-center leading-tight drop-shadow-lg">
-              Les Secteurs Stratégiques du Congo
+              {t("sectors.title", "Secteurs Stratégiques d'Investissement")}
             </h1>
             
             {/* Description */}
             <p className="text-white/90 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed drop-shadow-md">
-              La CDECO accompagne les investisseurs dans tous les secteurs stratégiques et encourage la diversification.
+              {t("sectors.subtitle", "La CDECO accompagne les investisseurs dans tous les secteurs stratégiques et encourage la diversification.")}
             </p>
           </div>
         </div>

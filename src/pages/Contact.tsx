@@ -14,6 +14,7 @@ import { Send, MapPin } from "lucide-react";
 import { z } from "zod";
 import contactService from "@/api/contactService";
 import ContactInfoSection from "@/components/contact/ContactInfoSection";
+import { useTranslation } from "react-i18next";
 import {
   fadeInUp,
   fadeInDown,
@@ -45,6 +46,7 @@ const initialFormData: ContactFormData = {
 };
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<ContactFormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +70,7 @@ const Contact = () => {
 
     if (!checkRateLimit()) {
       toast({
-        title: "Trop de tentatives",
+        title: t("common.error", "Trop de tentatives"),
         description: `Veuillez attendre ${getBlockTimeRemaining()} secondes avant de réessayer.`,
         variant: "destructive",
       });
@@ -89,8 +91,8 @@ const Contact = () => {
       });
 
       toast({
-        title: "Message envoyé !",
-        description: "Nous vous répondrons dans les plus brefs délais.",
+        title: t("contact.messageSent", "Message envoyé !"),
+        description: t("contact.messageSuccess", "Nous vous répondrons dans les plus brefs délais."),
       });
 
       setFormData(initialFormData);
@@ -104,9 +106,9 @@ const Contact = () => {
         });
         setErrors(newErrors);
       } else {
-        const message = error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.";
+        const message = error.response?.data?.message || t("contact.errorMessage", "Une erreur est survenue. Veuillez réessayer.");
         toast({
-          title: "Erreur",
+          title: t("contact.error", "Erreur"),
           description: message,
           variant: "destructive",
         });
@@ -135,19 +137,19 @@ const Contact = () => {
           variants={getVariants(staggerContainer)}
         >
           <motion.div variants={getVariants(fadeInDown)}>
-            <SectionHeader label="Contactez-nous" variant="light" />
+            <SectionHeader label={t("contact.badge", "Contactez-nous")} variant="light" />
           </motion.div>
           <motion.h1
             className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 md:mb-6"
             variants={getVariants(fadeInUp)}
           >
-            Restons en <span className="text-accent">Contact</span>
+            {t("contact.title", "Restons en")} <span className="text-accent">{t("contact.titleHighlight", "Contact")}</span>
           </motion.h1>
           <motion.p
             className="text-primary-foreground/80 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto px-2"
             variants={getVariants(fadeInUp)}
           >
-            Une question, un partenariat ou une demande d'adhésion ? Notre équipe est à votre écoute.
+            {t("contact.description", "Une question, un partenariat ou une demande d'adhésion ? Notre équipe est à votre écoute.")}
           </motion.p>
         </motion.div>
       </section>
@@ -172,7 +174,7 @@ const Contact = () => {
                       <Send className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                     </div>
                     <h2 className="font-heading text-lg md:text-xl lg:text-2xl font-bold text-foreground">
-                      Envoyez-nous un message
+                      {t("contact.sendMessage", "Envoyez-nous un message")}
                     </h2>
                   </motion.div>
 
@@ -185,7 +187,7 @@ const Contact = () => {
                       viewport={{ once: true }}
                     >
                       <motion.div className="space-y-1.5 md:space-y-2" variants={getVariants(staggerItem)}>
-                        <Label htmlFor="name" className="text-sm">Nom complet *</Label>
+                        <Label htmlFor="name" className="text-sm">{t("contact.name", "Nom complet")} *</Label>
                         <Input
                           id="name"
                           value={formData.name}
@@ -196,7 +198,7 @@ const Contact = () => {
                         {errors.name && <p className="text-xs md:text-sm text-destructive">{errors.name}</p>}
                       </motion.div>
                       <motion.div className="space-y-1.5 md:space-y-2" variants={getVariants(staggerItem)}>
-                        <Label htmlFor="email" className="text-sm">Email *</Label>
+                        <Label htmlFor="email" className="text-sm">{t("contact.email", "Adresse Email")} *</Label>
                         <Input
                           id="email"
                           type="email"
@@ -216,7 +218,7 @@ const Contact = () => {
                       whileInView="visible"
                       viewport={{ once: true }}
                     >
-                      <Label htmlFor="subject" className="text-sm">Sujet *</Label>
+                      <Label htmlFor="subject" className="text-sm">{t("contact.subject", "Sujet")} *</Label>
                       <Input
                         id="subject"
                         value={formData.subject}
@@ -234,12 +236,12 @@ const Contact = () => {
                       whileInView="visible"
                       viewport={{ once: true }}
                     >
-                      <Label htmlFor="message" className="text-sm">Message *</Label>
+                      <Label htmlFor="message" className="text-sm">{t("contact.message", "Message")} *</Label>
                       <Textarea
                         id="message"
                         value={formData.message}
                         onChange={(e) => updateFormData("message", e.target.value)}
-                        placeholder="Décrivez votre demande en détail..."
+                        placeholder={t("contact.messagePlaceholder", "Décrivez votre demande en détail...")}
                         rows={5}
                         className={`text-sm md:text-base ${errors.message ? "border-destructive" : ""}`}
                       />
@@ -257,11 +259,11 @@ const Contact = () => {
                     >
                       <Button type="submit" className="w-full text-sm md:text-base" size="lg" disabled={isSubmitting}>
                         {isSubmitting ? (
-                          <>Envoi en cours...</>
+                          <>{t("contact.sending", "Envoi en cours...")}</>
                         ) : (
                           <>
                             <Send className="w-4 h-4 mr-2" />
-                            Envoyer le message
+                            {t("contact.send", "Envoyer le message")}
                           </>
                         )}
                       </Button>

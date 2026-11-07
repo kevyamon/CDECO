@@ -11,52 +11,75 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/ui/section-header";
-import { Globe, Briefcase, CheckCircle, ArrowRight, BarChart3, Users, Factory, Lightbulb } from "lucide-react";
+import { Globe, Briefcase, CheckCircle, ArrowRight, BarChart3, Users, Factory, Lightbulb, LucideIcon } from "lucide-react";
 import { fadeInUp, staggerContainer, staggerItem, scaleIn, fadeInLeft, fadeInRight } from "@/animations/variants";
-const investmentReasons = [{
-  icon: BarChart3,
-  title: "Stabilité Macroéconomique",
-  description: "Un cadre économique en amélioration continue avec des réformes structurelles pour l'attractivité des IDE."
-}, {
-  icon: Globe,
-  title: "Position Géostratégique",
-  description: "Au cœur de l'Afrique centrale, accès privilégié au bassin du Congo et aux marchés régionaux de la CEMAC."
-}, {
-  icon: Factory,
-  title: "Ressources Naturelles",
-  description: "Potentiel immense : hydrocarbures, mines, forêts couvrant 70% du territoire, et terres agricoles fertiles."
-}, {
-  icon: Lightbulb,
-  title: "Diversification en Cours",
-  description: "Transition vers l'agriculture, le numérique, l'énergie verte et les industries de transformation."
-}, {
-  icon: Users,
-  title: "Capital Humain",
-  description: "Une jeunesse dynamique et une diaspora qualifiée, prête à contribuer au développement national."
-}, {
-  icon: Briefcase,
-  title: "Accompagnement CDECO",
-  description: "Un réseau d'excellence pour faciliter vos investissements et vos partenariats stratégiques."
-}];
-const keyStats = [{
-  label: "du PIB",
-  value: "42%",
-  detail: "Hydrocarbures"
-}, {
-  label: "du PIB",
-  value: "33%",
-  detail: "Services"
-}, {
-  label: "du territoire",
-  value: "70%",
-  detail: "Forêts"
-}, {
-  label: "exportations",
-  value: "80%",
-  detail: "Pétrole"
-}];
+import { useTranslation } from "react-i18next";
+
+interface ReasonItem {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
 const WhyInvestSection = () => {
+  const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
+
+  const investmentReasons: ReasonItem[] = [
+    {
+      icon: BarChart3,
+      title: t("whyInvest.r1Title", "Stabilité Macroéconomique"),
+      description: t("whyInvest.r1Desc", "Un cadre économique en amélioration continue avec des réformes structurelles pour l'attractivité des IDE.")
+    },
+    {
+      icon: Globe,
+      title: t("whyInvest.r2Title", "Position Géostratégique"),
+      description: t("whyInvest.r2Desc", "Au cœur de l'Afrique centrale, accès privilégié au bassin du Congo et aux marchés régionaux de la CEMAC.")
+    },
+    {
+      icon: Factory,
+      title: t("whyInvest.r3Title", "Ressources Naturelles"),
+      description: t("whyInvest.r3Desc", "Potentiel immense : hydrocarbures, mines, forêts couvrant 70% du territoire, et terres agricoles fertiles.")
+    },
+    {
+      icon: Lightbulb,
+      title: t("whyInvest.r4Title", "Diversification en Cours"),
+      description: t("whyInvest.r4Desc", "Transition vers l'agriculture, le numérique, l'énergie verte et les industries de transformation.")
+    },
+    {
+      icon: Users,
+      title: t("whyInvest.r5Title", "Capital Humain"),
+      description: t("whyInvest.r5Desc", "Une jeunesse dynamique et une diaspora qualifiée, prête à contribuer au développement national.")
+    },
+    {
+      icon: Briefcase,
+      title: t("whyInvest.r6Title", "Accompagnement CDECO"),
+      description: t("whyInvest.r6Desc", "Un réseau d'excellence pour faciliter vos investissements et vos partenariats stratégiques.")
+    }
+  ];
+
+  const keyStats = [
+    {
+      label: t("whyInvest.statGdp", "du PIB"),
+      value: "42%",
+      detail: t("whyInvest.statHydroLabel", "Hydrocarbures")
+    },
+    {
+      label: t("whyInvest.statGdp", "du PIB"),
+      value: "33%",
+      detail: t("whyInvest.statServicesLabel", "Services")
+    },
+    {
+      label: t("whyInvest.statTerritory", "du territoire"),
+      value: "70%",
+      detail: t("whyInvest.statForestLabel", "Forêts")
+    },
+    {
+      label: t("whyInvest.statGdp", "exportations"),
+      value: "80%",
+      detail: t("whyInvest.statHydroLabel", "Pétrole")
+    }
+  ];
 
   // Simple wrapper for reduced motion
   const MotionDiv = shouldReduceMotion ? 'div' : motion.div;
@@ -73,17 +96,14 @@ const WhyInvestSection = () => {
         once: true,
         margin: "-50px"
       }}>
-          <SectionHeader label="Investir au Congo" />
+          <SectionHeader label={t("whyInvest.badge", "Investir au Congo")} />
           
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 md:mb-6">
-            Construire une économie forte,{" "}
-            <span className="text-primary">diversifiée et résiliente</span>
+            {t("whyInvest.title", "Pourquoi Investir au Congo")}
           </h2>
           
           <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
-            Véritable moteur d'une croissance inclusive, durable et créatrice d'emplois, 
-            le Congo offre un potentiel considérable pour les investisseurs nationaux et internationaux 
-            dans des secteurs stratégiques.
+            {t("whyInvest.description", "Véritable moteur d'une croissance inclusive, durable et créatrice d'emplois, le Congo offre un potentiel considérable pour les investisseurs dans des secteurs stratégiques.")}
           </p>
         </motion.div>
 

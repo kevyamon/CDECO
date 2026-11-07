@@ -8,6 +8,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import PhotoGallery, { GalleryImage } from "@/components/PhotoGallery";
 import UpcomingEventsList from "@/components/events/UpcomingEventsList";
 import { fadeInUp, staggerContainer, staggerItem } from "@/animations/variants";
+import { useTranslation } from "react-i18next";
 
 // Importations des photos de la galerie
 import eventsForum from "@/assets/gallery/events-forum.jpg";
@@ -57,6 +58,7 @@ const pastEvents = [
 ];
 
 const Events = () => {
+  const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -76,19 +78,19 @@ const Events = () => {
           animate={shouldReduceMotion ? undefined : "visible"}
         >
           <motion.div variants={staggerItem}>
-            <SectionHeader label="Calendrier" variant="light" />
+            <SectionHeader label={t("events.badge", "Calendrier & Galerie")} variant="light" />
           </motion.div>
           <motion.h1
             variants={staggerItem}
             className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
           >
-            Événements CDECO
+            {t("events.title", "Événements CDECO")}
           </motion.h1>
           <motion.p
             variants={staggerItem}
             className="text-primary-foreground/80 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
           >
-            Forums, conférences, missions économiques et formations pour développer votre réseau et saisir les opportunités.
+            {t("events.description", "Forums, conférences internationales, missions économiques et rencontres networking de haut niveau.")}
           </motion.p>
         </motion.div>
       </section>
@@ -102,12 +104,12 @@ const Events = () => {
             whileInView={shouldReduceMotion ? undefined : "visible"}
             viewport={{ once: true, margin: "-50px" }}
           >
-            <SectionHeader label="À venir" />
+            <SectionHeader label={t("events.upcomingBadge", "À venir")} />
             <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Prochains <span className="text-primary">Événements</span>
+              {t("events.upcomingTitle", "Prochains Événements")}
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
-              Ne manquez pas nos prochaines rencontres et opportunités de networking.
+              {t("events.upcomingDescription", "Ne manquez pas nos prochaines rencontres et opportunités de networking stratégique.")}
             </p>
           </motion.div>
 
@@ -124,12 +126,12 @@ const Events = () => {
             whileInView={shouldReduceMotion ? undefined : "visible"}
             viewport={{ once: true, margin: "-50px" }}
           >
-            <SectionHeader label="Galerie" variant="accent" />
+            <SectionHeader label={t("events.galleryBadge", "Galerie Photos")} variant="accent" />
             <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-              Moments Forts
+              {t("events.galleryTitle", "Moments Forts & Sommets")}
             </h2>
             <p className="text-primary-foreground/80 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
-              Revivez les moments marquants de nos événements et activités officielles.
+              {t("events.galleryDescription", "Revivez les temps forts de la CDECO à Paris, Brazzaville, au Forum IEFA et auprès de l'OCDE.")}
             </p>
           </motion.div>
 

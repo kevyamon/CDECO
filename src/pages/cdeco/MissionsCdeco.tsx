@@ -14,6 +14,7 @@ import SEOHead from "@/components/SEOHead";
 import SectionHeader from "@/components/ui/section-header";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Globe, GraduationCap, Handshake, Building2, Users, Briefcase, Rocket, Network, BarChart3, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Configuration des 6 axes prioritaires de la CDECO
@@ -153,6 +154,7 @@ const projets = [
 ];
 
 const MissionsCdeco = () => {
+  const { t } = useTranslation();
   return (
     <Layout>
       <SEOHead
@@ -172,13 +174,12 @@ const MissionsCdeco = () => {
         </div>
 
         <div className="container-cdeco text-center relative z-10 px-4 sm:px-6">
-          <SectionHeader label="Nos engagements" variant="light" />
+          <SectionHeader label={t("missions.badge", "Nos engagements")} variant="light" />
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Missions & Activités
+            {t("missions.title", "Missions & Activités")}
           </h1>
           <p className="text-primary-foreground/80 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Six axes prioritaires pour promouvoir la diplomatie économique et renforcer 
-            le positionnement du Congo sur la scène internationale.
+            {t("missions.description", "Six axes prioritaires pour promouvoir la diplomatie économique et renforcer le positionnement du Congo sur la scène internationale.")}
           </p>
         </div>
       </section>
@@ -187,12 +188,12 @@ const MissionsCdeco = () => {
       <section className="py-16 md:py-24 bg-background">
         <div className="container-cdeco px-4 sm:px-6">
           <div className="text-center mb-12 md:mb-16">
-            <SectionHeader label="Stratégie" />
+            <SectionHeader label={t("missions.axesBadge", "Stratégie")} />
             <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Nos 6 Axes <span className="text-primary">Prioritaires</span>
+              {t("missions.axesTitle", "Nos 6 Axes Prioritaires")}
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
-              Des domaines d'intervention stratégiques pour un impact économique durable.
+              {t("missions.axesDescription", "Des domaines d'intervention stratégiques pour un impact économique durable.")}
             </p>
           </div>
 
@@ -279,7 +280,7 @@ const MissionsCdeco = () => {
 
                   {/* Objectifs */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-foreground mb-3 text-sm">Objectifs :</h4>
+                    <h4 className="font-semibold text-foreground mb-3 text-sm">{t("missions.objectives", "Objectifs :")}</h4>
                     <ul className="space-y-2">
                       {projet.objectifs.map((obj, i) => (
                         <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm">
@@ -294,7 +295,7 @@ const MissionsCdeco = () => {
 
                   {/* Impact */}
                   <div className="bg-primary/5 rounded-xl p-4 border-l-4 border-primary">
-                    <h4 className="font-semibold text-foreground mb-1 text-sm">Impact attendu</h4>
+                    <h4 className="font-semibold text-foreground mb-1 text-sm">{t("missions.expectedImpact", "Impact attendu")}</h4>
                     <p className="text-muted-foreground text-xs sm:text-sm">{projet.impact}</p>
                   </div>
                 </div>

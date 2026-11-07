@@ -13,8 +13,10 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Shield, Award, Target } from "lucide-react";
 import presidentImage from "@/assets/members/president-fondateur.jpg";
+import { useTranslation } from "react-i18next";
 
 const MessagePresident = () => {
+  const { t } = useTranslation();
   return (
     <Layout>
       <SEOHead
@@ -44,10 +46,10 @@ const MessagePresident = () => {
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5" aria-hidden="true" />
         <div className="container-cdeco relative z-10 text-center">
           <h1 id="president-title" className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Message du Président Fondateur
+            {t("president.title", "Message du Président Fondateur")}
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-            Découvrez la vision et le message de M. Arnold Wesley AKINA
+            {t("president.subtitle", "Découvrez la vision et le message de M. Arnold Wesley AKINA")}
           </p>
         </div>
       </section>
@@ -107,23 +109,19 @@ const MessagePresident = () => {
 
               <section className="bg-muted/50 rounded-xl p-6 my-8" aria-labelledby="national-scope">
                 <h3 id="national-scope" className="font-heading text-xl font-bold text-foreground mb-4">
-                  Sur le plan national
+                  {t("president.nationalTitle", "Sur le plan national")}
                 </h3>
                 <p>
-                  S'engage à promouvoir les relations économiques et commerciales de la République du Congo, 
-                  à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces 
-                  vives autour d'objectifs clairs: créer de la valeur ajoutée, attirer des investissements porteurs, 
-                  et encourager la diversification économique pour un développement durable.
+                  {t("president.nationalText", "La CDECO s'engage à promouvoir les relations économiques et commerciales de la République du Congo, à valoriser ses ressources, à soutenir son potentiel entrepreneurial, et à mobiliser les forces vives.")}
                 </p>
               </section>
 
               <section className="bg-muted/50 rounded-xl p-6 my-8" aria-labelledby="international-scope">
                 <h3 id="international-scope" className="font-heading text-xl font-bold text-foreground mb-4">
-                  Sur le plan international
+                  {t("president.intlTitle", "Sur le plan international")}
                 </h3>
                 <p>
-                  La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges 
-                  économiques entre le Congo, les États africains, les partenaires internationaux.
+                  {t("president.intlText", "La CDECO ambitionne de devenir une interface stratégique de haut niveau, facilitant les échanges économiques entre le Congo, les États africains et les partenaires mondiaux.")}
                 </p>
               </section>
 

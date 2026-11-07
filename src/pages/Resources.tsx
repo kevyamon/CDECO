@@ -4,32 +4,46 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, FileText, BookOpen, Users, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const documents = [
+const baseDocuments = [
   {
     id: 1,
-    title: "Présentation de la CDECO",
-    description: "Document de présentation globale de la Chambre de Diplomatie Économique du Congo",
+    titleKey: "resources.doc1Title",
+    descKey: "resources.doc1Desc",
+    defaultTitle: "Présentation de la CDECO",
+    defaultDesc: "Document de présentation globale de la Chambre de Diplomatie Économique du Congo",
     icon: FileText,
     file: "/documents/presentation-cdeco.pdf",
   },
   {
     id: 2,
-    title: "Charte Fondatrice de la CDECO",
-    description: "Charte de déontologie et d'éthique de la CDECO",
+    titleKey: "resources.doc2Title",
+    descKey: "resources.doc2Desc",
+    defaultTitle: "Charte Fondatrice de la CDECO",
+    defaultDesc: "Charte de déontologie et d'éthique de la CDECO",
     icon: BookOpen,
     file: "/documents/charte-cdeco.pdf",
   },
   {
     id: 3,
-    title: "CCN & CCI-CDECO",
-    description: "Document du Comité Consultatif International de la CDECO",
+    titleKey: "resources.doc3Title",
+    descKey: "resources.doc3Desc",
+    defaultTitle: "CCN & CCI-CDECO",
+    defaultDesc: "Document du Comité Consultatif International de la CDECO",
     icon: Users,
     file: "/documents/ccn-cci-cdeco.pdf",
   },
 ];
 
 const Resources = () => {
+  const { t } = useTranslation();
+
+  const documents = baseDocuments.map((doc) => ({
+    ...doc,
+    title: t(doc.titleKey, doc.defaultTitle),
+    description: t(doc.descKey, doc.defaultDesc),
+  }));
   return (
     <Layout>
       <SEOHead
@@ -60,25 +74,23 @@ const Resources = () => {
         <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-5" aria-hidden="true" />
         <div className="container-cdeco relative z-10 text-center">
           <h1 id="resources-title" className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Ressources
+            {t("resources.title", "Ressources & Publications")}
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-            Accédez aux documents officiels de la Chambre de Diplomatie Économique du Congo
+            {t("resources.subtitle", "Accédez aux documents officiels de la Chambre de Diplomatie Économique du Congo")}
           </p>
         </div>
       </section>
-
-      {/* Section supprimée - contenu déplacé vers /cdeco/message-president */}
 
       {/* Documents Section */}
       <section aria-labelledby="documents-title" className="py-16 lg:py-24 bg-background">
         <div className="container-cdeco">
           <div className="text-center mb-12">
             <h2 id="documents-title" className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Documents à télécharger
+              {t("resources.badge", "Documents Officiels")}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Retrouvez ici tous les documents officiels de la CDECO disponibles en téléchargement
+              {t("resources.subtitle", "Retrouvez ici tous les documents officiels de la CDECO disponibles en téléchargement")}
             </p>
           </div>
 
@@ -104,7 +116,7 @@ const Resources = () => {
                     >
                       <a href={doc.file} target="_blank" rel="noopener noreferrer">
                         <FileText className="w-4 h-4" />
-                        Voir le document
+                        {t("common.discover", "Voir le document")}
                       </a>
                     </Button>
                     <Button
@@ -114,7 +126,7 @@ const Resources = () => {
                     >
                       <a href={doc.file} download={`${doc.title}.pdf`}>
                         <Download className="w-4 h-4" />
-                        Télécharger
+                        {t("resources.download", "Télécharger")}
                       </a>
                     </Button>
                   </CardContent>

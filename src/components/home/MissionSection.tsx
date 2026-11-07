@@ -2,34 +2,21 @@ import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimat
 import { useRef, useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import SectionHeader from "@/components/ui/section-header";
+import { useTranslation } from "react-i18next";
 
 // Mission images
 import diplomatieImg from "@/assets/missions/diplomatie.jpg";
 import pmeImg from "@/assets/missions/pme.jpg";
 import intermediationImg from "@/assets/missions/intermediation.jpg";
 
-const missions = [
-  {
-    number: "01",
-    image: diplomatieImg,
-    title: "Diplomatie Commerciale",
-    description: "Faciliter les relations commerciales entre le Congo et les partenaires internationaux à travers une diplomatie économique active."
-  },
-  {
-    number: "02",
-    image: pmeImg,
-    title: "Soutien aux PME/PMI",
-    description: "Accompagner les petites et moyennes entreprises congolaises dans leur développement et leur internationalisation."
-  },
-  {
-    number: "03",
-    image: intermediationImg,
-    title: "Promotion de l'Excellence",
-    description: "Créer des passerelles entre les acteurs économiques locaux et les investisseurs internationaux."
-  }
-];
+interface MissionItem {
+  number: string;
+  image: string;
+  title: string;
+  description: string;
+}
 
-const MissionCard = ({ mission }: { mission: typeof missions[0] }) => {
+const MissionCard = ({ mission }: { mission: MissionItem }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -89,10 +76,32 @@ const MissionCard = ({ mission }: { mission: typeof missions[0] }) => {
 };
 
 const MissionSection = () => {
+  const { t } = useTranslation();
   const headerRef = useScrollAnimation<HTMLDivElement>({ type: "fadeUp" });
   const gridRef = useStaggerAnimation<HTMLDivElement>({ staggerAmount: 0.1 });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  const missions: MissionItem[] = [
+    {
+      number: "01",
+      image: diplomatieImg,
+      title: t("mission.p1Title", "Diplomatie Commerciale"),
+      description: t("mission.p1Desc", "Faciliter les relations commerciales entre le Congo et les partenaires internationaux à travers une diplomatie économique active.")
+    },
+    {
+      number: "02",
+      image: pmeImg,
+      title: t("mission.p2Title", "Soutien aux PME/PMI"),
+      description: t("mission.p2Desc", "Accompagner les petites et moyennes entreprises congolaises dans leur développement et leur internationalisation.")
+    },
+    {
+      number: "03",
+      image: intermediationImg,
+      title: t("mission.p3Title", "Promotion de l'Excellence"),
+      description: t("mission.p3Desc", "Créer des passerelles entre les acteurs économiques locaux et les investisseurs internationaux.")
+    }
+  ];
 
   useEffect(() => {
     if (!api) return;
@@ -105,13 +114,12 @@ const MissionSection = () => {
       <div className="container-cdeco px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
-          <SectionHeader label="Notre Mission" />
+          <SectionHeader label={t("mission.badge", "Notre Action")} />
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Promouvoir les Intérêts{" "}
-            <span className="text-primary">Économiques du Congo.</span>
+            {t("mission.title", "Trois Piliers d'Intervention")}
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            La CDECO œuvre pour la promotion des échanges économiques et commerciaux du Congo en créant des passerelles entre les acteurs nationaux, régionaux et mondiaux.
+            {t("mission.description", "La CDECO œuvre pour la promotion des échanges économiques et commerciaux du Congo en créant des passerelles entre les acteurs nationaux, régionaux et mondiaux.")}
           </p>
         </div>
 
@@ -168,23 +176,10 @@ const MissionSection = () => {
         <div className="mt-10 md:mt-14 max-w-3xl mx-auto">
           <div className="border-l-4 border-accent pl-6 py-2">
             <h3 className="font-heading text-lg font-semibold text-foreground mb-3">
-              Notre Vision
+              {t("about.visionTitle", "Notre Vision")}
             </h3>
-            <p className="text-muted-foreground text-sm leading-relaxed mb-3">
-              Notre vision est de positionner la République du Congo comme un{" "}
-              <span className="text-primary font-medium">Hub stratégique d'attractivité économique</span>{" "}
-              et commerciale en <span className="text-primary font-medium">Afrique</span> et à l'international. 
-              Nous aspirons à bâtir un écosystème diplomatique et inclusif en favorisant l'
-              <span className="text-primary font-medium">intégration</span> des acteurs congolais dans les 
-              grandes chaînes de valeur régionales et mondiales et tirer pleinement{" "}
-              <span className="text-primary font-medium">profit</span> d'accord tel sur la ZLECAF.
-            </p>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              À travers cet engagement, nous œuvrons pour un environnement propice où les membres de la CDECO, 
-              entrepreneurs congolais et africains ont accès aux outils financiers, aux marchés et aux opportunités, 
-              tout en encourageant des <span className="text-primary font-medium">collaborations gagnant-gagnant</span>{" "}
-              pour relever les défis <span className="text-primary font-medium">économiques</span>, sociaux et{" "}
-              <span className="text-primary font-medium">environnementaux</span> du continent.
+              {t("about.visionText", "Faire du Congo un hub économique incontournable en Afrique centrale, en favorisant les partenariats stratégiques, l'intégration aux chaînes de valeur régionales et l'innovation.")}
             </p>
           </div>
         </div>

@@ -14,15 +14,6 @@ import {
 import NavbarMobileMenu from "./NavbarMobileMenu";
 import { useAuth } from "@/hooks/useAuth";
 
-const cdecoSubmenu = [
-  { name: "Présentation", href: "/cdeco/presentation" },
-  { name: "Message du Président Fondateur", href: "/cdeco/message-president" },
-  { name: "Missions", href: "/cdeco/missions" },
-  { name: "Bureau", href: "/cdeco/bureau" },
-  { name: "Événements", href: "/evenements" },
-  { name: "Ressources", href: "/ressources" },
-];
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,6 +33,16 @@ const Navbar = () => {
       localStorage.setItem("cdeco_language", lang);
     } catch {}
   };
+
+  useEffect(() => {
+    const onLanguageChanged = (lng: string) => {
+      setCurrentLang((lng || "fr").toUpperCase().substring(0, 2));
+    };
+    i18n.on("languageChanged", onLanguageChanged);
+    return () => {
+      i18n.off("languageChanged", onLanguageChanged);
+    };
+  }, [i18n]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,9 +68,18 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+  const cdecoSubmenu = [
+    { name: t("nav.presentation", "Présentation"), href: "/cdeco/presentation" },
+    { name: t("nav.presidentMessage", "Message du Président"), href: "/cdeco/message-president" },
+    { name: t("nav.missions", "Missions"), href: "/cdeco/missions" },
+    { name: t("nav.bureau", "Bureau"), href: "/cdeco/bureau" },
+    { name: t("nav.events", "Événements"), href: "/evenements" },
+    { name: t("nav.resources", "Ressources"), href: "/ressources" },
+  ];
+
   const navLinks = [
     { name: t("nav.home", "Accueil"), href: "/" },
-    { name: "Le Congo", href: "/le-congo" },
+    { name: t("nav.congo", "Le Congo"), href: "/le-congo" },
     { name: "KAMPUS CDECO", href: "/kampus-cdeco" },
     { name: t("nav.events", "Événements"), href: "/evenements" },
     { name: t("nav.contact", "Contact"), href: "/contact" },
@@ -106,7 +116,7 @@ const Navbar = () => {
                   isScrolled ? "text-muted-foreground" : "text-white/80"
                 }`}
               >
-                Diplomatie Économique
+                {t("hero.badge", "Diplomatie Économique")}
               </span>
             </div>
           </Link>

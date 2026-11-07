@@ -1,33 +1,20 @@
-import { Scale, Award, Handshake, Target, Leaf } from "lucide-react";
+import { Scale, Award, Handshake, Target, Leaf, LucideIcon } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 import { useRef, useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import SectionHeader from "@/components/ui/section-header";
-const values = [{
-  icon: Scale,
-  title: "Neutralité institutionnelle",
-  description: "La CDECO agit en toute indépendance politique, religieuse et idéologique pour garantir l'objectivité et l'impartialité de ses actions."
-}, {
-  icon: Award,
-  title: "Exemplarité & Éthique",
-  description: "L'intégrité, la transparence, et la responsabilité guident l'ensemble des décisions et engagements de ses membres."
-}, {
-  icon: Handshake,
-  title: "Coopération gagnant-gagnant",
-  description: "La CDECO favorise des partenariats équilibrés, fondés sur la réciprocité, la confiance mutuelle et le respect des intérêts partagés."
-}, {
-  icon: Target,
-  title: "Excellence dans l'exécution",
-  description: "Une culture de la rigueur, de l'efficacité et de la qualité structure chaque mission pour répondre aux plus hauts standards."
-}, {
-  icon: Leaf,
-  title: "Engagement pour le développement durable",
-  description: "La CDECO soutient un développement inclusif, responsable et résilient, au service de l'intérêt général et des générations futures."
-}];
+import { useTranslation } from "react-i18next";
+
+interface ValueItem {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
 const ValueCard = ({
   value
 }: {
-  value: typeof values[0];
+  value: ValueItem;
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -69,6 +56,7 @@ const ValueCard = ({
     </div>;
 };
 const ValuesSection = () => {
+  const { t } = useTranslation();
   const headerRef = useScrollAnimation<HTMLDivElement>({
     type: "fadeUp"
   });
@@ -77,6 +65,35 @@ const ValuesSection = () => {
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+
+  const values: ValueItem[] = [
+    {
+      icon: Scale,
+      title: t("values.v1Title", "Neutralité institutionnelle"),
+      description: t("values.v1Desc", "La CDECO agit en toute indépendance politique, religieuse et idéologique pour garantir l'objectivité et l'impartialité de ses actions.")
+    },
+    {
+      icon: Award,
+      title: t("values.v2Title", "Exemplarité & Éthique"),
+      description: t("values.v2Desc", "L'intégrité, la transparence, et la responsabilité guident l'ensemble des décisions et engagements de ses membres.")
+    },
+    {
+      icon: Handshake,
+      title: t("values.v3Title", "Coopération gagnant-gagnant"),
+      description: t("values.v3Desc", "La CDECO favorise des partenariats équilibrés, fondés sur la réciprocité, la confiance mutuelle et le respect des intérêts partagés.")
+    },
+    {
+      icon: Target,
+      title: t("values.v4Title", "Excellence dans l'exécution"),
+      description: t("values.v4Desc", "Une culture de la rigueur, de l'efficacité et de la qualité structure chaque mission pour répondre aux plus hauts standards.")
+    },
+    {
+      icon: Leaf,
+      title: t("values.v5Title", "Engagement durable"),
+      description: t("values.v5Desc", "La CDECO soutient un développement inclusif, responsable et résilient, au service de l'intérêt général et des générations futures.")
+    }
+  ];
+
   useEffect(() => {
     if (!api) return;
     setCurrent(api.selectedScrollSnap());
@@ -95,11 +112,13 @@ const ValuesSection = () => {
       <div className="container-cdeco relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-10 md:mb-14 lg:mb-16">
-          <SectionHeader label="Nos Valeurs" variant="light" />
+          <SectionHeader label={t("values.badge", "Nos Valeurs")} variant="light" />
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4 md:mb-6">
-            Les Piliers de Notre Action
+            {t("values.title", "Les Principes Fondateurs de la CDECO")}
           </h2>
-          <p className="text-primary-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">La CDECO s’appuie sur un socle de valeurs fondamentales qui orientent ses actions, ses partenariats et son engagement auprès des institutions, et des acteurs publics-privés. Ces valeurs incarnent notre vision et traduisent notre responsabilité dans la construction d’un écosystème économique crédible, éthique et durable.  </p>
+          <p className="text-primary-foreground/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+            {t("values.description", "Les valeurs qui guident chacune de nos actions et fondent la confiance avec nos partenaires.")}
+          </p>
         </div>
 
         {/* Mobile Carousel (<768px) */}

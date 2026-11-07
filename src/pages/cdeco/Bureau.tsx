@@ -2,6 +2,7 @@ import { Users, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "react-i18next";
 
 // Images des membres du Bureau Exécutif
 import presidentImg from "@/assets/members/president-new.jpg";
@@ -158,6 +159,46 @@ const MemberCard = ({ name, role, roleColor, description, image, variant = "blue
 );
 
 const Bureau = () => {
+  const { t } = useTranslation();
+
+  const localizedBureauMembers = [
+    {
+      ...bureauMembers[0],
+      role: t("team.president", "Président Fondateur"),
+      description: t("team.presidentDesc", "Visionnaire et leader engagé pour le développement économique du Congo."),
+    },
+    {
+      ...bureauMembers[1],
+      role: t("team.vicePresident", "Vice-Président"),
+      description: t("team.vicePresidentDesc", "Chargé du développement économique, des partenariats privés et des Investissements."),
+    },
+    {
+      ...bureauMembers[2],
+      role: t("team.vicePresidente", "Vice-Présidente"),
+      description: t("team.vicePresidenteDesc", "Chargée de l'agriculture, l'industrie et le développement de partenariats avec les PME."),
+    },
+    {
+      ...bureauMembers[3],
+      role: t("team.secretary", "Secrétaire Général"),
+      description: t("team.secretaryDesc", "Coordination stratégique et gestion des opérations de la CDECO."),
+    },
+    {
+      ...bureauMembers[4],
+      role: t("team.communication", "Directrice de la Communication"),
+      description: t("team.communicationDesc", "Relations médias, visibilité institutionnelle et rayonnement international."),
+    },
+    {
+      ...bureauMembers[5],
+      role: t("team.treasurer", "Trésorière"),
+      description: t("team.treasurerDesc", "Gestion financière rigoureuse et transparente de l'organisation."),
+    },
+    {
+      ...bureauMembers[6],
+      role: t("team.directeurKampus", "Directeur KAMPUS CDECO"),
+      description: t("team.directeurKampusDesc", "Orientation des jeunes, bourses d'études et programmes d'excellence académique."),
+    },
+  ];
+
   return (
     <Layout>
       <SEOHead
@@ -174,28 +215,28 @@ const Bureau = () => {
               <div className="h-px w-12 bg-accent/60" />
               <div className="flex items-center gap-2 text-accent">
                 <Users className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-[0.2em]">Leadership</span>
+                <span className="text-xs font-bold uppercase tracking-[0.2em]">{t("about.leadershipBadge", "Leadership")}</span>
               </div>
               <div className="h-px w-12 bg-accent/60" />
             </div>
             <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-              BUREAU EXÉCUTIF NATIONAL
+              {t("team.title", "BUREAU EXÉCUTIF NATIONAL")}
             </h1>
             <p className="text-white/80 max-w-2xl mx-auto">
-              Une équipe de leaders visionnaires dédiés au développement économique du Congo.
+              {t("team.description", "Une équipe de leaders visionnaires dédiés au développement économique du Congo.")}
             </p>
           </div>
 
           {/* Grille des membres - première rangée (4 membres) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            {bureauMembers.slice(0, 4).map((member, index) => (
+            {localizedBureauMembers.slice(0, 4).map((member, index) => (
               <MemberCard key={member.name} {...member} variant="blue" index={index} />
             ))}
           </div>
 
           {/* Grille des membres - deuxième rangée (3 membres centrés) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {bureauMembers.slice(4).map((member, index) => (
+            {localizedBureauMembers.slice(4).map((member, index) => (
               <MemberCard key={member.name} {...member} variant="blue" index={index} />
             ))}
           </div>

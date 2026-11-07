@@ -11,10 +11,12 @@ import CongoMap from "@/components/congo/CongoMap";
 import { InfrastructureSection, EconomySection } from "@/components/congo/CongoInfrastructures";
 import { InvestorEnvironmentSection, WhyInvestSection } from "@/components/congo/CongoInvestmentReasons";
 import congoFlag from "@/assets/congo-flag.jpg";
+import { useTranslation } from "react-i18next";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -51,16 +53,16 @@ const HeroSection = () => {
       <div className="container-cdeco relative z-10 text-center py-20 px-4">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-4xl mx-auto">
           <motion.div variants={fadeInUp}>
-            <SectionHeader label="Destination Congo" variant="light" />
+            <SectionHeader label={t("congo.badge", "Destination Congo")} variant="light" />
           </motion.div>
           <motion.h1 variants={fadeInUp} className="text-4xl md:text-6xl font-heading font-bold text-white mb-6">
-            Le Congo-Brazzaville
+            {t("congo.title", "Le Congo-Brazzaville")}
           </motion.h1>
           <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-accent font-medium mb-4">
-            Un carrefour stratégique et une terre d'opportunités au cœur de l'Afrique
+            {t("congo.subtitle", "Un carrefour stratégique et une terre d'opportunités au cœur de l'Afrique")}
           </motion.p>
           <motion.p variants={fadeInUp} className="text-lg text-white/80 max-w-2xl mx-auto">
-            Découvrez un pays en pleine mutation économique, doté d'infrastructures modernes et d'un potentiel humain exceptionnel.
+            {t("congo.description", "Découvrez un pays en pleine mutation économique, doté d'infrastructures modernes et d'un potentiel humain exceptionnel.")}
           </motion.p>
         </motion.div>
       </div>
@@ -68,29 +70,31 @@ const HeroSection = () => {
   );
 };
 
-const StrategicPositionSection = () => (
-  <section className="py-20 bg-background">
-    <div className="container-cdeco px-4">
-      <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid lg:grid-cols-2 gap-12 items-center">
-        <motion.div variants={fadeInUp}>
-          <SectionHeader label="Géographie" />
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-6">
-            Une position géographique privilégiée
-          </h2>
-          <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-            Située au cœur du bassin du Congo, la République du Congo bénéficie d'un positionnement géographique exceptionnel qui en fait un carrefour naturel pour le commerce en Afrique centrale.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full border border-primary/20">
-              <Landmark className="h-5 w-5 text-primary" />
-              <span className="font-medium text-primary">Membre CEMAC</span>
+const StrategicPositionSection = () => {
+  const { t } = useTranslation();
+  return (
+    <section className="py-20 bg-background">
+      <div className="container-cdeco px-4">
+        <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div variants={fadeInUp}>
+            <SectionHeader label={t("congo.badge", "Géographie")} />
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-6">
+              {t("congo.geographyTitle", "Une position géographique privilégiée")}
+            </h2>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+              {t("congo.geographyText", "Située au cœur du bassin du Congo, la République du Congo bénéficie d'un positionnement géographique exceptionnel qui en fait un carrefour naturel pour le commerce en Afrique centrale.")}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full border border-primary/20">
+                <Landmark className="h-5 w-5 text-primary" />
+                <span className="font-medium text-primary">{t("congo.memberCemac", "Membre CEMAC")}</span>
+              </div>
+              <div className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full border border-primary/20">
+                <Landmark className="h-5 w-5 text-primary" />
+                <span className="font-medium text-primary">{t("congo.memberCeeac", "Membre CEEAC")}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full border border-primary/20">
-              <Landmark className="h-5 w-5 text-primary" />
-              <span className="font-medium text-primary">Membre CEEAC</span>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
         <motion.div variants={fadeInUp} className="relative">
           <div className="bg-gradient-to-br from-primary/5 to-accent/10 rounded-3xl p-8 border border-border">
@@ -113,7 +117,8 @@ const StrategicPositionSection = () => (
       </motion.div>
     </div>
   </section>
-);
+  );
+};
 
 const PopulationSection = () => (
   <section className="py-20 bg-secondary/30">
